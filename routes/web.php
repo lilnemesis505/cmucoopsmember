@@ -21,6 +21,7 @@ Route::get('admin/login', [AuthController::class, 'showLogin'])->name('admin.log
 Route::post('admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
 Route::get('admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
+
 // 2. หน้า Admin (ต้อง Login ก่อนถึงเข้าได้)
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     
@@ -31,7 +32,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('slides', [SlideController::class, 'index'])->name('slides.index');
     Route::post('slides', [SlideController::class, 'store'])->name('slides.store');
     Route::delete('slides/{id}', [SlideController::class, 'destroy'])->name('slides.destroy');
-
+    Route::get('slides/sync', [SlideController::class, 'syncFromImageKit'])->name('slides.sync');
     // Manage Events (Dynamic Key: ev1, ev2, ...)
     // หน้า list รวม
     Route::get('events', [EventController::class, 'index'])->name('events.index');
@@ -40,4 +41,5 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('events/{key}/details', [EventController::class, 'updateDetails'])->name('events.update_details');
     Route::post('events/{key}/upload', [EventController::class, 'uploadImage'])->name('events.upload');
     Route::delete('events/image/{id}', [EventController::class, 'deleteImage'])->name('events.delete_image');
+    
 });

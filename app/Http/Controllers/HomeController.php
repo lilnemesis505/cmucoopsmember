@@ -49,42 +49,5 @@ class HomeController extends Controller
     // ส่งตัวแปร $event ไปที่หน้า View
     return view('pages.event_detail', compact('event'));
     }
-    public function setupData()
-    {
-        // 1. สร้าง Slide (ถ้ายังไม่มี)
-        if (Slide::count() == 0) {
-            Slide::create(['image_url' => 'https://via.placeholder.com/800x400/007bff/ffffff?text=Slide+1']);
-            Slide::create(['image_url' => 'https://via.placeholder.com/800x400/28a745/ffffff?text=Slide+2']);
-            Slide::create(['image_url' => 'https://via.placeholder.com/800x400/dc3545/ffffff?text=Slide+3']);
-        }
-
-        // 2. สร้าง Banner ข้างๆ (ถ้ายังไม่มี)
-        if (Banner::count() == 0) {
-            Banner::create(['image_url' => 'https://via.placeholder.com/400x200/ffc107/000000?text=Side+Banner+1']);
-            Banner::create(['image_url' => 'https://via.placeholder.com/400x200/17a2b8/ffffff?text=Side+Banner+2']);
-        }
-
-        // 3. สร้าง Events (ev1 - ev6) และรูปภาพประกอบ
-        $eventKeys = ['ev1', 'ev2', 'ev3', 'ev4', 'ev5', 'ev6'];
-
-        foreach ($eventKeys as $index => $key) {
-            // ตรวจสอบว่ามี Event นี้หรือยัง ถ้าไม่มีให้สร้างใหม่
-            $event = Event::firstOrCreate(
-                ['key' => $key], // ค้นหาจาก key
-                [
-                    'title' => "กิจกรรมที่ " . ($index + 1) . " ($key)",
-                    'description' => "รายละเอียดจำลองสำหรับกิจกรรม $key \nนี่คือตัวอย่างข้อความยาวๆ เพื่อทดสอบการแสดงผล..."
-                ]
-            );
-
-            // ถ้า Event นี้ยังไม่มีรูป ให้เพิ่มรูปตัวอย่างเข้าไป 3 รูป
-            if ($event->images()->count() == 0) {
-                $event->images()->create(['image_url' => 'https://via.placeholder.com/600x400?text=Photo+1+for+' . $key]);
-                $event->images()->create(['image_url' => 'https://via.placeholder.com/600x400?text=Photo+2+for+' . $key]);
-                $event->images()->create(['image_url' => 'https://via.placeholder.com/600x400?text=Photo+3+for+' . $key]);
-            }
-        }
-
-        return "<h1>✅ ติดตั้งข้อมูลจำลองเสร็จเรียบร้อย!</h1> <p><a href='/'>กลับหน้าแรก</a></p>";
-    }
+    
 }

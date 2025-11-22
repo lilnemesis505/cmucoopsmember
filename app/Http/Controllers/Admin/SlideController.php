@@ -130,4 +130,66 @@ class SlideController extends Controller
             return back()->with('error', 'ลบไม่สำเร็จ: ' . $e->getMessage());
         }
     }
+    public function syncFromImageKit()
+    {
+        $addedSlides = 0;
+        $addedBanners = 0;
+
+        try {
+            // ---------------------------------------------------
+            // 1. จัดการ Slide (ดึงจากโฟลเดอร์ /main/slide/)
+            // ---------------------------------------------------
+            $slideFiles = $this->imageKit->listFiles([
+                'path' => '/main/slide/',
+                'limit' => 100 // ดึงสูงสุด 100 รูป (ปรับเพิ่มได้ถ้ามีเยอะ)
+            ]);
+
+            if (!empty($slideFiles->result)) {
+                foreach ($slideFiles->result as $file) {
+                    // ตรวจสอบว่าชื่อไฟล์ขึ้นต้นด้วย Slide_ หรือไม่ และต้องยังไม่มีใน DB
+                    // (ใช้ strpos หรือ str_starts_with เพื่อเช็คชื่อไฟล์)
+                    $isSlideFile = strpos($file->name, 'Slide_') === 0;
+                    $existsInDB = Slide::where('file_id', $file->fileId)->exists();
+
+                    if ($isSlideFile && !$existsInDB) {
+                        Slide::create([
+                            'file_id' => $file->fileId,
+                            'image_url' => $file->url,
+                            // อาจจะใส่ created_at ตามเวลาไฟล์ก็ได้ถ้าต้องการ
+                        ]);
+                        $addedSlides++;
+                    }
+                }
+            }
+
+            // ---------------------------------------------------
+            // 2. จัดการ Banner (ดึงจากโฟลเดอร์ /main/)
+            // ---------------------------------------------------
+            $bannerFiles = $this->imageKit->listFiles([
+                'path' => '/main/', // ตาม logic เก่า Banner อยู่ข้างนอก
+                'limit' => 100
+            ]);
+
+            if (!empty($bannerFiles->result)) {
+                foreach ($bannerFiles->result as $file) {
+                    // Banner ต้องชื่อขึ้นต้นด้วย Banner_ เท่านั้น (เพื่อกันไม่ให้ไปดึงไฟล์อื่นใน folder main)
+                    $isBannerFile = strpos($file->name, 'Banner_') === 0;
+                    $existsInDB = Banner::where('file_id', $file->fileId)->exists();
+
+                    if ($isBannerFile && !$existsInDB) {
+                        Banner::create([
+                            'file_id' => $file->fileId,
+                            'image_url' => $file->url
+                        ]);
+                        $addedBanners++;
+                    }
+                }
+            }
+
+            return back()->with('success', "ซิงค์ข้อมูลสำเร็จ! พบ Slide ใหม่: $addedSlides, Banner ใหม่: $addedBanners");
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'เกิดข้อผิดพลาดในการซิงค์: ' . $e->getMessage());
+        }
+    }
 }

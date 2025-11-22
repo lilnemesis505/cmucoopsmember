@@ -28,7 +28,9 @@
                 </div>
             </div>
         </form>
-
+        <a href="{{ route('admin.slides.sync') }}" class="btn btn-warning">
+    <i class="fa fa-refresh"></i> ดึงรูปจาก ImageKit (Sync)
+</a>
         {{-- ตารางรายการ Slide --}}
         <div class="table-responsive">
             <table class="table table-striped align-middle">
