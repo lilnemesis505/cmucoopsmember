@@ -43,7 +43,7 @@
         <div class="col-md-7">
             <h4>สิทธิประโยชน์สำหรับสมาชิก</h4>
             <p>รายละเอียดเกี่ยวกับสิทธิประโยชน์ต่างๆ...</p>
-            <a href="#" class="btn btn-primary btn-sm">ดูรายละเอียดเพิ่มเติม</a>
+            <a href="{{ route('member') }}" class="btn btn-primary btn-sm">ดูรายละเอียดเพิ่มเติม</a>
         </div>
     </div>
 </section>
@@ -58,7 +58,7 @@
         <div class="col-md-7">
             <h4>สิทธิประโยชน์สำหรับผู้ถือหุ้นสหกรณ์</h4>
             <p>เมื่อผู้สมัครสมาชิก จ่ายเงิน 100 บาท...</p>
-            <a href="#" class="btn btn-primary btn-sm">ดูรายละเอียดเพิ่มเติม</a>
+            <a href="{{ route('board') }}" class="btn btn-primary btn-sm">ดูรายละเอียดเพิ่มเติม</a>
         </div>
     </div>
 </section>

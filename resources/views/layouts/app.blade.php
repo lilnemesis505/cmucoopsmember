@@ -19,7 +19,8 @@
             <li><a href="{{ route('home') }}">หน้าหลัก</a></li>
             <li><a href="{{ route('member') }}">สมาชิก</a></li>
             <li><a href="{{ route('board') }}">ผู้ถือหุ้น</a></li>
-            <li><a href="#">อื่นๆ</a></li>
+            <li><a href="#">เกี่ยวกับเรา</a></li>
+            <li><a href="#">ตรวจสอบสมาชิก</a></li>
         </ul>
     </nav>
 
@@ -53,7 +54,7 @@
                  <div class="col-lg-3 col-md-6 mb-4">
                     <h5 class="mb-3 fw-bold">หมวดหมู่สินค้า</h5>
                     <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none small">เครื่องดื่ม</a></li>
+                        <li class="mb-2"><a href="{{ route('admin.login') }}" class="text-white text-decoration-none small">สำหรับคนหล่อเท่านั้น</a></li>
                         <li class="mb-2"><a href="#" class="text-white text-decoration-none small">ขนมเบเกอรี่</a></li>
                     </ul>
                 </div>
