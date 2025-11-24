@@ -19,8 +19,7 @@
             <li><a href="{{ route('home') }}">หน้าหลัก</a></li>
             <li><a href="{{ route('member') }}">สมาชิก</a></li>
             <li><a href="{{ route('board') }}">ผู้ถือหุ้น</a></li>
-            <li><a href="#">เกี่ยวกับเรา</a></li>
-            <li><a href="#">ตรวจสอบสมาชิก</a></li>
+            <li><a href="{{ route('check.member') }}">ตรวจสอบสมาชิก</a></li>
         </ul>
     </nav>
 

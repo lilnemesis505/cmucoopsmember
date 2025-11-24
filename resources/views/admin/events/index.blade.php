@@ -2,8 +2,17 @@
 
 @section('content')
 
-<h1 class="mb-4">จัดการข่าวสารและกิจกรรม (Events)</h1>
-<p class="text-muted">กรุณาเลือก Event ที่ต้องการแก้ไขอัลบั้มรูปภาพ</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-0">จัดการข่าวสารและกิจกรรม (Events)</h1>
+        <p class="text-muted mb-0">กรุณาเลือก Event ที่ต้องการแก้ไขอัลบั้มรูปภาพ</p>
+    </div>
+    
+    {{-- ปุ่ม Sync ข้อมูล --}}
+    <a href="{{ route('admin.events.sync') }}" class="btn btn-warning shadow-sm" onclick="return confirm('ระบบจะดึงข้อมูลรูปภาพทั้งหมดจาก ImageKit ลงมาในฐานข้อมูล\nยืนยันการทำงานหรือไม่?');">
+        <i class="bi bi-cloud-download-fill me-2"></i> Sync รูปจาก Cloud
+    </a>
+</div>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {{-- วนลูปสร้างการ์ด ev1 ถึง ev6 --}}

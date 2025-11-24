@@ -29,7 +29,7 @@
             </div>
         </form>
         <a href="{{ route('admin.slides.sync') }}" class="btn btn-warning">
-    <i class="fa fa-refresh"></i> ดึงรูปจาก ImageKit (Sync)
+    <i class="fa fa-refresh"></i> ดึงรูปจาก clound (Sync)
 </a>
         {{-- ตารางรายการ Slide --}}
         <div class="table-responsive">

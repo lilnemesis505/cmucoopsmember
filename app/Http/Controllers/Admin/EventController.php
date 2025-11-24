@@ -88,4 +88,53 @@ class EventController extends Controller
         $image->delete();
         return back()->with('warning', 'ลบรูปภาพสำเร็จ');
     }
+    public function syncFromImageKit()
+    {
+        $eventKeys = ['ev1', 'ev2', 'ev3', 'ev4', 'ev5', 'ev6'];
+        $totalSynced = 0;
+
+        try {
+            foreach ($eventKeys as $key) {
+                // 1. หา Event นั้นๆ ใน DB (ถ้าไม่มีให้สร้างใหม่กัน error)
+                $event = Event::firstOrCreate(['key' => $key], [
+                    'title' => "Event $key",
+                    'description' => "-"
+                ]);
+
+                // 2. กำหนดโฟลเดอร์ใน ImageKit ที่จะไปค้นหา
+                // *** สำคัญ: แก้ตรงนี้ให้ตรงกับที่คุณเคยอัปโหลดไว้ ***
+                // เช่นถ้าเคยอัปไว้ที่ /main/ev1/ ก็แก้เป็น "/main/$key/"
+                $folderPath = "/main/events/$key/"; 
+
+                // 3. ดึงรายการไฟล์จาก ImageKit
+                $files = $this->imageKit->listFiles([
+                    'path' => $folderPath,
+                    'limit' => 100
+                ]);
+
+                if (!empty($files->result)) {
+                    foreach ($files->result as $file) {
+                        // 4. เช็คว่ามีรูปนี้ใน DB หรือยัง (เช็คจาก file_id)
+                        $exists = EventImage::where('file_id', $file->fileId)->exists();
+
+                        if (!$exists) {
+                            // 5. ถ้ายังไม่มี ให้สร้างใหม่
+                            EventImage::create([
+                                'event_id' => $event->id,
+                                'file_id' => $file->fileId,
+                                'image_url' => $file->url,
+                                // 'file_name' => $file->name // (ถ้ามีคอลัมน์นี้)
+                            ]);
+                            $totalSynced++;
+                        }
+                    }
+                }
+            }
+
+            return back()->with('success', "ซิงค์ข้อมูลเสร็จสิ้น! ดึงรูปกลับมาได้ทั้งหมด $totalSynced รูป");
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'เกิดข้อผิดพลาดในการซิงค์: ' . $e->getMessage());
+        }
+    }
 }
