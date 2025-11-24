@@ -167,7 +167,6 @@
                 <button class="btn-toggle me-3" id="menu-toggle">
                     <i class="bi bi-list"></i>
                 </button>
-                <h5 class="mb-0 text-muted d-none d-md-block">Admin Management System</h5>
             </div>
 
             <div class="d-flex align-items-center gap-3">
