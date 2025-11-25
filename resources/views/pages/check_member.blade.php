@@ -178,9 +178,9 @@
             // ดึงข้อมูลจากปุ่ม
             var name = button.getAttribute('data-name');
             var addr = button.getAttribute('data-addr') || '-';
-            var tambon = button.getAttribute('data-tambon') ? 'ต.' + button.getAttribute('data-tambon') : '';
-            var amphur = button.getAttribute('data-amphur') ? 'อ.' + button.getAttribute('data-amphur') : '';
-            var province = button.getAttribute('data-province') ? 'จ.' + button.getAttribute('data-province') : '';
+            var tambon = button.getAttribute('data-tambon') || '';
+            var amphur = button.getAttribute('data-amphur') || '';
+            var province = button.getAttribute('data-province') || '';
             var zip = button.getAttribute('data-zip') || '';
 
             // รวมที่อยู่ให้สวยงาม

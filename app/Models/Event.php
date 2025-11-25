@@ -8,7 +8,12 @@ class Event extends Model
 {
     public $timestamps = false;
     public $table = 'events';
-    protected $fillable = ['key', 'title', 'description'];
+    protected $fillable = [
+        'key', 
+        'title', 
+        'description', 
+        'event_date' // <--- เพิ่มบรรทัดนี้เข้าไปใน $fillable
+    ];
 
     // ความสัมพันธ์กับรูปภาพ
    public function images()

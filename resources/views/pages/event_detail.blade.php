@@ -9,7 +9,17 @@
             <a href="{{ route('home') }}" class="text-decoration-none text-muted mb-2 d-block">
                 &laquo; กลับไปหน้าข่าวสาร
             </a>
-            <h1 class="fw-bold">{{ $event->title }}</h1>
+            
+            <h1 class="fw-bold mb-2">{{ $event->title }}</h1>
+            
+            {{-- [ส่วนที่เพิ่มใหม่] แสดงวันที่จัดกิจกรรม (ถ้ามี) --}}
+            @if($event->event_date)
+                <p class="text-primary mb-3">
+                    <i class="bi bi-calendar-event-fill me-2"></i> 
+                    วันที่จัดกิจกรรม: {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y') }}
+                </p>
+            @endif
+
             <p class="lead text-muted mt-3">
                 {!! nl2br(e($event->description)) !!}
             </p>
@@ -35,8 +45,7 @@
                         <div class="card shadow-sm h-100">
                             {{-- 
                                 รูปภาพ Thumbnail 
-                                - เมื่อคลิกจะเรียกฟังก์ชัน showImagePopup()
-                                - ส่ง URL รูปเต็ม (ไม่มี ?tr=...) เข้าไปในฟังก์ชัน
+                                - ใช้ onclick เรียกฟังก์ชัน JS ด้านล่าง 
                             --}}
                             <img src="{{ $image->image_url }}?tr=w-600,h-400,c-auto" 
                                  class="card-img-top" 
@@ -54,7 +63,7 @@
 
 {{-- MODAL POPUP สำหรับแสดงรูปใหญ่ --}}
 <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg"> {{-- modal-lg เพื่อให้รูปใหญ่ชัดเจน --}}
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content bg-transparent border-0 shadow-none">
             <div class="modal-body p-0 text-center position-relative">
                 
@@ -71,13 +80,13 @@
     </div>
 </div>
 
-{{-- JavaScript สำหรับจัดการ Popup --}}
+{{-- Script สั่งเปิด Popup --}}
 <script>
     function showImagePopup(fullImageUrl) {
-        // 1. เอารูปที่ส่งมาใส่ใน tag img ของ Modal
+        // เอารูปที่ส่งมาใส่ใน tag img ของ Modal
         document.getElementById('popupImage').src = fullImageUrl;
         
-        // 2. เรียก Bootstrap Modal ให้แสดงขึ้นมา
+        // เรียก Bootstrap Modal ให้แสดงขึ้นมา
         var myModal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
         myModal.show();
     }

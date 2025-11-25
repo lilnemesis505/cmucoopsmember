@@ -41,8 +41,9 @@
             <img src="https://ik.imagekit.io/cmuxacademy/member?updatedAt=1762759404324&tr=w-400,h-200,c-auto" class="img-fluid rounded shadow-sm" alt="สมาชิก">
         </div>
         <div class="col-md-7">
-            <h4>สิทธิประโยชน์สำหรับสมาชิก</h4>
-            <p>รายละเอียดเกี่ยวกับสิทธิประโยชน์ต่างๆ...</p>
+            <h4>การสมัครสมาชิก</h4>
+            <p>สามารถสมัครได้ 2 ช่องทางคือ แบบ walk in และ แบบออนไลน์</p>
+            <p>ผ่านช่องทางไลน์ ผ่าน LineID:CMUCOOP</p>
             <a href="{{ route('member') }}" class="btn btn-primary btn-sm">ดูรายละเอียดเพิ่มเติม</a>
         </div>
     </div>
@@ -56,8 +57,8 @@
             <img src="https://ik.imagekit.io/cmuxacademy/board?updatedAt=1762759204491&tr=w-400,h-200,c-auto" class="img-fluid rounded shadow-sm" alt="ผู้ถือหุ้น">
         </div>
         <div class="col-md-7">
-            <h4>สิทธิประโยชน์สำหรับผู้ถือหุ้นสหกรณ์</h4>
-            <p>เมื่อผู้สมัครสมาชิก จ่ายเงิน 100 บาท...</p>
+            <h4>สิทธิประโยชน์สำหรับผู้ถือหุ้นและสมาชิกสหกรณ์</h4>
+            <p>ซื้อหุ้น ร้านสหกรณ์มหาวิทยาลัยเชียงใหม่ รับสิทธิพิเศษอะไรบ้าง</p>
             <a href="{{ route('board') }}" class="btn btn-primary btn-sm">ดูรายละเอียดเพิ่มเติม</a>
         </div>
     </div>

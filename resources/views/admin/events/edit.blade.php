@@ -3,58 +3,102 @@
 @section('content')
 <a href="{{ route('admin.events.index') }}" class="btn btn-outline-secondary btn-sm mb-3">&laquo; กลับไปหน้ารวม Events</a>
 
-<h1 class="mb-4">จัดการ Event: {{ $key }}</h1>
+<h1 class="mb-4">จัดการ Event: <span class="text-primary">{{ $key }}</span></h1>
 
 <div class="card shadow-sm mb-4">
-    <div class="card-header"><h3>แก้ไขรายละเอียด</h3></div>
+    <div class="card-header bg-white py-3">
+        <h4 class="mb-0"><i class="bi bi-pencil-square"></i> แก้ไขรายละเอียด</h4>
+    </div>
     <div class="card-body">
         <form method="POST" action="{{ route('admin.events.update_details', $key) }}">
             @csrf
+            
             <div class="mb-3">
-                <label>หัวข้อ:</label>
-                <input type="text" class="form-control" name="event_title" value="{{ $event->title }}">
+                <label class="form-label fw-bold">หัวข้อ:</label>
+                <input type="text" class="form-control" name="event_title" value="{{ $event->title }}" placeholder="ระบุชื่อกิจกรรม...">
             </div>
+
+            {{-- [เพิ่มใหม่] ช่องเลือกวันที่ --}}
             <div class="mb-3">
-                <label>รายละเอียด:</label>
-                <textarea class="form-control" name="event_description" rows="5">{{ $event->description }}</textarea>
+                <label class="form-label fw-bold">วันที่จัดกิจกรรม:</label>
+                <input type="date" class="form-control" name="event_date" value="{{ $event->event_date }}">
             </div>
-            <button type="submit" class="btn btn-success">บันทึก</button>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">รายละเอียด:</label>
+                <textarea class="form-control" name="event_description" rows="5" placeholder="ใส่รายละเอียดเนื้อหาข่าว...">{{ $event->description }}</textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-save"></i> บันทึกข้อมูล
+            </button>
         </form>
     </div>
 </div>
 
 <div class="card shadow-sm mb-4">
-    <div class="card-header"><h3>อัปโหลดรูปภาพ</h3></div>
+    <div class="card-header bg-white py-3">
+        <h4 class="mb-0"><i class="bi bi-cloud-upload"></i> อัปโหลดรูปภาพ</h4>
+    </div>
     <div class="card-body">
         <form method="POST" action="{{ route('admin.events.upload', $key) }}" enctype="multipart/form-data">
             @csrf
-            <div class="mb-3">
+            <div class="input-group mb-3">
                 <input type="file" class="form-control" name="event_image" required>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-upload"></i> อัปโหลด
+                </button>
             </div>
-            <button type="submit" class="btn btn-primary">อัปโหลด</button>
+            <small class="text-muted">* รองรับไฟล์รูปภาพ jpg, png, jpeg</small>
         </form>
     </div>
 </div>
 
 <div class="card shadow-sm">
-    <div class="card-header"><h3>รูปภาพในอัลบั้ม</h3></div>
+    <div class="card-header bg-white py-3">
+        <h4 class="mb-0"><i class="bi bi-images"></i> รูปภาพในอัลบั้ม</h4>
+    </div>
     <div class="card-body">
-        <table class="table table-striped">
-            <tbody>
-                @foreach($images as $img)
-                <tr>
-                    <td><img src="{{ $img->image_url }}?tr=w-100" class="img-thumbnail"></td>
-                    <td>
-                        <form method="POST" action="{{ route('admin.events.delete_image', $img->id) }}" onsubmit="return confirm('ยืนยันลบ?');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm">ลบ</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        @if($images->isEmpty())
+            <div class="text-center py-4 text-muted">
+                ยังไม่มีรูปภาพในอัลบั้มนี้
+            </div>
+        @else
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 150px;">รูปภาพ</th>
+                            <th>ลิงก์ไฟล์ (ImageKit)</th>
+                            <th style="width: 100px;">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($images as $img)
+                        <tr>
+                            <td class="text-center">
+                                <img src="{{ $img->image_url }}?tr=w-100,h-100,c-maintain_ratio" class="img-thumbnail rounded" style="max-height: 80px;">
+                            </td>
+                            <td>
+                                <a href="{{ $img->image_url }}" target="_blank" class="text-decoration-none text-truncate d-block" style="max-width: 300px;">
+                                    {{ $img->image_url }}
+                                </a>
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ route('admin.events.delete_image', $img->id) }}" onsubmit="return confirm('ยืนยันที่จะลบรูปภาพนี้ใช่หรือไม่?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger btn-sm w-100">
+                                        <i class="bi bi-trash"></i> ลบ
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </div>
 </div>
 @endsection

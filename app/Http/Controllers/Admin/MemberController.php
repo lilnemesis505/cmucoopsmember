@@ -63,13 +63,31 @@ class MemberController extends Controller
     }
 
     // บันทึกสมาชิกใหม่
-    public function store(Request $request)
+   public function store(Request $request)
     {
-        // validate ข้อมูลตามต้องการ
+        // 1. ตรวจสอบข้อมูลเบื้องต้น (Validation)
+        $request->validate([
+            'member_id' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+        ]);
+
+        // 2. เช็คว่ามีรหัสสมาชิกนี้ในระบบหรือยัง?
+        // ค้นหาในตาราง members โดยดูที่คอลัมน์ member_id
+        $exists = Member::where('member_id', $request->member_id)->exists();
+
+        if ($exists) {
+            // ถ้ามีแล้ว: ให้เด้งกลับไปพร้อมข้อความ Error (สีแดง)
+            // (input จะหายไป แต่จะมีการแจ้งเตือนชัดเจน)
+            return back()->with('error', "บันทึกล้มเหลว! รหัสสมาชิก '{$request->member_id}' มีอยู่ในระบบแล้ว");
+        }
+
+        // 3. ถ้ายังไม่มี: ให้บันทึกข้อมูลลง Database
         Member::create($request->all());
+
+        // ส่งกลับพร้อมข้อความ Success (สีเขียว)
         return redirect()->route('admin.members.index')->with('success', 'เพิ่มสมาชิกสำเร็จ');
     }
-
     // ฟอร์มแก้ไข
     public function edit($id)
     {
@@ -80,8 +98,26 @@ class MemberController extends Controller
     // อัปเดตข้อมูล
     public function update(Request $request, $id)
     {
+        // 1. ตรวจสอบข้อมูลพื้นฐาน
+        $request->validate([
+            'member_id' => 'required',
+        ]);
+
+        // 2. เช็คว่ารหัสสมาชิกซ้ำกับคนอื่นไหม? (โดยข้าม ID ของตัวเองไป)
+        // Logic: หารหัสนี้ใน DB + แต่ ID ต้องไม่ใช่คนนี้
+        $exists = Member::where('member_id', $request->member_id)
+                        ->where('id', '!=', $id) // <--- สำคัญมาก: ห้ามเช็คเจอกับตัวเอง
+                        ->exists();
+
+        if ($exists) {
+            // ถ้าซ้ำกับคนอื่น: แจ้งเตือนและเด้งกลับ
+            return back()->with('error', "แก้ไขล้มเหลว! รหัสสมาชิก '{$request->member_id}' ถูกใช้งานโดยสมาชิกท่านอื่นแล้ว");
+        }
+
+        // 3. ✅ ถ้าไม่ซ้ำ (หรือเป็นรหัสเดิมของตัวเอง): บันทึกได้เลย
         $member = Member::findOrFail($id);
         $member->update($request->all());
+        
         return redirect()->route('admin.members.index')->with('success', 'แก้ไขข้อมูลสำเร็จ');
     }
 
