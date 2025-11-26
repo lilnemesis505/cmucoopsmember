@@ -139,6 +139,22 @@
             <a href="{{ route('admin.slides.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.slides.*') ? 'active' : '' }}">
                 <i class="bi bi-images"></i> จัดการแบนเนอร์
             </a>
+           {{-- ... เมนูจัดการสิทธิพิเศษ ... --}}
+            <a href="{{ route('admin.promotions.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.promotions.*') ? 'active' : '' }}">
+                <i class="bi bi-newspaper"></i> จัดการสิทธิพิเศษ
+            </a>
+
+            {{-- [แก้ไขใหม่] เมนูแก้ไขหน้า Member และ Board --}}
+            {{-- 1. แก้ไขหน้าสมาชิก --}}
+            <a href="{{ route('admin.pages.edit', 'member') }}" class="list-group-item list-group-item-action {{ request()->is('admin/pages/member/edit') ? 'active' : '' }}">
+                <i class="bi bi-person-badge"></i> แก้ไขหน้า1
+            </a>
+
+            {{-- 2. แก้ไขหน้าผู้ถือหุ้น --}}
+            <a href="{{ route('admin.pages.edit', 'board') }}" class="list-group-item list-group-item-action {{ request()->is('admin/pages/board/edit') ? 'active' : '' }}">
+                <i class="bi bi-graph-up"></i> แก้ไขหน้า2
+            </a>
+            {{-- ----------------------------------------- --}}
 
             {{-- จัดการ Events --}}
             <a href="{{ route('admin.events.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.events.*') ? 'active' : '' }}">

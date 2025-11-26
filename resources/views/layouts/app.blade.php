@@ -76,7 +76,7 @@
             .logo-img {
                 height: 100px; 
                 position: absolute; 
-                top: -35px; /* ดึงขึ้นไปข้างบน */
+                top: -45px; /* ดึงขึ้นไปข้างบน */
                 left: 0;
                 z-index: 1001; 
                 filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));

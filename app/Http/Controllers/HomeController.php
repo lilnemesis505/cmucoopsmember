@@ -6,15 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Slide;
 use App\Models\Banner;
 use App\Models\Event;
-// use App\Models\PageView; // เอาออก หรือคอมเมนต์ไว้ถ้าไม่ได้ใช้แล้ว
 use App\Models\EventImage;
+use App\Models\Promotion; // เรียกใช้ Model Promotion
 
 class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        // --- ส่วนบันทึก Traffic ถูกลบออกแล้ว ---
-
         // 1. ดึงข้อมูล Slide และ Banner
         $slides = Slide::orderBy('id', 'asc')->get();
         $banners = Banner::orderBy('id', 'asc')->limit(2)->get();
@@ -28,26 +26,34 @@ class HomeController extends Controller
                        ->with('coverImage')
                        ->get();
 
-        return view('home', compact('slides', 'banner1', 'banner2', 'events'));
+        // 3. [เพิ่มใหม่] ดึงข้อมูล Promotion ทั้งหมด
+        $promotions = Promotion::all();
+
+        // ส่งตัวแปร promotions ไปที่หน้า home ด้วย
+        return view('home', compact('slides', 'banner1', 'banner2', 'events', 'promotions'));
     }
 
-    public function member()
-    {
-        return view('pages.member');
-    }
+   public function member()
+{
+    $page = \App\Models\PageContent::where('page_key', 'member')->first();
+    // แก้ให้ชี้ไปที่ folder 'pages' ปกติ
+    return view('pages.member', compact('page')); 
+}
 
     public function board()
     {
-        return view('pages.board');
+        // ดึงข้อมูลหน้า board
+        $page = \App\Models\PageContent::where('page_key', 'board')->first();
+        return view('pages.board', compact('page'));
     }
+
     public function showEvent($key)
     {
         // 1. ค้นหา Event จาก key (ev1, ev2, ...)
-        // ถ้าไม่เจอจะเด้งหน้า 404 ให้เอง (firstOrFail)
-    $event = Event::where('key', $key)->with('images')->firstOrFail();
+        $event = Event::where('key', $key)->with('images')->firstOrFail();
 
-    // ส่งตัวแปร $event ไปที่หน้า View
-    return view('pages.event_detail', compact('event'));
+        // ส่งตัวแปร $event ไปที่หน้า View รายละเอียด
+        return view('pages.event_detail', compact('event'));
     }
     
 }

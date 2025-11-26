@@ -6,7 +6,7 @@
 
 <div class="row g-4">
     {{-- 1. จัดการ Banner --}}
-    <div class="col-md-3"> {{-- ปรับขนาดเป็น col-md-3 เพื่อให้เรียงสวยขึ้น --}}
+    <div class="col-md-3"> 
         <div class="card shadow-sm h-100">
             <div class="card-body text-center">
                 <i class="bi bi-images display-4 text-warning mb-3"></i>
@@ -17,7 +17,20 @@
         </div>
     </div>
 
-    {{-- 2. จัดการ Events --}}
+    {{-- 2. จัดการสิทธิพิเศษ/ประชาสัมพันธ์ (เพิ่มใหม่) --}}
+    <div class="col-md-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-megaphone-fill display-4 text-info mb-3"></i>
+                <h5>จัดการประชาสัมพันธ์</h5>
+                <p class="text-muted small">แก้ไขรูปและข้อความสิทธิประโยชน์</p>
+                {{-- ลิงก์ไปยัง Route ที่เราเพิ่งสร้าง --}}
+                <a href="{{ route('admin.promotions.index') }}" class="btn btn-outline-info btn-sm">จัดการ</a>
+            </div>
+        </div>
+    </div>
+
+    {{-- 3. จัดการ Events --}}
     <div class="col-md-3">
         <div class="card shadow-sm h-100">
             <div class="card-body text-center">
@@ -29,7 +42,7 @@
         </div>
     </div>
 
-    {{-- 3. จัดการสมาชิก (เพิ่มใหม่) --}}
+    {{-- 4. จัดการสมาชิก --}}
     <div class="col-md-3">
         <div class="card shadow-sm h-100 border-primary">
             <div class="card-body text-center">
@@ -43,7 +56,7 @@
         </div>
     </div>
 
-    {{-- 4. หน้าบ้าน --}}
+    {{-- 5. หน้าบ้าน --}}
     <div class="col-md-3">
         <div class="card shadow-sm h-100">
             <div class="card-body text-center">

@@ -2,67 +2,96 @@
 
 @section('content')
 
-{{-- ส่วน Banner --}}
+{{-- ส่วนสมาชิกและผู้ถือหุ้น (Static Content) --}}
 <section class="banner-section mt-3">
-    <div class="main-banner">
-        <div id="mainBannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-            <div class="carousel-inner">
-                @forelse ($slides as $index => $slide)
-                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                        <img src="{{ $slide->image_url }}?tr=w-800,h-400,c-auto" class="d-block w-100" alt="Slide {{ $index + 1 }}">
+    <div class="row"> {{-- เพิ่ม row เพื่อจัด layout ให้สวยงาม --}}
+        
+        {{-- 1. Main Banner (สไลด์หลัก) --}}
+        <div class="col-lg-8 mb-3">
+            <div class="main-banner">
+                <div id="mainBannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                    <div class="carousel-inner rounded overflow-hidden"> {{-- เพิ่ม rounded --}}
+                        @forelse ($slides as $index => $slide)
+                            <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                {{-- Lock ความสูงไว้ที่ 400px --}}
+                                <img src="{{ $slide->image_url }}?tr=w-800,h-400,c-maintain_ratio" 
+                                     class="d-block w-100" 
+                                     alt="Slide {{ $index + 1 }}"
+                                     style="height: 400px; object-fit: cover;"> 
+                            </div>
+                        @empty
+                            <div class="carousel-item active">
+                                <img src="https://via.placeholder.com/800x400.png?text=No+slides+found" 
+                                     class="d-block w-100" 
+                                     alt="Default Banner"
+                                     style="height: 400px; object-fit: cover;">
+                            </div>
+                        @endforelse
                     </div>
-                @empty
-                    <div class="carousel-item active">
-                        <img src="https://via.placeholder.com/800x400.png?text=No+slides+found" class="d-block w-100" alt="Default Banner">
-                    </div>
-                @endforelse
+                    <button class="carousel-control-prev" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
+                </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#mainBannerCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            </button>
         </div>
-    </div>
 
-    <div class="side-banners">
-        <img src="{{ $banner1 }}?tr=w-400,h-200,c-auto" alt="Side Banner 1">
-        <img src="{{ $banner2 }}?tr=w-400,h-200,c-auto" alt="Side Banner 2">
+        {{-- 2. Side Banners (แบนเนอร์ข้างๆ) --}}
+        <div class="col-lg-4">
+            <div class="d-flex flex-column gap-3"> {{-- ใช้ Flex จัดเรียงแนวตั้ง --}}
+                {{-- Lock ความสูงไว้ที่ 190px (2 รูป รวมช่องว่างจะได้ใกล้เคียง 400px) --}}
+                <img src="{{ $banner1 }}?tr=w-400,h-200,c-maintain_ratio" 
+                     class="img-fluid rounded w-100" 
+                     alt="Side Banner 1"
+                     style="height: 190px; object-fit: cover;">
+
+                <img src="{{ $banner2 }}?tr=w-400,h-200,c-maintain_ratio" 
+                     class="img-fluid rounded w-100" 
+                     alt="Side Banner 2"
+                     style="height: 190px; object-fit: cover;">
+            </div>
+        </div>
+        
     </div>
 </section>
 
 <hr class="my-5">
 
-{{-- ส่วนสมาชิกและผู้ถือหุ้น (Static Content) --}}
-<section class="members-section my-4">
-    <div class="row align-items-center">
-        <div class="col-md-5">
-            <img src="https://ik.imagekit.io/cmuxacademy/member?updatedAt=1762759404324&tr=w-400,h-200,c-auto" class="img-fluid rounded shadow-sm" alt="สมาชิก">
-        </div>
-        <div class="col-md-7">
-            <h4>การสมัครสมาชิก</h4>
-            <p>สามารถสมัครได้ 2 ช่องทางคือ แบบ walk in และ แบบออนไลน์</p>
-            <p>ผ่านช่องทางไลน์ ผ่าน LineID:CMUCOOP</p>
-            <a href="{{ route('member') }}" class="btn btn-primary btn-sm">ดูรายละเอียดเพิ่มเติม</a>
-        </div>
-    </div>
-</section>
+{{-- 3. ส่วนสมาชิกและผู้ถือหุ้น (Promotions) --}}
+@foreach($promotions as $index => $promo)
+    @php
+        // กำหนดลิงก์ตามลำดับของข้อมูล (อันบน=0, อันล่าง=1)
+        $link = '#'; 
+        if ($index == 0) {
+            $link = route('member'); // อันบน ไปหน้าสมาชิก
+        } elseif ($index == 1) {
+            $link = route('board');  // อันล่าง ไปหน้าผู้ถือหุ้น
+        }
+    @endphp
 
-<hr class="my-4">
-
-<section class="members-section my-4">
-    <div class="row align-items-center">
-        <div class="col-md-5">
-            <img src="https://ik.imagekit.io/cmuxacademy/board?updatedAt=1762759204491&tr=w-400,h-200,c-auto" class="img-fluid rounded shadow-sm" alt="ผู้ถือหุ้น">
-        </div>
-        <div class="col-md-7">
-            <h4>สิทธิประโยชน์สำหรับผู้ถือหุ้นและสมาชิกสหกรณ์</h4>
-            <p>ซื้อหุ้น ร้านสหกรณ์มหาวิทยาลัยเชียงใหม่ รับสิทธิพิเศษอะไรบ้าง</p>
-            <a href="{{ route('board') }}" class="btn btn-primary btn-sm">ดูรายละเอียดเพิ่มเติม</a>
-        </div>
+<div class="row mb-5 align-items-center bg-white p-4 rounded shadow-sm" style="min-height: 300px;">
+    <div class="col-md-5">
+        <img src="{{ $promo->image_url }}?tr=w-600,h-400" 
+             class="img-fluid rounded w-100" 
+             alt="{{ $promo->main_title }}"
+             style="height: 250px; object-fit: cover;">
     </div>
-</section>
+    <div class="col-md-7">
+        <h3 class="fw-bold mt-3 mt-md-0">{{ $promo->main_title }}</h3>
+        
+        <p class="text-muted" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+            {{ $promo->subtitle }}
+        </p>
+        
+        {{-- ใช้ตัวแปร $link ที่เรากำหนดข้างบน --}}
+        <a href="{{ $link }}" class="btn btn-primary mt-2">
+            ดูรายละเอียดเพิ่มเติม
+        </a>
+    </div>
+</div>
+@endforeach
 
 <hr class="my-5">
 

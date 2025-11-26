@@ -50,8 +50,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::delete('events/image/{id}', [EventController::class, 'deleteImage'])->name('events.delete_image');
     // ฟังก์ชัน Upload Excel (ควรซ่อนไว้ หรือใส่ Middleware auth เพื่อให้ Admin ใช้เท่านั้น)
     Route::post('/import-members', [MemberCheckController::class, 'import'])->name('import.members');
-        Route::delete('members/truncate', [App\Http\Controllers\Admin\MemberController::class, 'truncate'])->name('members.truncate');
+    Route::delete('members/truncate', [App\Http\Controllers\Admin\MemberController::class, 'truncate'])->name('members.truncate');
     Route::post('members/import', [App\Http\Controllers\Admin\MemberController::class, 'import'])->name('members.import');
     Route::resource('members', App\Http\Controllers\Admin\MemberController::class);
-    
+
+    Route::get('promotions', [App\Http\Controllers\Admin\PromotionController::class, 'index'])->name('promotions.index');
+    Route::put('promotions/update-all', [App\Http\Controllers\Admin\PromotionController::class, 'updateAll'])->name('promotions.update_all');
+    Route::put('promotions/{id}', [App\Http\Controllers\Admin\PromotionController::class, 'update'])->name('promotions.update');
+    // จัดการเนื้อหาหน้าเว็บ (Member, Board)
+    Route::get('pages/{key}/edit', [App\Http\Controllers\Admin\PageContentController::class, 'edit'])->name('pages.edit');
+    Route::put('pages/{key}', [App\Http\Controllers\Admin\PageContentController::class, 'update'])->name('pages.update');
+
 });
+    
