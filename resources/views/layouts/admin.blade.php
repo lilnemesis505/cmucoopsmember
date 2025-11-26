@@ -9,14 +9,13 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <style>
+<style>
         body { 
             font-family: 'Prompt', sans-serif;
-            background-color: #f3f6f9; /* พื้นหลัง content สีเทาอ่อนๆ สบายตา */
-            overflow-x: hidden; /* ป้องกัน scroll แนวนอนตอนซ่อนเมนู */
+            background-color: #f3f6f9;
+            overflow-x: hidden;
         }
 
-        /* --- Wrapper Layout --- */
         #wrapper {
             display: flex;
             width: 100%;
@@ -24,11 +23,11 @@
             transition: all 0.3s ease;
         }
 
-        /* --- Sidebar Design (ตามรูปตัวอย่าง) --- */
+        /* --- Sidebar --- */
         #sidebar-wrapper {
             min-width: 260px;
             max-width: 260px;
-            background-color: #ffffff; /* พื้นหลังขาว */
+            background-color: #ffffff;
             border-right: 1px solid #eef2f5;
             transition: all 0.3s ease;
             display: flex;
@@ -36,75 +35,85 @@
             z-index: 1000;
         }
 
-        /* กรณีซ่อน Sidebar */
+        /* ส่วน Logo Admin */
+        .sidebar-logo {
+            height: 70px;  /* ความสูงกล่องเท่าเดิม (เท่า Navbar) */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: #fff;
+            overflow: hidden; /* ป้องกันรูปทะลุถ้าใหญ่เกิน */
+        }
+
+        .sidebar-logo img {
+            /* ✅ แก้ตรงนี้: เพิ่มขนาดรูปให้ใหญ่ขึ้น (จาก 45px เป็น 60px) */
+            height: 60px; 
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-logo img:hover {
+            transform: scale(1.05);
+        }
+
+        /* ส่วน Navbar บน */
+        .top-navbar {
+            height: 70px; /* ความสูงเท่ากับ Sidebar Logo */
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* -------------------------------- */
+
         #wrapper.toggled #sidebar-wrapper {
             margin-left: -260px;
         }
 
-        /* --- Logo Area --- */
-        .sidebar-heading {
-            padding: 1.2rem 1.5rem;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #0d1e4c; /* สีน้ำเงินเข้ม */
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        /* --- Menu Items --- */
         .list-group-item {
             border: none;
             padding: 15px 25px;
             font-size: 1rem;
             font-weight: 500;
-            color: #3f5376; /* สีเทาอมน้ำเงิน */
+            color: #3f5376;
             background-color: transparent;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 15px; /* ระยะห่างไอคอนกับตัวหนังสือ */
+            gap: 15px;
         }
 
         .list-group-item i {
             font-size: 1.2rem;
-            color: #8fa0b8; /* สีไอคอนจางๆ */
+            color: #8fa0b8;
             min-width: 25px;
         }
 
-        /* Hover & Active State */
         .list-group-item:hover {
             background-color: #f8faff;
-            color: #0d47a1; /* สีน้ำเงินเข้มเมื่อชี้ */
+            color: #0d47a1;
         }
         .list-group-item:hover i {
             color: #0d47a1;
         }
 
         .list-group-item.active {
-            background-color: #eef4ff; /* พื้นหลังสีฟ้าจางๆ */
-            color: #0d47a1; /* ตัวหนังสือสีน้ำเงินเข้ม */
-            border-left: 4px solid #0d47a1; /* แถบสีด้านซ้าย */
+            background-color: #eef4ff;
+            color: #0d47a1;
+            border-left: 4px solid #0d47a1;
             font-weight: 600;
         }
         .list-group-item.active i {
             color: #0d47a1;
         }
 
-        /* --- Main Content --- */
         #page-content-wrapper {
             width: 100%;
             flex: 1;
-        }
-
-        .top-navbar {
-            background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .btn-toggle {
@@ -113,6 +122,9 @@
             font-size: 1.5rem;
             color: #0d1e4c;
             cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
         }
         
         .content-area {
@@ -124,41 +136,45 @@
 
 <div class="d-flex" id="wrapper">
 
+    {{-- Sidebar --}}
     <div id="sidebar-wrapper">
-        <div class="sidebar-heading">
-            <i class="bi bi-building-fill text-primary"></i> CMU X-CADEMY
+        
+        {{-- แก้ไขส่วนแสดงโลโก้ --}}
+        <div class="sidebar-logo">
+            <a href="{{ route('home') }}" target="_blank" title="ไปที่หน้าเว็บไซต์">
+                <img src="https://ik.imagekit.io/cmucoopsmember/icon" alt="CMU X-CADEMY">
+            </a>
         </div>
-        <div class="list-group list-group-flush mt-3">
+
+        <div class="list-group list-group-flush mt-2">
             
             {{-- Dashboard --}}
             <a href="{{ route('admin.dashboard') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-grid-fill"></i> เมนูหลัก
             </a>
 
-            {{-- จัดการ Banner (สไลด์) --}}
+            {{-- จัดการ Banner --}}
             <a href="{{ route('admin.slides.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.slides.*') ? 'active' : '' }}">
                 <i class="bi bi-images"></i> จัดการแบนเนอร์
             </a>
-           {{-- ... เมนูจัดการสิทธิพิเศษ ... --}}
+
+            {{-- จัดการสิทธิพิเศษ --}}
             <a href="{{ route('admin.promotions.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.promotions.*') ? 'active' : '' }}">
                 <i class="bi bi-newspaper"></i> จัดการสิทธิพิเศษ
             </a>
 
-            {{-- [แก้ไขใหม่] เมนูแก้ไขหน้า Member และ Board --}}
-            {{-- 1. แก้ไขหน้าสมาชิก --}}
+            {{-- จัดการเนื้อหาหน้าเว็บ --}}
             <a href="{{ route('admin.pages.edit', 'member') }}" class="list-group-item list-group-item-action {{ request()->is('admin/pages/member/edit') ? 'active' : '' }}">
-                <i class="bi bi-person-badge"></i> แก้ไขหน้า1
+                <i class="bi bi-list"></i> แก้ไขหน้า 1
             </a>
 
-            {{-- 2. แก้ไขหน้าผู้ถือหุ้น --}}
             <a href="{{ route('admin.pages.edit', 'board') }}" class="list-group-item list-group-item-action {{ request()->is('admin/pages/board/edit') ? 'active' : '' }}">
-                <i class="bi bi-graph-up"></i> แก้ไขหน้า2
+                <i class="bi bi-list"></i> แก้ไขหน้า 2
             </a>
-            {{-- ----------------------------------------- --}}
 
-            {{-- จัดการ Events --}}
+            {{-- จัดการข่าวสาร --}}
             <a href="{{ route('admin.events.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.events.*') ? 'active' : '' }}">
-                <i class="bi bi-newspaper"></i> ระบบข่าวสาร
+                <i class="bi bi-calendar-event"></i> ระบบข่าวสาร
             </a>
 
             {{-- จัดการสมาชิก --}}
@@ -168,21 +184,23 @@
             
         </div>
         
-        {{-- ปุ่ม Logout ด้านล่างสุด --}}
+        {{-- Logout --}}
         <div class="mt-auto p-3 border-top">
             <a href="{{ route('admin.logout') }}" class="list-group-item list-group-item-action text-danger">
                 <i class="bi bi-box-arrow-right text-danger"></i> ออกจากระบบ
             </a>
         </div>
     </div>
+
+    {{-- Content --}}
     <div id="page-content-wrapper">
 
         <nav class="top-navbar">
             <div class="d-flex align-items-center">
-                {{-- ปุ่มกดซ่อน Sidebar --}}
                 <button class="btn-toggle me-3" id="menu-toggle">
                     <i class="bi bi-list"></i>
                 </button>
+                <span class="fw-bold text-primary d-none d-md-block">ระบบจัดการหลังบ้าน</span>
             </div>
 
             <div class="d-flex align-items-center gap-3">
@@ -197,7 +215,6 @@
         </nav>
 
         <main class="content-area">
-            {{-- Flash Messages --}}
             @if(session('success'))
                 <div class="alert alert-success border-0 shadow-sm mb-4">
                     <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
@@ -212,10 +229,11 @@
             @yield('content')
         </main>
     </div>
-    </div>
+
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-{{-- Script สำหรับปุ่ม Toggle --}}
 <script>
     var el = document.getElementById("wrapper");
     var toggleButton = document.getElementById("menu-toggle");
