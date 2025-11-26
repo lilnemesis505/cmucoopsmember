@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request; // 1. แก้ i เล็กเป็น I ใหญ่
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -10,9 +11,12 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withMiddleware(function (Middleware $middleware) {
+        // 2. แก้ไข Syntax และวงเล็บให้ครบถ้วน
+        $middleware->redirectGuestsTo(function (Request $request) {
+            return route('home');
+        });
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
