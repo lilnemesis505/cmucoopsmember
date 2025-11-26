@@ -24,6 +24,9 @@ Route::get('admin/login', [AuthController::class, 'showLogin'])->name('admin.log
 Route::post('admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
 Route::get('admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
+// ... (Route Login เดิม)
+Route::get('admin/registerCMUXCADEMY', [AuthController::class, 'showRegister'])->name('admin.register');
+Route::post('admin/register', [AuthController::class, 'register'])->name('admin.register.submit');
 
 // 2. หน้า Admin (ต้อง Login ก่อนถึงเข้าได้)
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {

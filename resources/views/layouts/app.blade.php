@@ -11,35 +11,85 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     <style>
-        /* CSS สำหรับ Navbar Active State */
-        .nav-links li a {
+        /* --- Navbar Styling --- */
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding-top: 10px;
+            padding-bottom: 10px;
             position: relative;
-            text-decoration: none;
-            color: inherit;
+            z-index: 1000;
+        }
+
+        /* --- Logo Styling (Responsive) --- */
+        .logo-img {
+            transition: all 0.3s ease;
+            /* ค่าเริ่มต้นสำหรับมือถือ: ขนาดปกติ ไม่ลอย */
+            height: 50px; 
+            width: auto;
+        }
+
+        /* --- Menu Links Styling --- */
+        .navbar-nav .nav-link {
+            position: relative;
+            color: #333;
+            font-weight: 500;
+            margin-left: 15px;
+            margin-right: 15px;
             transition: color 0.3s ease;
         }
 
-        /* เมื่อเป็นสถานะ Active (หน้าปัจจุบัน) */
-        .nav-links li a.active {
-            color: #0d6efd !important; /* เปลี่ยนตัวหนังสือเป็นสีฟ้า */
-            font-weight: 600;
+        .navbar-nav .nav-link.active {
+            color: #0d6efd !important;
+            font-weight: 700;
         }
 
-        /* สร้างเส้นขีดใต้ด้วย Pseudo-element */
-        .nav-links li a.active::after {
+        /* เส้นขีดใต้ (เฉพาะตอน Active) */
+        .navbar-nav .nav-link.active::after {
             content: '';
             position: absolute;
             left: 0;
-            bottom: -5px; /* ระยะห่างจากตัวหนังสือ */
+            bottom: 0px;
             width: 100%;
-            height: 3px; /* ความหนาของเส้น */
-            background-color: #0d6efd; /* สีของเส้น (ฟ้า) */
+            height: 3px;
+            background-color: #0d6efd;
             border-radius: 2px;
         }
 
-        /* เพิ่มลูกเล่นตอนเอาเมาส์ชี้ (Hover) สำหรับอันที่ยังไม่ Active */
-        .nav-links li a:not(.active):hover {
+        .navbar-nav .nav-link:not(.active):hover {
             color: #0d6efd;
+        }
+
+        /* =========================================
+           Desktop Only Styles (หน้าจอใหญ่กว่า 992px) 
+           ========================================= */
+        @media (min-width: 992px) {
+            .navbar {
+                height: 70px; /* ฟิกความสูงเฉพาะบน Desktop */
+            }
+
+            .logo-container {
+                position: relative;
+            }
+
+            /* ทำให้โลโก้ใหญ่และลอยเฉพาะบนจอคอม */
+            .logo-img {
+                height: 100px; 
+                position: absolute; 
+                top: -35px; /* ดึงขึ้นไปข้างบน */
+                left: 0;
+                z-index: 1001; 
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            }
+
+            .logo-img:hover {
+                transform: scale(1.05);
+            }
+
+            /* ดันเมนูไปทางขวาไม่ให้ทับโลโก้ */
+            .navbar-collapse {
+                margin-left: 120px; 
+            }
         }
 
         /* --- Footer Styles --- */
@@ -48,8 +98,8 @@
             display: inline-block;
         }
         .hover-link:hover {
-            color: #ffc107 !important; /* เปลี่ยนเป็นสีเหลืองทองตอนชี้ */
-            transform: translateX(5px); /* ขยับไปทางขวานิดนึง */
+            color: #ffc107 !important;
+            transform: translateX(5px);
             text-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
         }
         .border-bottom {
@@ -59,28 +109,41 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="logo">
-            <a href="{{ route('home') }}" style="text-decoration: none; color: inherit;">CMU X ACADEMY</a>
+    {{-- ใช้โครงสร้าง Navbar ของ Bootstrap เพื่อรองรับ Mobile --}}
+    <nav class="navbar navbar-expand-lg bg-white px-3 px-lg-4">
+        <div class="container-fluid">
+            
+            {{-- ส่วนโลโก้ --}}
+            <a class="navbar-brand logo-container" href="{{ route('home') }}">
+                <img src="https://ik.imagekit.io/cmucoopsmember/icon" alt="CMU X-CADEMY" class="logo-img">
+            </a>
+
+            {{-- ปุ่ม Hamburger (จะโผล่มาเฉพาะตอนจอเล็ก) --}}
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            {{-- รายการเมนู (จะถูกซ่อนในปุ่มตอนจอเล็ก) --}}
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">หน้าหลัก</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('member') ? 'active' : '' }}" href="{{ route('member') }}">สมาชิก</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('board') ? 'active' : '' }}" href="{{ route('board') }}">ผู้ถือหุ้น</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('check.member') ? 'active' : '' }}" href="{{ route('check.member') }}">ตรวจสอบสมาชิก</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <ul class="nav-links">
-            {{-- ใช้ request()->routeIs('ชื่อ_route') เพื่อเช็คว่าอยู่หน้านั้นหรือไม่ --}}
-            <li>
-                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">หน้าหลัก</a>
-            </li>
-            <li>
-                <a href="{{ route('member') }}" class="{{ request()->routeIs('member') ? 'active' : '' }}">สมาชิก</a>
-            </li>
-            <li>
-                <a href="{{ route('board') }}" class="{{ request()->routeIs('board') ? 'active' : '' }}">ผู้ถือหุ้น</a>
-            </li>
-            <li>
-                <a href="{{ route('check.member') }}" class="{{ request()->routeIs('check.member') ? 'active' : '' }}">ตรวจสอบสมาชิก</a>
-            </li>
-        </ul>
     </nav>
 
-    <div class="container">
+    <div class="container" style="padding-top: 30px;">
         {{-- ส่วนเนื้อหาที่จะเปลี่ยนไปเรื่อยๆ --}}
         @yield('content')
     </div>
@@ -88,7 +151,6 @@
     <footer class="bg-dark text-white pt-5 pb-4 border-top mt-5">
     <div class="container-fluid">
         <div class="row">
-            
             {{-- 1. ส่วนติดต่อสอบถาม --}}
             <div class="col-lg-3 col-md-6 mb-4">
                 <h5 class="mb-3 fw-bold text-warning border-bottom border-warning d-inline-block pb-1">ติดต่อสอบถาม</h5>
