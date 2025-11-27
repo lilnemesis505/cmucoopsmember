@@ -132,7 +132,7 @@
                         <a class="nav-link {{ request()->routeIs('member') ? 'active' : '' }}" href="{{ route('member') }}">สมาชิก</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('board') ? 'active' : '' }}" href="{{ route('board') }}">ผู้ถือหุ้น</a>
+                        <a class="nav-link {{ request()->routeIs('board') ? 'active' : '' }}" href="{{ route('board') }}">สิทธิพิเศษ</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('check.member') ? 'active' : '' }}" href="{{ route('check.member') }}">ตรวจสอบสมาชิก</a>
