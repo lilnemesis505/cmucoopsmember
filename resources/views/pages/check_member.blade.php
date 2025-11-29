@@ -8,8 +8,7 @@
             <h2 class="text-center mb-4 fw-bold text-primary">
                 <i class="bi bi-person-vcard"></i> ตรวจสอบสถานะสมาชิก
             </h2>
-
-            {{-- การ์ดค้นหา --}}
+            {{-- การ์ดค้นหา (เหมือนเดิม) --}}
             <div class="card shadow-sm mb-4 border-0">
                 <div class="card-body bg-light p-4 rounded">
                     <form action="{{ route('check.member') }}" method="GET">
@@ -43,6 +42,9 @@
                                 <button type="submit" class="btn btn-primary px-5 rounded-pill shadow-sm">
                                     <i class="bi bi-search"></i> ค้นหาข้อมูล
                                 </button>
+                               <a href="https://www.cmu-coops.com/login.php" target="_blank" class="btn btn-success px-3  #addressModal #addressModal rounded-pill shadow-sm text-decoration-none fw-bold">
+                                เข้าสู่ระบบสมาชิก
+                                </a>
                                 @if($member_id || $id_card || $first_name || $last_name || $phone)
                                     <a href="{{ route('check.member') }}" class="btn btn-outline-secondary px-4 rounded-pill ms-2">
                                         ล้างค่า
@@ -106,17 +108,17 @@
                                             </button>
                                         </td>
                                         
-                                        {{-- 2. แก้ไขเบอร์โทรให้ลิงก์ถูกต้อง --}}
+                                        {{-- 2. เบอร์โทร (แสดงเป็น text ธรรมดา ไม่กดโทร) --}}
                                         <td>
-    @if($member->phone)
-        {{-- เปลี่ยนเป็น span ธรรมดา ไม่ต้องมี href --}}
-        <span class="text-dark fw-bold">
-            <i class="bi bi-telephone-fill text-success"></i> {{ $member->phone }}
-        </span>
-    @else
-        <span class="text-muted">-</span>
-    @endif
-</td>
+                                            @if($member->phone)
+                                                <span class="text-dark fw-bold">
+                                                    <i class="bi bi-telephone-fill text-success"></i> {{ $member->phone }}
+                                                </span>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
+
                                         <td>
                                             <span class="badge bg-success rounded-pill">ปกติ</span>
                                         </td>

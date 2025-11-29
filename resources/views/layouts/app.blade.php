@@ -147,36 +147,46 @@
         @yield('content')
     </div>
 
-    <footer class="bg-dark text-white pt-5 pb-4 border-top mt-5">
+    <footer class="bg-dark text-white pt-4 pb-3 border-top mt-5">
     <div class="container-fluid">
         <div class="row">
-            {{-- 1. ส่วนติดต่อสอบถาม --}}
+           {{-- 1. ส่วนติดต่อสอบถาม --}}
             <div class="col-lg-3 col-md-6 mb-4">
                 <h5 class="mb-3 fw-bold text-warning border-bottom border-warning d-inline-block pb-1">ติดต่อสอบถาม</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-3 d-flex align-items-center">
-                        <i class="bi bi-telephone-fill me-3 text-success fs-5"></i>
-                        <div>
-                            <span class="d-block text-muted small" style="font-size: 0.8rem;">เบอร์โทรศัพท์</span>
-                            <a href="tel:0999999999" class="text-white text-decoration-none hover-link">099-999-9999</a>
-                        </div>
+                    
+                    {{-- เบอร์โทร --}}
+                    <li class="mb-2">
+                        <span class="text-white-50 small me-2">เบอร์โทรศัพท์:</span>
+                        <a href="tel:053217139" class="text-white text-decoration-none hover-link fw-bold">
+                            063-1385154
+                        </a>
                     </li>
-                    <li class="mb-3 d-flex align-items-center">
-                        <i class="bi bi-envelope-fill me-3 text-danger fs-5"></i>
-                        <div>
-                            <span class="d-block text-muted small" style="font-size: 0.8rem;">อีเมล</span>
-                            <a href="mailto:cmucoop@gmail.com" class="text-white text-decoration-none hover-link">cmucoop@gmail.com</a>
-                        </div>
+
+                    {{-- Line ID --}}
+                    <li class="mb-2">
+                        <span class="text-white-50 small me-2">Line ID:</span>
+                        <a href="https://line.me/R/ti/p/@cmucoop" target="_blank" class="text-white text-decoration-none hover-link">
+                            @cmucoop
+                        </a>
                     </li>
-                    <li class="mb-3 d-flex align-items-center">
-                        <i class="bi bi-facebook me-3 text-primary fs-5"></i>
-                        <div>
-                            <span class="d-block text-muted small" style="font-size: 0.8rem;">Facebook</span>
-                            <a href="https://www.facebook.com/share/1AD8Pi4Wf7/" target="_blank" class="text-white text-decoration-none hover-link">
-                                CMUcoop X-cademy
-                            </a>
-                        </div>
+
+                    {{-- อีเมล --}}
+                    <li class="mb-2">
+                        <span class="text-white-50 small me-2">อีเมล:</span>
+                        <a href="mailto:cmucoop@gmail.com" class="text-white text-decoration-none hover-link">
+                            cmucoop@gmail.com
+                        </a>
                     </li>
+
+                    {{-- Facebook --}}
+                    <li class="mb-2">
+                        <span class="text-white-50 small me-2">Facebook:</span>
+                        <a href="https://www.facebook.com/share/1AD8Pi4Wf7/" target="_blank" class="text-white text-decoration-none hover-link">
+                            CMUcoop X-cademy
+                        </a>
+                    </li>
+
                 </ul>
             </div>
 
@@ -190,7 +200,7 @@
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="https://maps.app.goo.gl/QHP8sZCeuJ8hJ9f98" class="text-white text-decoration-none small hover-link">
+                        <a href="https://www.cmu-coops.com/location.php" class="text-white text-decoration-none small hover-link">
                             <i class="bi bi-chevron-right small text-muted me-1"></i> ตำแหน่งร้านสหกรณ์มหาวิทยาลัยเชียงใหม่
                         </a>
                     </li>
@@ -202,8 +212,8 @@
                 <h5 class="mb-3 fw-bold border-bottom d-inline-block pb-1">CMUCOOP'S</h5>
                 <ul class="list-unstyled mb-0">
                     <li class="mb-2">
-                        <a href="#" class="text-white text-decoration-none small hover-link">
-                            <i class="bi bi-chevron-right small text-muted me-1"></i> เกี่ยวกับเรา
+                        <a href="https://www.cmu-coops.com/about.php" class="text-white text-decoration-none small hover-link">
+                            <i class="bi bi-chevron-right small text-muted me-1"></i> เกี่ยวกับร้านสหกรณ์
                         </a>
                     </li>
                     <li class="mb-2">
@@ -216,16 +226,19 @@
 
             {{-- 4. หมวดหมู่สินค้า --}}
             <div class="col-lg-3 col-md-6 mb-4">
-                <h5 class="mb-3 fw-bold border-bottom d-inline-block pb-1">หมวดหมู่สินค้า</h5>
+                <h5 class="mb-3 fw-bold border-bottom d-inline-block pb-1">เวลาทำการ</h5>
                 <ul class="list-unstyled mb-0">
                     <li class="mb-2">
-                        <a href="{{ route('admin.login') }}" class="text-white text-decoration-none small hover-link">
-                            <i class="bi bi-box-seam small text-muted me-1"></i> สำหรับคนหล่อเท่านั้น
+                        <a href="#" class="text-white text-decoration-none small hover-link">
+                            <i class="bi bi-box-seam small text-muted me-1"></i> จุดประชาสัมพันธ์ ร้านสหกรณ์มหาวิทยาลัยเชียงใหม่ 
+                            <br>
+                            สาขาสำนักงานใหญ่
                         </a>
                     </li>
                     <li class="mb-2">
                         <a href="#" class="text-white text-decoration-none small hover-link">
-                            <i class="bi bi-basket small text-muted me-1"></i> ขนมเบเกอรี่
+                            <i class="bi bi-basket small text-muted me-1"></i> วันจันทร์-ศุกร์
+                            9.00-16.00
                         </a>
                     </li>
                 </ul>
@@ -234,9 +247,18 @@
 
         <hr class="text-secondary">
         
-        <div class="text-center text-muted small">
-            <p class="mb-0">
-                © {{ date("Y") }} CMU X ACADEMY. All Rights Reserved.
+        {{-- ส่วน Copyright --}}
+        <div class="text-center text-muted small pb-2">
+            <p class="mb-1 text-white opacity-75">
+                ลิขสิทธิ์โดยร้าน สหกรณ์มหาวิทยาลัยเชียงใหม่ จำกัด {{ date("Y") }}
+            </p>
+            <p class="mb-0 text-muted" style="font-size: 0.75rem;">
+                &copy; {{ date("Y") }} 
+                {{-- ซ่อนลิงก์เข้า Admin --}}
+                <a href="{{ route('admin.login') }}" class="text-decoration-none text-muted fw-bold hover-link" title="Admin Login">
+                    CMU X ACADEMY
+                </a>. 
+                All Rights Reserved.
             </p>
         </div>
     </div>
