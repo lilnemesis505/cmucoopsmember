@@ -387,5 +387,5 @@
             document.getElementById('modal_zip_code').value = button.getAttribute('data-zip-code');
         });
     });
-</script>
+</script> 
 @endsection
