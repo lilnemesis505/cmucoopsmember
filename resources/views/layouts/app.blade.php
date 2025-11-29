@@ -158,8 +158,9 @@
                     {{-- เบอร์โทร --}}
                     <li class="mb-2">
                         <span class="text-white-50 small me-2">เบอร์โทรศัพท์:</span>
-                        <a href="tel:053217139" class="text-white text-decoration-none hover-link fw-bold">
-                            063-1385154
+                        <a href="#" class="text-white text-decoration-none hover-link fw-bold">
+                            063-1385154,
+                            0-5321-7139
                         </a>
                     </li>
 
@@ -167,7 +168,7 @@
                     <li class="mb-2">
                         <span class="text-white-50 small me-2">Line ID:</span>
                         <a href="https://line.me/R/ti/p/@cmucoop" target="_blank" class="text-white text-decoration-none hover-link">
-                            @cmucoop
+                            cmucoopmember
                         </a>
                     </li>
 
@@ -230,7 +231,7 @@
                 <ul class="list-unstyled mb-0">
                     <li class="mb-2">
                         <a href="#" class="text-white text-decoration-none small hover-link">
-                            <i class="bi bi-box-seam small text-muted me-1"></i> จุดประชาสัมพันธ์ ร้านสหกรณ์มหาวิทยาลัยเชียงใหม่ 
+                            <i class="bi bi-box-seam small text-muted me-1"></i> จุดสมาชิกสัมพันธ์ ร้านสหกรณ์มหาวิทยาลัยเชียงใหม่ 
                             <br>
                             สาขาสำนักงานใหญ่
                         </a>
