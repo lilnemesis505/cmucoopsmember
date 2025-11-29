@@ -167,21 +167,33 @@
             <div class="p-4">
                 
                 {{-- รูปภาพเดิม --}}
+             {{-- รูปภาพเดิม --}}
                 @if(!empty($page->images))
-                    <p class="fw-bold mb-3">รูปภาพปัจจุบัน <span class="text-danger fw-normal small">(คลิกที่รูปเพื่อเลือกลบ)</span></p>
+                    <p class="fw-bold mb-3">รูปภาพปัจจุบัน <span class="text-danger fw-normal small">(กดที่ปุ่ม X เพื่อลบรูป)</span></p>
                     <div class="row g-3 mb-4">
                         @foreach($page->images as $index => $img)
                         <div class="col-6 col-md-3 col-lg-2">
-                            <label class="gallery-item w-100">
-                                <input type="checkbox" name="remove_images[]" value="{{ $img }}" class="gallery-checkbox">
-                                <img src="{{ $img }}?tr=w-200,h-200,c-maintain_ratio" alt="Image {{ $index }}">
-                                <div class="delete-overlay"><i class="bi bi-trash"></i> ลบรูปนี้</div>
-                            </label>
+                            <div class="position-relative border rounded p-1" id="img-box-{{ $index }}">
+                                <img src="{{ $img }}?tr=w-200,h-200,c-maintain_ratio" class="w-100 rounded" style="height: 120px; object-fit: cover;">
+                                
+                                {{-- ปุ่มลบ (Checkbox ซ่อนอยู่ข้างใน) --}}
+                                <div class="form-check position-absolute top-0 end-0 m-1">
+                                    <input class="btn-check" type="checkbox" name="remove_images[]" value="{{ $img }}" id="del_img_{{ $index }}" autocomplete="off" onchange="toggleDelete({{ $index }})">
+                                    <label class="btn btn-sm btn-danger rounded-circle shadow-sm p-0" for="del_img_{{ $index }}" style="width: 24px; height: 24px; line-height: 22px;">
+                                        <i class="bi bi-x"></i>
+                                    </label>
+                                </div>
+                                
+                                {{-- Overlay สีแดงเมื่อเลือก --}}
+                                <div id="overlay-{{ $index }}" class="position-absolute top-0 start-0 w-100 h-100 bg-danger bg-opacity-50 rounded d-none flex-column justify-content-center align-items-center text-white fw-bold" style="pointer-events: none;">
+                                    <i class="bi bi-trash-fill fs-3 mb-1"></i>
+                                    <span>ลบ</span>
+                                </div>
+                            </div>
                         </div>
                         @endforeach
                     </div>
                 @endif
-
                 <hr class="my-4 text-muted opacity-25">
 
                 {{-- อัปโหลดใหม่ --}}
@@ -244,6 +256,18 @@
             }
         });
     });
+    function toggleDelete(index) {
+        var checkbox = document.getElementById('del_img_' + index);
+        var overlay = document.getElementById('overlay-' + index);
+        
+        if (checkbox.checked) {
+            overlay.classList.remove('d-none');
+            overlay.classList.add('d-flex');
+        } else {
+            overlay.classList.add('d-none');
+            overlay.classList.remove('d-flex');
+        }
+    }
 </script>
 
 @endsection
