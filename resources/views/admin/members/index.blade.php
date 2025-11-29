@@ -365,17 +365,20 @@
             var button = event.relatedTarget;
             var id = button.getAttribute('data-id');
             var form = document.getElementById('editMemberForm');
-            form.action = '/admin/members/' + id; 
+
+            // --- [แก้ไขจุดนี้] ---
+            // สร้าง URL จาก Laravel Route โดยใส่ Placeholder ไว้ก่อน (:id)
+            var urlTemplate = "{{ route('admin.members.update', ':id') }}";
+            // แทนที่ :id ด้วย ID จริงๆ ของสมาชิก
+            form.action = urlTemplate.replace(':id', id);
+            // --------------------
 
             document.getElementById('modal_member_id').value = button.getAttribute('data-member-id');
             document.getElementById('modal_id_card').value = button.getAttribute('data-id-card');
             document.getElementById('modal_title_name').value = button.getAttribute('data-title-name');
             document.getElementById('modal_first_name').value = button.getAttribute('data-first-name');
             document.getElementById('modal_last_name').value = button.getAttribute('data-last-name');
-            
-            // ดึงค่าวันที่มาใส่ (ถ้ามีค่า ต้องเป็น format YYYY-MM-DD)
             document.getElementById('modal_registry_date').value = button.getAttribute('data-registry-date');
-            
             document.getElementById('modal_phone').value = button.getAttribute('data-phone');
             document.getElementById('modal_loc_addr').value = button.getAttribute('data-loc-addr');
             document.getElementById('modal_tambon').value = button.getAttribute('data-tambon');
