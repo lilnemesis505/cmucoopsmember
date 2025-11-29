@@ -1,6 +1,33 @@
 @extends('layouts.admin')
 
 @section('content')
+
+{{-- 1. CSS สำหรับหน้าจอ Loading --}}
+<style>
+    #loadingOverlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.6); /* พื้นหลังสีดำจางๆ */
+        z-index: 9999; /* อยู่บนสุด */
+        display: none; /* ซ่อนไว้ก่อน */
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: white;
+    }
+    .spinner-border {
+        width: 3rem; height: 3rem;
+    }
+</style>
+
+{{-- 2. HTML ส่วน Loading (ซ่อนอยู่) --}}
+<div id="loadingOverlay">
+    <div class="spinner-border text-light mb-3" role="status"></div>
+    <h4 class="fw-bold">กำลังนำเข้าข้อมูล...</h4>
+    <p>กรุณารอสักครู่ อย่าปิดหน้าต่างนี้</p>
+</div>
+
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="bi bi-people-fill"></i> จัดการข้อมูลสมาชิก</h2>
@@ -15,7 +42,8 @@
             <i class="bi bi-file-earmark-spreadsheet"></i> นำเข้าข้อมูลจาก Excel
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.members.import') }}" method="POST" enctype="multipart/form-data" class="row align-items-center">
+            {{-- เพิ่ม id="importForm" และ onsubmit="showLoading()" --}}
+            <form id="importForm" action="{{ route('admin.members.import') }}" method="POST" enctype="multipart/form-data" class="row align-items-center" onsubmit="return showLoading()">
                 @csrf
                 <div class="col-auto">
                     <label>เลือกไฟล์ Excel (.xlsx, .csv):</label>
@@ -24,7 +52,9 @@
                     <input type="file" name="file" class="form-control" required>
                 </div>
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-success">Upload & Import</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-cloud-upload"></i> Upload & Import
+                    </button>
                 </div>
                 <div class="col-auto">
                     <button type="button" class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#clearDataModal">
@@ -44,7 +74,7 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-   {{-- ตารางข้อมูล --}}
+   {{-- ตารางข้อมูล (คงเดิม) --}}
     <div class="card shadow-sm">
         <div class="card-header bg-white py-3">
             <form action="{{ route('admin.members.index') }}" method="GET">
@@ -350,6 +380,12 @@
 
 {{-- JavaScript --}}
 <script>
+    // 3. ฟังก์ชัน Loading Screen
+    function showLoading() {
+        document.getElementById('loadingOverlay').style.display = 'flex';
+        return true; // ยอมให้ Submit Form
+    }
+
     // ฟังก์ชันตั้งค่าวันที่ปัจจุบัน
     function setToday(elementId) {
         const today = new Date();
