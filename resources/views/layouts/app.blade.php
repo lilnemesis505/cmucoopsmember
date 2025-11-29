@@ -171,6 +171,12 @@
                             cmucoopmember
                         </a>
                     </li>
+                     <li class="mb-2">
+                        <span class="text-white-50 small me-2">Line ID:</span>
+                        <a href="https://line.me/R/ti/p/@cmucoop" target="_blank" class="text-white text-decoration-none hover-link">
+                            cmucoop
+                        </a>
+                    </li>
 
                     {{-- อีเมล --}}
                     <li class="mb-2">
