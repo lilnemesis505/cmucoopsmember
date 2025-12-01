@@ -160,7 +160,7 @@
 
             {{-- จัดการสิทธิพิเศษ --}}
             <a href="{{ route('admin.promotions.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.promotions.*') ? 'active' : '' }}">
-                <i class="bi bi-newspaper"></i> จัดการสิทธิพิเศษ
+                <i class="bi bi-newspaper"></i> จัดการสิทธิประโยชน์
             </a>
 
             {{-- จัดการเนื้อหาหน้าเว็บ --}}
