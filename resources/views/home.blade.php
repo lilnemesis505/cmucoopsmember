@@ -2,58 +2,34 @@
 
 @section('content')
 
-{{-- เรียกใช้ Google Fonts (Prompt) เพื่อความสวยงาม --}}
+{{-- เรียกใช้ Google Fonts --}}
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap');
 
-    body {
-        font-family: 'Prompt', sans-serif;
-    }
+    body { font-family: 'Prompt', sans-serif; }
 
-    /* ตกแต่งหัวข้อ Section */
     .section-title {
-        position: relative;
-        display: inline-block;
-        font-weight: 700;
-        color: #2c3e50;
-        margin-bottom: 1.5rem;
+        position: relative; display: inline-block; font-weight: 700; color: #2c3e50; margin-bottom: 1.5rem;
     }
     .section-title::after {
-        content: '';
-        position: absolute;
-        width: 50%;
-        height: 4px;
-        background: linear-gradient(to right, #0d6efd, #0dcaf0); /* เส้นไล่สีฟ้า */
-        bottom: -8px;
-        left: 0;
-        border-radius: 2px;
+        content: ''; position: absolute; width: 50%; height: 4px;
+        background: linear-gradient(to right, #0d6efd, #0dcaf0);
+        bottom: -8px; left: 0; border-radius: 2px;
     }
 
-    /* เอฟเฟกต์การ์ดข่าวสารตอนเอาเมาส์ชี้ */
-    .hover-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: none;
-    }
-    .hover-card:hover {
-        transform: translateY(-5px); /* ลอยขึ้น */
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-    }
+    .hover-card { transition: transform 0.3s ease, box-shadow 0.3s ease; border: none; }
+    .hover-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
 
-    /* ปรับแต่งปุ่ม */
-    .btn-custom {
-        border-radius: 50px;
-        padding: 8px 25px;
-        font-weight: 500;
-        transition: all 0.3s;
-    }
-    .btn-custom:hover {
-        transform: scale(1.05);
-    }
+    .btn-custom { border-radius: 50px; padding: 8px 25px; font-weight: 500; transition: all 0.3s; }
+    .btn-custom:hover { transform: scale(1.05); }
+    
+    /* เพิ่ม style ให้เมาส์เป็นรูปแว่นขยายตอนชี้รูป banner */
+    .zoom-cursor { cursor: zoom-in; }
 </style>
 
 {{-- ส่วน Banner สไลด์ --}}
 <section class="banner-section mt-4">
-    <div class="row g-3"> {{-- g-3 เพื่อลดช่องว่างระหว่างคอลัมน์เล็กน้อย --}}
+    <div class="row g-3">
         
         {{-- 1. Main Banner --}}
         <div class="col-lg-8">
@@ -63,9 +39,10 @@
                         @forelse ($slides as $index => $slide)
                             <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
                                 <img src="{{ $slide->image_url }}?tr=w-800,h-400,c-maintain_ratio" 
-                                     class="d-block w-100" 
+                                     class="d-block w-100 zoom-cursor" 
                                      alt="Slide {{ $index + 1 }}"
-                                     style="height: 400px; object-fit: cover;"> 
+                                     style="height: 400px; object-fit: cover;"
+                                     onclick="showImagePopup('{{ $slide->image_url }}')"> 
                             </div>
                         @empty
                             <div class="carousel-item active">
@@ -84,27 +61,29 @@
             </div>
         </div>
 
-        {{-- 2. Side Banners --}}
+        {{-- 2. Side Banners (เพิ่ม onclick ให้เด้ง Popup) --}}
         <div class="col-lg-4">
             <div class="d-flex flex-column gap-3 h-100">
                 <img src="{{ $banner1 }}?tr=w-400,h-200,c-maintain_ratio" 
-                     class="img-fluid rounded-3 w-100 shadow-sm hover-card" 
+                     class="img-fluid rounded-3 w-100 shadow-sm hover-card zoom-cursor" 
                      alt="Side Banner 1"
-                     style="height: 190px; object-fit: cover; cursor: pointer;">
+                     style="height: 190px; object-fit: cover;"
+                     onclick="showImagePopup('{{ $banner1 }}')"> {{-- คลิกแล้วส่ง URL รูปเต็มไป --}}
 
                 <img src="{{ $banner2 }}?tr=w-400,h-200,c-maintain_ratio" 
-                     class="img-fluid rounded-3 w-100 shadow-sm hover-card" 
+                     class="img-fluid rounded-3 w-100 shadow-sm hover-card zoom-cursor" 
                      alt="Side Banner 2"
-                     style="height: 190px; object-fit: cover; cursor: pointer;">
+                     style="height: 190px; object-fit: cover;"
+                     onclick="showImagePopup('{{ $banner2 }}')">
             </div>
         </div>
         
     </div>
 </section>
 
-<div class="my-5"></div> {{-- เว้นระยะ --}}
+<div class="my-5"></div>
 
-{{-- 3. ส่วนสิทธิพิเศษ--}}
+{{-- 3. ส่วนสิทธิพิเศษ --}}
 <section class="promotion-section">
     @foreach($promotions as $index => $promo)
         @php
@@ -125,15 +104,12 @@
             </div>
             <div class="col-md-7">
                 <div class="card-body p-4 p-lg-5">
-                    {{-- หัวข้อแบบมีขีดสีด้านหน้า --}}
                     <h2 class="card-title fw-bold text-primary mb-3" style="border-left: 5px solid #0d6efd; padding-left: 15px;">
                         {{ $promo->main_title }}
                     </h2>
-                    
                     <p class="card-text text-secondary fs-5" style="line-height: 1.8; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                         {{ $promo->subtitle }}
                     </p>
-                    
                     <a href="{{ $link }}" class="btn btn-primary btn-custom mt-3 shadow-sm">
                         ดูรายละเอียดเพิ่มเติม <i class="bi bi-arrow-right ms-1"></i>
                     </a>
@@ -150,7 +126,7 @@
 <section class="news-section mb-5">
     <div class="d-flex justify-content-between align-items-end mb-4">
         <h2 class="section-title h1 m-0">ข่าวสารและกิจกรรม</h2>
-        <a href="#" class="text-decoration-none text-muted small hover-link">ดูทั้งหมด <i class="bi bi-chevron-right"></i></a>
+        {{-- <a href="#" class="text-decoration-none text-muted small hover-link">ดูทั้งหมด <i class="bi bi-chevron-right"></i></a> --}}
     </div>
     
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -165,7 +141,6 @@
                              class="card-img-top" width="100%" height="225" 
                              alt="{{ $event->title }}" style="object-fit: cover;">
                         
-                        {{-- วันที่ (ถ้ามี field วันที่) --}}
                         @if(isset($event->created_at))
                         <div class="position-absolute bottom-0 start-0 bg-white px-3 py-1 m-2 rounded-pill shadow-sm small fw-bold text-primary">
                             <i class="bi bi-calendar3"></i> {{ $event->created_at->format('d M Y') }}
@@ -192,5 +167,35 @@
         @endforeach
     </div>
 </section>
+
+{{-- MODAL POPUP สำหรับแสดงรูปใหญ่ --}}
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-transparent border-0 shadow-none">
+            <div class="modal-body p-0 text-center position-relative">
+                {{-- ปุ่มปิด --}}
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" 
+                        data-bs-dismiss="modal" aria-label="Close" 
+                        style="z-index: 10; background-color: rgba(0,0,0,0.5); padding: 10px; border-radius: 50%;">
+                </button>
+                {{-- รูปภาพใหญ่ --}}
+                <img id="popupImage" src="" class="img-fluid rounded shadow" style="max-height: 90vh;">
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Script สั่งเปิด Popup --}}
+<script>
+    function showImagePopup(fullImageUrl) {
+        // ลบพารามิเตอร์ย่อรูปออก (ถ้ามี) เพื่อให้ได้รูปไซส์จริง
+        // เช่น ?tr=w-400... จะถูกตัดทิ้ง
+        var cleanUrl = fullImageUrl.split('?')[0]; 
+        
+        document.getElementById('popupImage').src = cleanUrl;
+        var myModal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+        myModal.show();
+    }
+</script>
 
 @endsection
