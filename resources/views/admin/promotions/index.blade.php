@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h2 class="mb-4"><i class="bi bi-megaphone-fill"></i> จัดการข้อมูลประชาสัมพันธ์</h2>
+    <h2 class="mb-4"><i class="bi bi-megaphone-fill"></i> จัดการปกสิทธิประโยชน์</h2>
 
     {{-- Form คลุมทั้งหมด --}}
     <form action="{{ route('admin.promotions.update_all') }}" method="POST" enctype="multipart/form-data">

@@ -117,7 +117,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="mb-1 fw-bold text-dark">
-                <i class="bi bi-pencil-fill text-primary"></i> แก้ไขหน้า: <span class="text-primary text-capitalize">{{ $key }}</span>
+                <i class="bi bi-pencil-fill text-primary"></i> แก้ไขเนื้อหา</span>
             </h2>
             <p class="text-muted mb-0">ปรับแต่งเนื้อหา จัดรูปแบบข้อความ และจัดการรูปภาพ</p>
         </div>
@@ -162,7 +162,7 @@
         {{-- SECTION 3: แกลเลอรีรูปภาพ --}}
         <div class="card-section">
             <div class="section-header">
-                <i class="bi bi-images text-success"></i> แกลเลอรีรูปภาพ (ท้ายเว็บ)
+                <i class="bi bi-images text-success"></i> รูปภาพ (ท้ายเว็บ)
             </div>
             <div class="p-4">
                 
