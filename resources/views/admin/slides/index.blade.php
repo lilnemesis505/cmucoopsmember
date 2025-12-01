@@ -19,7 +19,7 @@
                 <div class="col-md-8">
                     <label class="form-label fw-bold">อัปโหลดสไลด์ใหม่:</label>
                     <input type="file" class="form-control" name="image" required accept="image/*">
-                    <div class="form-text">แนะนำขนาด 800x400px</div>
+                    <div class="form-text">แนะนำขนาด 1920x1080px</div>
                 </div>
                 <div class="col-md-4">
                     <button type="submit" class="btn btn-primary w-100">
