@@ -104,7 +104,7 @@
 
 <div class="my-5"></div> {{-- เว้นระยะ --}}
 
-{{-- 3. ส่วนสมาชิกและผู้ถือหุ้น (Promotions) --}}
+{{-- 3. ส่วนสิทธิพิเศษ--}}
 <section class="promotion-section">
     @foreach($promotions as $index => $promo)
         @php

@@ -22,7 +22,7 @@
         <div class="card shadow-sm h-100">
             <div class="card-body text-center">
                 <i class="bi bi-megaphone-fill display-4 text-info mb-3"></i>
-                <h5>จัดการประชาสัมพันธ์</h5>
+                <h5>จัดการสิทธิประโยชน์</h5>
                 <p class="text-muted small">แก้ไขรูปและข้อความสิทธิประโยชน์</p>
                 {{-- ลิงก์ไปยัง Route ที่เราเพิ่งสร้าง --}}
                 <a href="{{ route('admin.promotions.index') }}" class="btn btn-outline-info btn-sm">จัดการ</a>
