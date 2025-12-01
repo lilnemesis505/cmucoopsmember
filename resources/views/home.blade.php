@@ -23,7 +23,7 @@
     .btn-custom { border-radius: 50px; padding: 8px 25px; font-weight: 500; transition: all 0.3s; }
     .btn-custom:hover { transform: scale(1.05); }
     
-    /* เพิ่ม style ให้เมาส์เป็นรูปแว่นขยายตอนชี้รูป banner */
+    /* Cursor เป็นรูปแว่นขยาย */
     .zoom-cursor { cursor: zoom-in; }
 </style>
 
@@ -31,13 +31,14 @@
 <section class="banner-section mt-4">
     <div class="row g-3">
         
-        {{-- 1. Main Banner --}}
+        {{-- 1. Main Banner (สไลด์หลัก) --}}
         <div class="col-lg-8">
             <div class="main-banner shadow-sm rounded-3 overflow-hidden">
                 <div id="mainBannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
                     <div class="carousel-inner">
                         @forelse ($slides as $index => $slide)
                             <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                {{-- เพิ่ม onclick และ class zoom-cursor --}}
                                 <img src="{{ $slide->image_url }}?tr=w-800,h-400,c-maintain_ratio" 
                                      class="d-block w-100 zoom-cursor" 
                                      alt="Slide {{ $index + 1 }}"
@@ -61,14 +62,14 @@
             </div>
         </div>
 
-        {{-- 2. Side Banners (เพิ่ม onclick ให้เด้ง Popup) --}}
+        {{-- 2. Side Banners (แบนเนอร์ข้าง) --}}
         <div class="col-lg-4">
             <div class="d-flex flex-column gap-3 h-100">
                 <img src="{{ $banner1 }}?tr=w-400,h-200,c-maintain_ratio" 
                      class="img-fluid rounded-3 w-100 shadow-sm hover-card zoom-cursor" 
                      alt="Side Banner 1"
                      style="height: 190px; object-fit: cover;"
-                     onclick="showImagePopup('{{ $banner1 }}')"> {{-- คลิกแล้วส่ง URL รูปเต็มไป --}}
+                     onclick="showImagePopup('{{ $banner1 }}')"> 
 
                 <img src="{{ $banner2 }}?tr=w-400,h-200,c-maintain_ratio" 
                      class="img-fluid rounded-3 w-100 shadow-sm hover-card zoom-cursor" 
@@ -96,10 +97,12 @@
         <div class="row g-0 align-items-center">
             <div class="col-md-5">
                 <div class="p-2">
+                    {{-- เพิ่ม onclick ให้รูป Promotion ด้วยเผื่ออยากดูรูปใหญ่ --}}
                     <img src="{{ $promo->image_url }}?tr=w-600,h-400" 
-                         class="img-fluid rounded-3 w-100" 
+                         class="img-fluid rounded-3 w-100 zoom-cursor" 
                          alt="{{ $promo->main_title }}"
-                         style="height: 280px; object-fit: cover;">
+                         style="height: 280px; object-fit: cover;"
+                         onclick="showImagePopup('{{ $promo->image_url }}')">
                 </div>
             </div>
             <div class="col-md-7">
@@ -126,7 +129,6 @@
 <section class="news-section mb-5">
     <div class="d-flex justify-content-between align-items-end mb-4">
         <h2 class="section-title h1 m-0">ข่าวสารและกิจกรรม</h2>
-        {{-- <a href="#" class="text-decoration-none text-muted small hover-link">ดูทั้งหมด <i class="bi bi-chevron-right"></i></a> --}}
     </div>
     
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -168,9 +170,9 @@
     </div>
 </section>
 
-{{-- MODAL POPUP สำหรับแสดงรูปใหญ่ --}}
+{{-- MODAL POPUP (Lightbox) --}}
 <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl"> {{-- ใช้ modal-xl เพื่อให้กว้างเต็มตา --}}
         <div class="modal-content bg-transparent border-0 shadow-none">
             <div class="modal-body p-0 text-center position-relative">
                 {{-- ปุ่มปิด --}}
@@ -179,20 +181,26 @@
                         style="z-index: 10; background-color: rgba(0,0,0,0.5); padding: 10px; border-radius: 50%;">
                 </button>
                 {{-- รูปภาพใหญ่ --}}
-                <img id="popupImage" src="" class="img-fluid rounded shadow" style="max-height: 90vh;">
+                <img id="popupImage" src="" class="img-fluid rounded shadow" style="max-height: 90vh; width: auto;">
             </div>
         </div>
     </div>
 </div>
 
-{{-- Script สั่งเปิด Popup --}}
+{{-- Script จัดการ Popup และความคมชัด --}}
 <script>
     function showImagePopup(fullImageUrl) {
-        // ลบพารามิเตอร์ย่อรูปออก (ถ้ามี) เพื่อให้ได้รูปไซส์จริง
-        // เช่น ?tr=w-400... จะถูกตัดทิ้ง
-        var cleanUrl = fullImageUrl.split('?')[0]; 
+        // 1. ลบ Parameter ย่อรูปเดิมออก (เช่น ?tr=w-400...)
+        var baseUrl = fullImageUrl.split('?')[0]; 
         
-        document.getElementById('popupImage').src = cleanUrl;
+        // 2. เติม Parameter ใหม่เพื่อบังคับขนาด FHD (Width: 1920px)
+        // ImageKit จะทำการ Resize ให้ชัดเป๊ะที่ 1920px
+        var fhdUrl = baseUrl + "?tr=w-1920";
+
+        // 3. ใส่ URL ลงใน Modal
+        document.getElementById('popupImage').src = fhdUrl;
+        
+        // 4. เปิด Modal
         var myModal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
         myModal.show();
     }
