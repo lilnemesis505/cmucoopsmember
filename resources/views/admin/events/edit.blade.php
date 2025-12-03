@@ -111,8 +111,7 @@
        <form action="{{ route('admin.events.destroy', $key) }}" method="POST" onsubmit="return confirmDelete()">
     @csrf
     @method('DELETE') <button type="submit" class="btn btn-outline-danger w-100">
-        <i class="bi bi-trash"></i> ยืนยันลบ
-    </button>
+        <i class="bi bi-trash"></i> ลบกิจกรรม
 </form>
     </div>
 </div>
