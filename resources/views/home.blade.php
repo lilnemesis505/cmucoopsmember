@@ -98,7 +98,7 @@
             <div class="col-md-5">
                 <div class="p-2">
                     {{-- เพิ่ม onclick ให้รูป Promotion ด้วยเผื่ออยากดูรูปใหญ่ --}}
-                    <img src="{{ $promo->image_url }}?tr=w-600,h-400" 
+                    <img src="{{ $promo->image_url }}?tr=w-800,h-400" 
                          class="img-fluid rounded-3 w-100 zoom-cursor" 
                          alt="{{ $promo->main_title }}"
                          style="height: 280px; object-fit: cover;"
@@ -129,47 +129,79 @@
 <section class="news-section mb-5">
     <div class="d-flex justify-content-between align-items-end mb-4">
         <h2 class="section-title h1 m-0">ข่าวสารและกิจกรรม</h2>
+        
+        {{-- ปุ่มเลื่อนซ้าย-ขวา --}}
+        {{-- แสดงปุ่มเฉพาะเมื่อมี Event มากกว่า 6 รายการ (คือมีมากกว่า 1 หน้า) --}}
+        @if($events->count() > 6)
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary rounded-circle shadow-sm" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev" style="width: 45px; height: 45px;">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="btn btn-outline-secondary rounded-circle shadow-sm" type="button" data-bs-target="#newsCarousel" data-bs-slide="next" style="width: 45px; height: 45px;">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+        @endif
     </div>
     
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach ($events as $event)
+    {{-- Carousel --}}
+<div id="newsCarousel" class="carousel slide" data-bs-interval="false">       
+     <div class="carousel-inner">
             @php
-                $coverUrl = $event->coverImage->image_url ?? 'https://via.placeholder.com/400x225.png?text=Event+Cover';
+                // ใช้ค่า $events ที่ส่งมาจาก Controller (ซึ่งถูกแก้แล้วให้ดึงมาทั้งหมด)
+                $chunks = $events->chunk(6); 
             @endphp
-            <div class="col">
-                <div class="card h-100 shadow-sm hover-card rounded-4 overflow-hidden bg-white">
-                    <div class="position-relative">
-                        <img src="{{ $coverUrl }}?tr=w-400,h-250,c-auto" 
-                             class="card-img-top" width="100%" height="225" 
-                             alt="{{ $event->title }}" style="object-fit: cover;">
-                        
-                        @if(isset($event->created_at))
-                        <div class="position-absolute bottom-0 start-0 bg-white px-3 py-1 m-2 rounded-pill shadow-sm small fw-bold text-primary">
-                            <i class="bi bi-calendar3"></i> {{ $event->created_at->format('d M Y') }}
-                        </div>
-                        @endif
-                    </div>
-                    
-                    <div class="card-body d-flex flex-column p-4">
-                        <h5 class="card-title fw-bold text-dark mb-3" style="line-height: 1.5;">
-                            {{ Str::limit($event->title ?? 'Event ' . $event->key, 50) }}
-                        </h5>
-                        <p class="card-text text-muted mb-4 flex-grow-1" style="font-size: 0.95rem;">
-                            {{ Str::limit($event->description, 90) }}
-                        </p>
-                        
-                        <div class="mt-auto pt-3 border-top">
-                            <a href="{{ route('event.show', $event->key) }}" class="text-decoration-none fw-bold text-primary">
-                                อ่านต่อ <i class="bi bi-arrow-right-short"></i>
-                            </a>
-                        </div>
+
+            @forelse ($chunks as $index => $chunk)
+                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                        @foreach ($chunk as $event)
+                            @php
+                                // เช็คว่ามีความสัมพันธ์ coverImage หรือไม่ ถ้าไม่มีให้ใช้รูป placeholder
+                                $coverUrl = optional($event->coverImage)->image_url ?? 'https://via.placeholder.com/400x225.png?text=No+Image';
+                            @endphp
+                            <div class="col">
+                                <div class="card h-100 shadow-sm hover-card rounded-4 overflow-hidden bg-white border-0">
+                                    <div class="position-relative">
+                                        <img src="{{ $coverUrl }}?tr=w-400,h-250,c-auto" 
+                                             class="card-img-top" width="100%" height="225" 
+                                             alt="{{ $event->title }}" style="object-fit: cover;">
+                                        
+                                        @if($event->event_date)
+                                        <div class="position-absolute bottom-0 start-0 bg-white px-3 py-1 m-2 rounded-pill shadow-sm small fw-bold text-primary">
+                                            <i class="bi bi-calendar3"></i> {{ \Carbon\Carbon::parse($event->event_date)->format('d M Y') }}
+                                        </div>
+                                        @endif
+                                    </div>
+                                    
+                                    <div class="card-body d-flex flex-column p-4">
+                                        <h5 class="card-title fw-bold text-dark mb-3" style="line-height: 1.5; height: 3em; overflow: hidden;">
+                                            {{ Str::limit($event->title ?? 'Event ' . $event->key, 50) }}
+                                        </h5>
+                                        <p class="card-text text-muted mb-4 flex-grow-1" style="font-size: 0.95rem; height: 4.5em; overflow: hidden;">
+                                            {{ Str::limit($event->description ?? 'ไม่มีรายละเอียด', 90) }}
+                                        </p>
+                                        
+                                        <div class="mt-auto pt-3 border-top">
+                                            <a href="{{ route('event.show', $event->key) }}" class="text-decoration-none fw-bold text-primary stretched-link">
+                                                อ่านต่อ <i class="bi bi-arrow-right-short"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
-            </div>
-        @endforeach
+            @empty
+                <div class="alert alert-light text-center py-5 border">
+                    ยังไม่มีข่าวสารในขณะนี้
+                </div>
+            @endforelse
+
+        </div>
     </div>
 </section>
-
 {{-- MODAL POPUP (Lightbox) --}}
 <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl"> {{-- ใช้ modal-xl เพื่อให้กว้างเต็มตา --}}
@@ -189,21 +221,32 @@
 
 {{-- Script จัดการ Popup และความคมชัด --}}
 <script>
+    // 1. ฟังก์ชันแสดง Popup (ต้องแยกออกมาเป็นอิสระ)
     function showImagePopup(fullImageUrl) {
-        // 1. ลบ Parameter ย่อรูปเดิมออก (เช่น ?tr=w-400...)
+        // ลบ Parameter ย่อรูปเดิมออก
         var baseUrl = fullImageUrl.split('?')[0]; 
         
-        // 2. เติม Parameter ใหม่เพื่อบังคับขนาด FHD (Width: 1920px)
-        // ImageKit จะทำการ Resize ให้ชัดเป๊ะที่ 1920px
+        // เติม Parameter ใหม่เพื่อบังคับขนาด FHD
         var fhdUrl = baseUrl + "?tr=w-1920";
 
-        // 3. ใส่ URL ลงใน Modal
+        // ใส่ URL ลงใน Modal
         document.getElementById('popupImage').src = fhdUrl;
         
-        // 4. เปิด Modal
+        // เปิด Modal
         var myModal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
         myModal.show();
-    }
+    } // <--- ต้องปิดปีกกาตรงนี้ก่อนครับ
+
+    // 2. สคริปต์เริ่มการทำงานของ Carousel (ทำงานเมื่อหน้าเว็บโหลดเสร็จ)
+    document.addEventListener('DOMContentLoaded', function () {
+        var myCarousel = document.querySelector('#newsCarousel');
+        if (myCarousel) {
+            var carousel = new bootstrap.Carousel(myCarousel, {
+                interval: false, // ปิดเลื่อนเองอัตโนมัติ
+                wrap: true       // วนลูปได้
+            });
+        }
+    });
 </script>
 
 @endsection

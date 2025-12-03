@@ -44,10 +44,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('events/sync', [EventController::class, 'syncFromImageKit'])->name('events.sync');
     Route::get('events', [EventController::class, 'index'])->name('events.index');
     // หน้าจัดการ event รายตัว (ใช้ {key} รับค่า ev1, ev2)
+    Route::delete('events/{key}/delete', [EventController::class, 'destroyEvent'])->name('events.destroy');
     Route::get('events/{key}', [EventController::class, 'edit'])->name('events.edit');
     Route::post('events/{key}/details', [EventController::class, 'updateDetails'])->name('events.update_details');
     Route::post('events/{key}/upload', [EventController::class, 'uploadImage'])->name('events.upload');
-    Route::delete('events/image/{id}', [EventController::class, 'deleteImage'])->name('events.delete_image');
+    Route::delete('events/image/{id}', [EventController::class, 'deleteImage'])->name('events.delete_image');    Route::post('events/create', [EventController::class, 'create'])->name('events.create');
     // ฟังก์ชัน Upload Excel (ควรซ่อนไว้ หรือใส่ Middleware auth เพื่อให้ Admin ใช้เท่านั้น)
     Route::post('/import-members', [MemberCheckController::class, 'import'])->name('import.members');
     Route::delete('members/truncate', [App\Http\Controllers\Admin\MemberController::class, 'truncate'])->name('members.truncate');

@@ -100,5 +100,26 @@
             </div>
         @endif
     </div>
+    <div class="card shadow-sm mt-4 border-danger">
+    <div class="card-header bg-danger text-white py-3">
+    </div>
+    <div class="card-body">
+        <p class="text-muted small">
+            ระบบจะทำการลบข้อมูลของ <strong>{{ $key }}</strong> ทั้งหมด (หัวข้อ, รายละเอียด, รูปภาพ) 
+        </p>
+
+       <form action="{{ route('admin.events.destroy', $key) }}" method="POST" onsubmit="return confirmDelete()">
+    @csrf
+    @method('DELETE') <button type="submit" class="btn btn-outline-danger w-100">
+        <i class="bi bi-trash"></i> ยืนยันลบ
+    </button>
+</form>
+    </div>
+</div>
+<script>
+    function confirmDelete() {
+        return confirm("คุณแน่ใจหรือไม่ที่จะลบ {{ $key }}?\n\nการกระทำนี้ไม่สามารถเรียกคืนได้ และข้อมูลลำดับถัดไปจะถูกเลื่อนขึ้นมาแทนที่ทันที");
+    }
+</script>
 </div>
 @endsection

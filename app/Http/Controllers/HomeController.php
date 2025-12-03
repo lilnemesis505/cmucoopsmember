@@ -11,27 +11,31 @@ use App\Models\Promotion; // เรียกใช้ Model Promotion
 
 class HomeController extends Controller
 {
-    public function index(Request $request)
-    {
-        // 1. ดึงข้อมูล Slide และ Banner
-        $slides = Slide::orderBy('id', 'asc')->get();
-        $banners = Banner::orderBy('id', 'asc')->limit(2)->get();
+   public function index(Request $request)
+{
+    // 1. ดึงข้อมูล Slide และ Banner
+    $slides = Slide::orderBy('id', 'asc')->get();
+    $banners = Banner::orderBy('id', 'asc')->limit(2)->get();
 
-        // เตรียม Banner URL (ถ้าไม่มีใส่ Placeholder)
-        $banner1 = $banners->get(0)->image_url ?? 'https://via.placeholder.com/400x200.png?text=Side+Banner+1';
-        $banner2 = $banners->get(1)->image_url ?? 'https://via.placeholder.com/400x200.png?text=Side+Banner+2';
+    $banner1 = $banners->get(0)->image_url ?? 'https://via.placeholder.com/400x200.png?text=Side+Banner+1';
+    $banner2 = $banners->get(1)->image_url ?? 'https://via.placeholder.com/400x200.png?text=Side+Banner+2';
 
-        // 2. ดึงข้อมูล Event พร้อมรูปปก
-        $events = Event::whereIn('key', ['ev1', 'ev2', 'ev3', 'ev4', 'ev5', 'ev6'])
-                       ->with('coverImage')
-                       ->get();
+    // --- [จุดที่แก้ไข] ---
+    // ดึง Event ทั้งหมดที่มี พร้อมรูปปก
+    $eventsRaw = Event::with('coverImage')->get();
 
-        // 3. [เพิ่มใหม่] ดึงข้อมูล Promotion ทั้งหมด
-        $promotions = Promotion::all();
+    // เรียงลำดับเอง เพราะถ้าใช้ Database sort 'ev10' จะมาก่อน 'ev2'
+    $events = $eventsRaw->sortBy(function($event) {
+        // ตัดคำว่า 'ev' ออกแล้วแปลงเป็นตัวเลขเพื่อเรียงลำดับ
+        return (int) str_replace('ev', '', $event->key);
+    });
+    // ------------------
 
-        // ส่งตัวแปร promotions ไปที่หน้า home ด้วย
-        return view('home', compact('slides', 'banner1', 'banner2', 'events', 'promotions'));
-    }
+    // 3. ดึงข้อมูล Promotion
+    $promotions = Promotion::all();
+
+    return view('home', compact('slides', 'banner1', 'banner2', 'events', 'promotions'));
+}
 
    public function member()
 {
