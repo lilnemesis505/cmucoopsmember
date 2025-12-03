@@ -5,7 +5,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 class="mb-0 fw-bold"><i class="bi bi-calendar-week"></i> จัดการข่าวสารและกิจกรรม</h2>
-        <p class="text-muted small mb-0">รายการกิจกรรมทั้งหมดในระบบ (เรียงตามลำดับ)</p>
+        <p class="text-muted small mb-0">รายการกิจกรรมทั้งหมดในระบบ (เรียงลำดับตาม ev ข้างบน3 ข้างล่าง3)</p>
     </div>
     
     <div>
