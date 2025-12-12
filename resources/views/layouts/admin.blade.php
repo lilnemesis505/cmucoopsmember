@@ -9,7 +9,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<style>
+    <style>
         body { 
             font-family: 'Prompt', sans-serif;
             background-color: #f3f6f9;
@@ -47,7 +47,6 @@
         }
 
         .sidebar-logo img {
-            /* ✅ แก้ตรงนี้: เพิ่มขนาดรูปให้ใหญ่ขึ้น (จาก 45px เป็น 60px) */
             height: 60px; 
             width: auto;
             transition: transform 0.3s ease;
@@ -139,7 +138,6 @@
     {{-- Sidebar --}}
     <div id="sidebar-wrapper">
         
-        {{-- แก้ไขส่วนแสดงโลโก้ --}}
         <div class="sidebar-logo">
             <a href="{{ route('home') }}" target="_blank" title="ไปที่หน้าเว็บไซต์">
                 <img src="https://ik.imagekit.io/cmucoopsmember/icon" alt="CMU X-CADEMY">
@@ -148,43 +146,44 @@
 
         <div class="list-group list-group-flush mt-2">
             
-            {{-- Dashboard --}}
+            {{-- 1. Dashboard --}}
             <a href="{{ route('admin.dashboard') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-grid-fill"></i> เมนูหลัก
             </a>
 
-            {{-- จัดการ Banner --}}
+            {{-- 2. จัดการ Banner --}}
             <a href="{{ route('admin.slides.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.slides.*') ? 'active' : '' }}">
                 <i class="bi bi-images"></i> จัดการแบนเนอร์
             </a>
 
-            {{-- จัดการสิทธิพิเศษ --}}
+            {{-- 3. จัดการสิทธิพิเศษ (Promotions) --}}
             <a href="{{ route('admin.promotions.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.promotions.*') ? 'active' : '' }}">
-                <i class="bi bi-newspaper"></i> จัดการสิทธิประโยชน์
+                <i class="bi bi-gift-fill"></i> จัดการสิทธิพิเศษ
             </a>
 
-            {{-- จัดการเนื้อหาหน้าเว็บ --}}
-            <a href="{{ route('admin.pages.edit', 'member') }}" class="list-group-item list-group-item-action {{ request()->is('admin/pages/member/edit') ? 'active' : '' }}">
-                <i class="bi bi-list"></i> แก้ไขหน้า 1
+            {{-- 4. [ใหม่] หน้าผู้ถือหุ้น (Board) --}}
+            <a href="{{ route('admin.board.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.board.*') ? 'active' : '' }}">
+                <i class="bi bi-layers-fill"></i> หน้าผู้ร่วมโครงการ
             </a>
 
-            <a href="{{ route('admin.pages.edit', 'board') }}" class="list-group-item list-group-item-action {{ request()->is('admin/pages/board/edit') ? 'active' : '' }}">
-                <i class="bi bi-list"></i> แก้ไขหน้า 2
-            </a>
-
-            {{-- จัดการข่าวสาร --}}
+            {{-- 5. ระบบข่าวสาร (Events) --}}
             <a href="{{ route('admin.events.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.events.*') ? 'active' : '' }}">
                 <i class="bi bi-calendar-event"></i> ระบบข่าวสาร
             </a>
 
-            {{-- จัดการสมาชิก --}}
+            {{-- 6. แก้ไขหน้าสมาชิก --}}
+            <a href="{{ route('admin.pages.edit', 'member') }}" class="list-group-item list-group-item-action {{ request()->is('admin/pages/member/edit') ? 'active' : '' }}">
+                <i class="bi bi-file-earmark-text"></i> แก้ไขหน้าสมาชิก
+            </a>
+
+            {{-- 7. ฐานข้อมูลสมาชิก --}}
             <a href="{{ route('admin.members.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('admin.members.*') ? 'active' : '' }}">
-                <i class="bi bi-people-fill"></i> สมาชิก
+                <i class="bi bi-people-fill"></i> ฐานข้อมูลสมาชิก
             </a>
             
         </div>
         
-        {{-- Logout --}}
+        {{-- ส่วน Logout (ที่น่าจะหายไป) --}}
         <div class="mt-auto p-3 border-top">
             <a href="{{ route('admin.logout') }}" class="list-group-item list-group-item-action text-danger">
                 <i class="bi bi-box-arrow-right text-danger"></i> ออกจากระบบ
