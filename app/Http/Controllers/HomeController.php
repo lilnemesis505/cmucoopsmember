@@ -44,11 +44,17 @@ class HomeController extends Controller
     return view('pages.member', compact('page')); 
 }
 
-    public function board()
+   public function board()
     {
-        // ดึงข้อมูลหน้า board
-        $page = \App\Models\PageContent::where('page_key', 'board')->first();
-        return view('pages.board', compact('page'));
+        $posts = \App\Models\BoardPost::latest()->get();
+        return view('pages.board_index', compact('posts'));
+    }
+
+    // หน้า Board รายละเอียด (Show)
+    public function showBoard($id)
+    {
+        $post = \App\Models\BoardPost::findOrFail($id);
+        return view('pages.board_show', compact('post'));
     }
 
     public function showEvent($key)

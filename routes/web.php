@@ -13,6 +13,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/member', [HomeController::class, 'member'])->name('member');
 Route::get('/board', [HomeController::class, 'board'])->name('board');
+Route::get('/board/{id}', [HomeController::class, 'showBoard'])->name('board.show');
 // รับค่า {key} เช่น /event/ev1, /event/ev2 ระบบจะรู้เองว่าเป็นงานไหน
 Route::get('/event/{key}', [HomeController::class, 'showEvent'])->name('event.show');
 Route::get('/setup-data', [HomeController::class, 'setupData']);
@@ -61,6 +62,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // จัดการเนื้อหาหน้าเว็บ (Member, Board)
     Route::get('pages/{key}/edit', [App\Http\Controllers\Admin\PageContentController::class, 'edit'])->name('pages.edit');
     Route::put('pages/{key}', [App\Http\Controllers\Admin\PageContentController::class, 'update'])->name('pages.update');
-
+    Route::resource('board', App\Http\Controllers\Admin\BoardPostController::class);
 });
+
     
