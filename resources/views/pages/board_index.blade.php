@@ -3,7 +3,7 @@
 @section('content')
 <div class="container my-5">
     <div class="text-center mb-5">
-        <h2 class="fw-bold text-success"><i class="bi bi-layers-fill"></i> สิทธิประโยชน์ผู้ถือหุ้น</h2>
+        <h2 class="fw-bold text-success"><i class="bi bi-layers-fill"></i> โครงการต่างๆที่เข้าร่วมกับสหกรณ์</h2>
         <p class="text-muted">เลือกหัวข้อเพื่อดูรายละเอียดเพิ่มเติม</p>
     </div>
 
