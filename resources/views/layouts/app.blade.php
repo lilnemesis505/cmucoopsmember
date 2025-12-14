@@ -132,7 +132,7 @@
                         <a class="nav-link {{ request()->routeIs('member') ? 'active' : '' }}" href="{{ route('member') }}">สมาชิก</a>
                     </li>
                    <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('board*') ? 'active' : '' }}" href="{{ route('board') }}">จัดการสิทธิพิเศษ</a>
+        <a class="nav-link {{ request()->routeIs('board*') ? 'active' : '' }}" href="{{ route('board') }}">สวัสดิการ</a>
     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('check.member') ? 'active' : '' }}" href="{{ route('check.member') }}">ตรวจสอบสมาชิก</a>
