@@ -29,6 +29,6 @@ export default defineConfig({
         hmr: {
             host: '172.16.22.131' // ⚠️ ใส่ IP ของเครื่องคุณ (ที่เช็คจาก ipconfig)
         },
-        port: 8000, // ล็อคเลข Port ไว้จะได้ไม่ต้องแก้ Firewall บ่อย
+        port: 5173, // ล็อคเลข Port ไว้จะได้ไม่ต้องแก้ Firewall บ่อย
     },
 });

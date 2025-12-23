@@ -1,209 +1,137 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { Link, Head } from '@inertiajs/vue3';
+import { ref, onMounted } from 'vue';
 
+const isDarkMode = ref(false);
+const isMobileMenuOpen = ref(false); // สำหรับเมนูมือถือ
+
+// ฟังก์ชันสลับโหมด
+const toggleTheme = () => {
+    isDarkMode.value = !isDarkMode.value;
+    if (isDarkMode.value) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+    }
+};
+
+onMounted(() => {
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        isDarkMode.value = true;
+        document.documentElement.classList.add('dark');
+    }
+});
 </script>
 
 <template>
-    <div>
-        <nav class="navbar navbar-expand-lg bg-white px-3 px-lg-4">
-            <div class="container-fluid">
-                
-                <Link class="navbar-brand logo-container" :href="route('landing')">
-                    <img src="https://ik.imagekit.io/cmucoopsmember/icon" alt="CMU X-CADEMY" class="logo-img">
-                </Link>
+    <Head>
+        <component :is="'script'" src="https://cdn.tailwindcss.com"></component>
+        <component :is="'script'">
+            tailwind.config = { 
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        fontFamily: { sans: ['Prompt', 'sans-serif'] }
+                    }
+                }
+            }
+        </component>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    </Head>
 
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    <div class="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 dark:space-bg font-sans text-slate-600 dark:text-slate-300 transition-colors duration-300">
+        
+        <nav class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 fixed w-full z-50 transition-colors duration-300">
+            <div class="container mx-auto px-4 lg:px-6">
+                <div class="flex justify-between items-center h-20">
+                    
+                    <Link :href="route('landing')" class="flex items-center group">
+                        <div class="relative w-12 h-12 mr-3 transition-transform group-hover:scale-110">
+                            <img src="https://ik.imagekit.io/cmucoopsmember/icon" alt="Logo" class="w-full h-full object-contain drop-shadow-md">
+                        </div>
+                        <div class="leading-tight">
+                            <span class="block font-bold text-lg text-slate-800 dark:text-white tracking-tight">CMUCOOP</span>
+                            <span class="block text-[10px] text-blue-600 dark:text-blue-400 font-semibold tracking-wider">MEMBER ZONE</span>
+                        </div>
+                    </Link>
 
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto align-items-center">
-                        <li class="nav-item">
-                            <Link class="nav-link" :class="{ 'active': route().current('member.home') }" :href="route('member.home')">หน้าหลัก</Link>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <Link class="nav-link" :class="{ 'active': route().current('member') }" :href="route('member')">สมาชิก</Link>
-                        </li>
-                        <li class="nav-item">
-                            <Link class="nav-link" :class="{ 'active': route().current('board*') }" :href="route('board')">สวัสดิการ</Link>
-                        </li>
-                        <li class="nav-item">
-                            <Link class="nav-link" :class="{ 'active': route().current('easypoint*') }" :href="route('easypoint')">EasyPoint</Link>
-                        </li>
-                        <li class="nav-item">
-                            <Link class="nav-link" :class="{ 'active': route().current('check.member') }" :href="route('check.member')">ตรวจสอบสมาชิก</Link>
-                        </li>
-                    </ul>
+                    <div class="hidden lg:flex items-center space-x-1">
+                        <Link :href="route('member.home')" :class="['nav-item', route().current('member.home') ? 'active' : '']">
+                            <i class="bi bi-house-door mr-1.5"></i> หน้าหลัก
+                        </Link>
+                        <Link :href="route('member')" :class="['nav-item', route().current('member') ? 'active' : '']">
+                            <i class="bi bi-person-vcard mr-1.5"></i> สมาชิก
+                        </Link>
+                        <Link :href="route('board')" :class="['nav-item', route().current('board*') ? 'active' : '']">
+                            <i class="bi bi-clipboard2-heart mr-1.5"></i> สวัสดิการ
+                        </Link>
+                        <Link :href="route('easypoint')" :class="['nav-item', route().current('easypoint*') ? 'active' : '']">
+                            <i class="bi bi-coin mr-1.5"></i> EasyPoint
+                        </Link>
+                        <Link :href="route('check.member')" :class="['nav-item', route().current('check.member') ? 'active' : '']">
+                            <i class="bi bi-search mr-1.5"></i> ตรวจสอบ
+                        </Link>
+                    </div>
+
+                    <div class="flex items-center space-x-3">
+                         <button @click="toggleTheme" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors">
+                            <i v-if="isDarkMode" class="bi bi-moon-stars-fill text-yellow-400"></i>
+                            <i v-else class="bi bi-sun-fill text-orange-500"></i>
+                        </button>
+
+                        <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="lg:hidden p-2 text-slate-600 dark:text-slate-300">
+                            <i class="bi bi-list text-2xl"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            <div v-show="isMobileMenuOpen" class="lg:hidden bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 px-4 py-4 space-y-2 shadow-lg">
+                <Link :href="route('member.home')" class="mobile-link">หน้าหลัก</Link>
+                <Link :href="route('member')" class="mobile-link">ข้อมูลสมาชิก</Link>
+                <Link :href="route('board')" class="mobile-link">สวัสดิการ</Link>
+                <Link :href="route('easypoint')" class="mobile-link">EasyPoint</Link>
+                <Link :href="route('check.member')" class="mobile-link">ตรวจสอบสมาชิก</Link>
+            </div>
         </nav>
-        <div class="container" style="padding-top: 30px;">
+
+        <div class="pt-24 pb-12 px-4 container mx-auto relative z-10">
             <slot />
         </div>
 
-        <footer class="bg-dark text-white pt-4 pb-3 border-top mt-5">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <h5 class="mb-3 fw-bold text-warning border-bottom border-warning d-inline-block pb-1">ติดต่อสอบถาม</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-2">
-                                <span class="text-white-50 small me-2">เบอร์โทรศัพท์:</span>
-                                <span class="fw-bold">063-1385154, 0-5321-7139</span>
-                            </li>
-                            <li class="mb-2">
-                                <span class="text-white-50 small me-2">Line ID:</span>
-                                <a href="https://line.me/R/ti/p/@cmucoop" target="_blank" class="text-white text-decoration-none hover-link">cmucoopmember</a>
-                            </li>
-                            <li class="mb-2">
-                                <span class="text-white-50 small me-2">Line ID:</span>
-                                <a href="https://line.me/R/ti/p/@cmucoop" target="_blank" class="text-white text-decoration-none hover-link">cmucoop</a>
-                            </li>
-                            <li class="mb-2">
-                                <span class="text-white-50 small me-2">อีเมล:</span>
-                                <a href="mailto:cmucoop@gmail.com" class="text-white text-decoration-none hover-link">cmucoop@gmail.com</a>
-                            </li>
-                            <li class="mb-2">
-                                <span class="text-white-50 small me-2">Facebook:</span>
-                                <a href="https://www.facebook.com/share/1AD8Pi4Wf7/" target="_blank" class="text-white text-decoration-none hover-link">CMUcoop X-cademy</a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <h5 class="mb-3 fw-bold border-bottom d-inline-block pb-1">ลิงก์ที่เกี่ยวข้อง</h5>
-                        <ul class="list-unstyled mb-0">
-                            <li class="mb-2">
-                                <a href="https://www.cmu-coops.com/" target="_blank" class="text-white text-decoration-none small hover-link">
-                                    <i class="bi bi-chevron-right small text-muted me-1"></i> ร้านสหกรณ์มหาวิทยาลัยเชียงใหม่
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="https://www.cmu-coops.com/location.php" class="text-white text-decoration-none small hover-link">
-                                    <i class="bi bi-chevron-right small text-muted me-1"></i> ตำแหน่งร้านสหกรณ์
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <h5 class="mb-3 fw-bold border-bottom d-inline-block pb-1">CMUCOOP'S</h5>
-                        <ul class="list-unstyled mb-0">
-                            <li class="mb-2">
-                                <a href="https://www.cmu-coops.com/about.php" class="text-white text-decoration-none small hover-link">
-                                    <i class="bi bi-chevron-right small text-muted me-1"></i> เกี่ยวกับร้านสหกรณ์
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="https://www.cmu-coops.com/coopnews.php" class="text-white text-decoration-none small hover-link">
-                                    <i class="bi bi-chevron-right small text-muted me-1"></i> ข่าวสารประชาสัมพันธ์
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <h5 class="mb-3 fw-bold border-bottom d-inline-block pb-1">เวลาทำการ</h5>
-                        <ul class="list-unstyled mb-0">
-                            <li class="mb-2">
-                                <span class="text-white text-decoration-none small">
-                                    <i class="bi bi-box-seam small text-muted me-1"></i> จุดสมาชิกสัมพันธ์ (สนญ.)
-                                    <br>วันจันทร์-ศุกร์ 9.00-16.00
-                                </span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <hr class="text-secondary">
-                
-                <div class="text-center text-muted small pb-2">
-                    <p class="mb-1 text-white opacity-75">ลิขสิทธิ์โดยร้าน สหกรณ์มหาวิทยาลัยเชียงใหม่ จำกัด {{ new Date().getFullYear() }}</p>
-                    <p class="mb-0 text-muted" style="font-size: 0.75rem;">
-                        &copy; {{ new Date().getFullYear() }} 
-                        <a :href="route('admin.login')" class="text-decoration-none text-muted fw-bold hover-link">CMU X ACADEMY</a>. 
-                        All Rights Reserved.
-                    </p>
-                </div>
+        <footer class="bg-white dark:bg-slate-800/90 backdrop-blur-md border-t border-slate-200 dark:border-slate-700/50 pt-8 pb-6 mt-auto relative z-20 text-sm">
+            <div class="container mx-auto px-6 text-center">
+                <p class="text-xs text-slate-500 dark:text-slate-400">
+                    &copy; {{ new Date().getFullYear() }} CMU Cooperative. All Rights Reserved.
+                </p>
             </div>
         </footer>
+
     </div>
 </template>
 
 <style scoped>
-/* เอา CSS จาก app.blade.php มาใส่ที่นี่ */
-    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap');
-    
-    /* Navbar Styling */
-    .navbar {
-        background-color: #fff;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        padding-top: 10px;
-        padding-bottom: 10px;
-        position: relative;
-        z-index: 1000;
-        font-family: 'Prompt', sans-serif;
+    /* Custom Nav Item Style */
+    .nav-item {
+        @apply px-4 py-2 rounded-full text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all flex items-center;
+    }
+    .nav-item.active {
+        @apply text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 font-bold shadow-sm;
+    }
+    .mobile-link {
+        @apply block px-4 py-3 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium;
     }
 
-    .logo-img {
-        transition: all 0.3s ease;
-        height: 50px; 
-        width: auto;
-    }
-
-    .navbar-nav .nav-link {
-        position: relative;
-        color: #333;
-        font-weight: 500;
-        margin-left: 15px;
-        margin-right: 15px;
-        transition: color 0.3s ease;
-    }
-
-    .navbar-nav .nav-link.active {
-        color: #0d6efd !important;
-        font-weight: 700;
-    }
-
-    .navbar-nav .nav-link.active::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0px;
-        width: 100%;
-        height: 3px;
-        background-color: #0d6efd;
-        border-radius: 2px;
-    }
-
-    .navbar-nav .nav-link:not(.active):hover {
-        color: #0d6efd;
-    }
-
-    /* Footer Hover */
-    .hover-link {
-        transition: all 0.3s ease;
-        display: inline-block;
-    }
-    .hover-link:hover {
-        color: #ffc107 !important;
-        transform: translateX(5px);
-        text-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
-    }
-
-    @media (min-width: 992px) {
-        .navbar { height: 70px; }
-        .logo-container { position: relative; }
-        .logo-img {
-            height: 100px; 
-            position: absolute; 
-            top: -45px; 
-            left: 0;
-            z-index: 1001; 
-        }
-        .logo-img:hover { transform: scale(1.05); }
-        .navbar-collapse { margin-left: 120px; }
+    /* Space Background */
+    .dark .space-bg {
+        background-color: #0f172a;
+        background-image: 
+            radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+            radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+            radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0));
+        background-repeat: repeat;
+        background-size: 200px 200px;
     }
 </style>
