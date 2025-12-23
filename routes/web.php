@@ -9,16 +9,25 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\MemberCheckController;
 
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('landing');
+// ไฟล์ HomeXcademy.vue
+Route::get('/xcademy', [HomeController::class, 'xcademy'])->name('xcademy');
+Route::prefix('member')->group(function () {
+    
+    // ใหม่: /member (เข้าปุ๊บเจอไฟล์ HomeMember.vue ทันที)
+    Route::get('/', [HomeController::class, 'memberHome'])->name('member.home');
 
-Route::get('/member', [HomeController::class, 'member'])->name('member');
-Route::get('/board', [HomeController::class, 'board'])->name('board');
-Route::get('/board/{id}', [HomeController::class, 'showBoard'])->name('board.show');
-// รับค่า {key} เช่น /event/ev1, /event/ev2 ระบบจะรู้เองว่าเป็นงานไหน
-Route::get('/event/{key}', [HomeController::class, 'showEvent'])->name('event.show');
-Route::get('/setup-data', [HomeController::class, 'setupData']);
-// หน้าค้นหาสมาชิก (ทุกคนเข้าได้)
-Route::get('/check-member', [MemberCheckController::class, 'index'])->name('check.member');
+    // ส่วนหน้าข้อมูลสมาชิก ให้ใช้ /info เหมือนเดิม เพื่อไม่ให้ URL ชนกัน
+    Route::get('/info', [HomeController::class, 'member'])->name('member');
+
+    // ... (Route อื่นๆ เหมือนเดิม) ...
+    Route::get('/board', [HomeController::class, 'board'])->name('board');
+    Route::get('/board/{id}', [HomeController::class, 'showBoard'])->name('board.show');
+    Route::get('/easypoint', [HomeController::class, 'easyPoint'])->name('easypoint');
+    Route::get('/easypoint/{id}', [HomeController::class, 'showEasyPoint'])->name('easypoint.show');
+    Route::get('/check', [HomeController::class, 'checkMember'])->name('check.member');
+});
+
 
 // 1. หน้า Login (ไม่ต้องผ่าน Middleware Auth)
 Route::get('admin/login', [AuthController::class, 'showLogin'])->name('admin.login');
@@ -51,7 +60,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('events/{key}/upload', [EventController::class, 'uploadImage'])->name('events.upload');
     Route::delete('events/image/{id}', [EventController::class, 'deleteImage'])->name('events.delete_image');    Route::post('events/create', [EventController::class, 'create'])->name('events.create');
     // ฟังก์ชัน Upload Excel (ควรซ่อนไว้ หรือใส่ Middleware auth เพื่อให้ Admin ใช้เท่านั้น)
-    Route::post('/import-members', [MemberCheckController::class, 'import'])->name('import.members');
+    Route::post('/member/import', [App\Http\Controllers\HomeController::class, 'importMembers'])->name('member.import');
     Route::delete('members/truncate', [App\Http\Controllers\Admin\MemberController::class, 'truncate'])->name('members.truncate');
     Route::post('members/import', [App\Http\Controllers\Admin\MemberController::class, 'import'])->name('members.import');
     Route::resource('members', App\Http\Controllers\Admin\MemberController::class);
