@@ -1,45 +1,15 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
-
-const showMobileMenu = ref(false);
+// AppLayout.vue
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-600 selection:bg-blue-100 selection:text-blue-600">
+    <div class="min-h-screen flex flex-col font-sans antialiased bg-slate-900 text-slate-600 selection:bg-blue-500 selection:text-white">
         
-        <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm transition-all">
-            <div class="container mx-auto px-6 h-12 flex items-center justify-between">
-                <Link href="/" class="flex items-center gap-3 group">
-                </Link>
-
-                <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-500">
-                    <Link :href="route('member.home')" class="hover:text-blue-600 transition-colors">ระบบสมาชิก</Link>
-                    <Link :href="route('xcademy')" class="hover:text-orange-500 transition-colors">หลักสูตร (X-Cademy)</Link>
-                    <a href="https://www.cmu-coops.com/" target="_blank" class="hover:text-emerald-600 transition-colors">ร้านค้าสหกรณ์</a>
-                </div>
-
-                <button @click="showMobileMenu = !showMobileMenu" class="md:hidden text-2xl text-slate-600 focus:outline-none">
-                    <i :class="showMobileMenu ? 'bi bi-x' : 'bi bi-list'"></i>
-                </button>
-            </div>
-
-            <transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0 -translate-y-2" enter-to-class="opacity-100 translate-y-0" leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 -translate-y-2">
-                <div v-if="showMobileMenu" class="md:hidden bg-white border-b border-slate-100 absolute w-full px-6 py-4 shadow-xl">
-                    <div class="flex flex-col space-y-4 font-medium text-slate-600">
-                        <Link :href="route('member.home')" class="block py-2">ระบบสมาชิก</Link>
-                        <Link :href="route('xcademy')" class="block py-2">X-Cademy</Link>
-                        <a href="https://www.cmu-coops.com/" target="_blank" class="block py-2">ร้านค้าสหกรณ์</a>
-                    </div>
-                </div>
-            </transition>
-        </nav>
-
-        <main class="flex-grow relative z-10">
+        <main class="flex-grow w-full">
             <slot />
         </main>
 
-        <footer class="bg-white border-t border-slate-100 pt-16 pb-8 mt-auto relative z-20 text-sm">
+     <footer class="bg-white border-t border-slate-100 py-6 relative z-20 text-sm text-slate-500">
             <div class="container mx-auto px-6">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
                     <div class="md:col-span-4 lg:col-span-5">
