@@ -56,25 +56,30 @@ const prevImage = () => {
                 <div class="animated-shape circle shape-3 bg-purple-500/10 blur-3xl"></div>
             </div>
 
-            <div class="relative z-10 w-full max-w-6xl mt-8 mb-8 animate-fade-in-down text-center flex flex-col items-center justify-center min-h-[30vh]">
+            <div class="relative z-10 w-full max-w-6xl mt-8 mb-12 animate-fade-in-down text-center flex flex-col items-center justify-center">
                 
-                <div class="relative group cursor-pointer transition-transform hover:scale-105 duration-500">
-                    <div class="absolute -inset-4 bg-gradient-to-r from-orange-200 via-amber-100 to-orange-200 rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition-opacity"></div>
-                    <h2>กิจกรรมประจำเดือน</h2>
-                    <img 
-    src="https://ik.imagekit.io/cmucoopsmember/S__20848677.jpg" 
-    alt="Poster" 
-    class="relative h-60 md:h-70 w-auto drop-shadow-xl z-10"
->
+                <div class="mb-8 relative">
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm">
+                        กิจกรรมประจำเดือน
+                    </h1>
                 </div>
-                <div class="w-24 h-1 bg-gradient-to-r  to-amber-400 rounded-full mt-4"></div>
+
+                <div class="relative group cursor-pointer transition-transform hover:scale-[1.01] duration-500">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-orange-100 via-amber-100 to-purple-100 rounded-[2rem] blur-3xl opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                    
+                    <img 
+                        src="https://ik.imagekit.io/cmucoopsmember/S__20848677.jpg" 
+                        alt="Poster Activity" 
+                        class="relative w-auto h-[450px] md:h-[650px] object-contain drop-shadow-2xl z-10 rounded-2xl border-4 border-white/50"
+                    >
+                </div>
             </div>
 
 
-            <div class="relative z-10 w-full max-w-7xl mt-8 mb-6 flex items-center gap-4 animate-fade-in-up px-4">
+            <div class="relative z-10 w-full max-w-7xl mt-8 mb-8 flex items-center gap-4 animate-fade-in-up px-4">
                  <div class="flex-grow h-px bg-slate-200"></div>
-                 <h2 class="text-2xl md:text-3xl font-bold text-slate-800 flex items-center whitespace-nowrap">
-                     <i class="bi bi-megaphone-fill text-purple-500 mr-3"></i> ข่าวสารและกิจกรรม
+                 <h2 class="text-2xl md:text-3xl font-bold text-slate-700 flex items-center whitespace-nowrap">
+                     <i class="bi bi-grid-fill text-purple-500 mr-3"></i> อัลบั้มภาพกิจกรรม
                  </h2>
                  <div class="flex-grow h-px bg-slate-200"></div>
             </div>
@@ -190,10 +195,9 @@ const prevImage = () => {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* เพิ่ม Animation ขาขึ้นสำหรับหัวข้อ */
 .animate-fade-in-up {
     animation: fadeInUp 0.8s ease-out forwards;
-    opacity: 0; /* เริ่มต้นซ่อนไว้ก่อน */
+    opacity: 0;
 }
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
