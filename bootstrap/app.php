@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // 2. แก้ไข Syntax และวงเล็บให้ครบถ้วน
         $middleware->redirectGuestsTo(function (Request $request) {
-            return route('home');
+            return route('admin.login');
         });
         $middleware->web(append: [
             HandleInertiaRequests::class,

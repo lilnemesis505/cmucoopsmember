@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\EventImage;
 use ImageKit\ImageKit;
+use Inertia\Inertia;
 
 class EventController extends Controller
 {
@@ -21,16 +22,28 @@ class EventController extends Controller
     }
 
     public function index()
-    {
-        return view('admin.events.index');
-    }
+{
+    // ดึงข้อมูลและเรียงลำดับ (เหมือนใน blade เดิม)
+    $events = Event::with('images')->get()->sortBy(function($event) {
+        return (int) str_replace('ev', '', $event->key);
+    })->values(); // values() เพื่อ reset key array ให้ JS อ่านง่าย
+
+    return Inertia::render('Admin/Xcademy/Index', [
+        'events' => $events
+    ]);
+}
 
     public function edit($key)
-    {
-        $event = Event::firstOrCreate(['key' => $key]);
-        $images = $event->images()->orderBy('id', 'desc')->get();
-        return view('admin.events.edit', compact('event', 'images', 'key'));
-    }
+{
+    $event = Event::firstOrCreate(['key' => $key]);
+    $images = $event->images()->orderBy('id', 'desc')->get();
+
+    return Inertia::render('Admin/Xcademy/Edit', [
+        'event' => $event,
+        'images' => $images,
+        'key_param' => $key // เปลี่ยนชื่อตัวแปรนิดหน่อยเพื่อความชัดเจนใน Vue
+    ]);
+}
 
     // --- ส่วนที่แก้ไข: เพิ่มการบันทึก event_date ---
     public function updateDetails(Request $request, $key)
@@ -82,47 +95,96 @@ class EventController extends Controller
         return back()->with('warning', 'ลบรูปภาพสำเร็จ');
     }
 
-   public function syncFromImageKit()
-{
-    // --- [จุดที่แก้ไข] ---
-    // เปลี่ยนจาก Hardcode array มาเป็นการดึง Key ทั้งหมดที่มีอยู่ใน Database ปัจจุบัน
-    // หรือถ้าอยากให้ Sync ตัวที่ยังไม่มีใน DB คุณอาจต้องใช้ listFolders ของ ImageKit API (ซึ่งซับซ้อนกว่า)
-    // เบื้องต้นแนะนำให้ Sync ตามที่มีใน DB ที่เรา Create ไว้ครับ
-    $events = Event::all(); 
-    $totalSynced = 0;
+public function syncFromImageKit(Request $request)
+    {
+        // 1. รับค่าช่วงที่จะเช็ค (ถ้าไม่ส่งมา ให้ทำแค่ 5 อันแรก)
+        $start = $request->input('start', 1);
+        $end = $request->input('end', 5);
+        
+        // ปลดล็อกเวลาสำหรับรอบนี้
+        set_time_limit(0); 
 
-    try {
-        foreach ($events as $event) {
-            $key = $event->key;
+        try {
+            $createdEvents = 0;
+            $syncedImages = 0;
+            $skippedImages = 0;
+            $consecutiveMisses = 0; // ใช้นับเฉพาะใน Batch นี้
             
-            // ตรวจสอบ Path ให้ตรงกับ ImageKit ของคุณ
-            $folderPath = "/main/events/$key/"; 
-            
-            $files = $this->imageKit->listFiles([
-                'path' => $folderPath,
-                'limit' => 100
-            ]);
+            // วนลูปตามช่วงที่ส่งมา
+            for ($i = $start; $i <= $end; $i++) {
+                
+                $key = 'ev' . $i;         
+                $folderPath = "/event/{$key}/"; 
 
-            if (!empty($files->result)) {
-                foreach ($files->result as $file) {
-                    // เช็คว่ามี file_id นี้หรือยัง ป้องกันข้อมูลซ้ำ
-                    $exists = EventImage::where('file_id', $file->fileId)->exists();
-                    if (!$exists) {
-                        EventImage::create([
-                            'event_id' => $event->id,
-                            'file_id' => $file->fileId,
-                            'image_url' => $file->url,
-                        ]);
-                        $totalSynced++;
+                // เรียก API ImageKit
+                $files = $this->imageKit->listFiles([
+                    'path' => $folderPath,
+                    'limit' => 100 
+                ]);
+
+                if (!empty($files->result) && count($files->result) > 0) {
+                    
+                    // --- (Logic เดิม: สร้าง Event) ---
+                    $event = Event::firstOrCreate(
+                        ['key' => $key],
+                        [
+                            'title' => "Event $key (Imported)",
+                            'description' => "นำเข้าอัตโนมัติจาก ImageKit Path: $folderPath",
+                            'event_date' => now()
+                        ]
+                    );
+
+                    if ($event->wasRecentlyCreated) $createdEvents++;
+
+                    // --- (Logic เดิม: จัดการรูปภาพ Bulk Insert) ---
+                    $existingFileIds = EventImage::where('event_id', $event->id)->pluck('file_id')->toArray();
+                    $newImagesData = [];
+                    $now = now();
+
+                    foreach ($files->result as $file) {
+                        if (isset($file->url)) {
+                            if (!in_array($file->fileId, $existingFileIds)) {
+                                $newImagesData[] = [
+                                    'event_id' => $event->id,
+                                    'file_id' => $file->fileId,
+                                    'image_url' => $file->url,
+                                    'created_at' => $now,
+                                    'updated_at' => $now,
+                                ];
+                                $syncedImages++;
+                            } else {
+                                $skippedImages++;
+                            }
+                        }
                     }
+
+                    if (!empty($newImagesData)) {
+                        EventImage::insert($newImagesData);
+                    }
+                    
+                    // Reset Misses เพราะเจอของ
+                    $consecutiveMisses = 0;
+
+                } else {
+                    $consecutiveMisses++;
                 }
             }
+
+            // ส่งข้อมูลกลับเป็น JSON ให้ Frontend รับไปประมวลผลต่อ
+            return response()->json([
+                'success' => true,
+                'created' => $createdEvents,
+                'synced' => $syncedImages,
+                'skipped' => $skippedImages,
+                'last_check' => $end,
+                // บอก Frontend ว่าควรหยุดไหม ถ้าใน Batch นี้ว่างเปล่าทั้งหมด (เช็ค 5 ว่าง 5)
+                'empty_batch' => ($consecutiveMisses >= ($end - $start + 1)) 
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
-        return back()->with('success', "ซิงค์ข้อมูลเสร็จสิ้น! ดึงรูปกลับมาได้ทั้งหมด $totalSynced รูป จากทุก Event");
-    } catch (\Exception $e) {
-        return back()->with('error', 'เกิดข้อผิดพลาดในการซิงค์: ' . $e->getMessage());
     }
-}
     public function destroyEvent($key)
     {
         // 1. [แก้ไข] ดึง Keys ทั้งหมดจาก Database และเรียงลำดับให้ถูกต้อง (ev1, ev2, ..., ev10)
