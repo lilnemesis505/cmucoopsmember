@@ -34,12 +34,13 @@ class AuthController extends Controller
     }
 
     public function showLogin()
-    {
-        if (Auth::check()) {
-            return redirect()->route('admin.dashboard');
-        }
-        return view('admin.auth.login');
+{
+    if (Auth::check()) {
+        return redirect()->route('admin.dashboard');
     }
+    // เปลี่ยนจาก view('admin.auth.login') เป็น:
+    return \Inertia\Inertia::render('Admin/Auth/Login');
+}
 
     public function login(Request $request)
     {
