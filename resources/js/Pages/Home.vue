@@ -112,7 +112,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                         </div>
                     </a>
 
-                    <div class="modern-card md:col-span-4 group cursor-pointer border-t-4 border-yellow-400">
+                     <Link :href="route('easypoint')" class="modern-card md:col-span-4 group border-t-4 border-yellow-500 relative z-20">
                         <div class="flex flex-col h-full p-6 relative overflow-hidden">
                             <div class="absolute inset-0 bg-yellow-50 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
                             
@@ -127,7 +127,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                                 <p class="text-sm text-slate-500 mt-1">แลกคะแนนสะสมเป็นรางวัล</p>
                             </div>
                         </div>
-                    </div>
+                    </Link>
 
                 </div>
             </div>
