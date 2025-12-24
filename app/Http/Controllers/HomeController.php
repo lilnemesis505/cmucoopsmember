@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\PageContent; // 1. เรียกใช้ Model นี้
 use Inertia\Inertia;
 use App\Models\EasyPointPost;
+use App\Models\Event;
 
 class HomeController extends Controller
 {
@@ -16,9 +17,16 @@ class HomeController extends Controller
     }
     public function xcademy()
     {
-        return Inertia::render('HomeXcademy');
-    }
+        // ดึง Event ทั้งหมด พร้อมรูปภาพ
+        // เรียงตามวันที่ล่าสุด หรือตาม Key ก็ได้
+        $events = Event::with('images')
+            ->orderBy('key', 'desc') // หรือ orderBy('event_date', 'desc')
+            ->get();
 
+        return Inertia::render('HomeXcademy', [
+            'events' => $events
+        ]);
+    }
     public function memberHome()
     {
         // 2. ดึงข้อมูล 3 ตัวตาม Page Key
