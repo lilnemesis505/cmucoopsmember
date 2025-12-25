@@ -13,8 +13,12 @@ use App\Http\Controllers\Admin\BoardPostController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\PageContentController;
 use App\Http\Controllers\Admin\PromotionController;
-use App\Http\Controllers\Admin\SlideController; // ถ้ามี
+use App\Http\Controllers\Admin\BannerController;
 
+use App\Models\Member; // <--- เพิ่ม
+use App\Models\Event;
+use App\Models\TrafficLog;
+use Carbon\Carbon;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,7 +47,7 @@ Route::prefix('member')->group(function () {
 // =========================================================================
 // 2. ADMIN GUEST (ยังไม่ได้ Login)
 // =========================================================================
-
+Route::post('/track-view', [TrackController::class, 'store'])->name('track.view');
 Route::prefix('admin')->middleware('guest')->group(function () {
     Route::get('login', [AuthController::class, 'showLogin'])->name('admin.login');
     Route::post('login', [AuthController::class, 'login']);
@@ -64,10 +68,39 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('admin.logout');
 
     // --- MAIN DASHBOARD (ทางแยก) ---
-    Route::get('dashboard', function () {
-        return Inertia::render('Admin/Dashboard');
-    })->name('admin.dashboard');
+Route::get('dashboard', function () {
+    
+    // 1. เตรียมวันย้อนหลัง 7 วัน
+    $labels = [];
+    $memberData = [];
+    $xcademyData = [];
+    
+    for ($i = 6; $i >= 0; $i--) {
+        $date = Carbon::today()->subDays($i);
+        $labels[] = $date->locale('th')->dayName; // "จันทร์", "อังคาร"
+        
+        // 2. นับจากตาราง traffic_logs
+        $memberData[] = TrafficLog::where('page_name', 'member')
+                        ->whereDate('created_at', $date)
+                        ->count();
+                        
+        $xcademyData[] = TrafficLog::where('page_name', 'xcademy')
+                        ->whereDate('created_at', $date)
+                        ->count();
+    }
 
+    return Inertia::render('Admin/Dashboard', [
+        'totalMembers' => App\Models\Member::count(),
+        'totalEvents'  => App\Models\Event::count(),
+        
+        // ส่งข้อมูลกราฟ
+        'trafficChart' => [
+            'labels' => $labels,
+            'memberData' => $memberData,
+            'xcademyData' => $xcademyData
+        ]
+    ]);
+})->name('admin.dashboard');
 
     // ---------------------------------------------------------------------
     // GROUP A: MEMBER SYSTEM (จัดการสมาชิก & หน้าเว็บทั่วไป)
@@ -124,6 +157,15 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         
         // ลบรูปภาพใน Event
         Route::delete('events/image/{id}', [EventController::class, 'deleteImage'])->name('admin.events.delete_image');
+    });
+    Route::prefix('banner')->group(function () {
+        // เปลี่ยน /banners เป็น / (index)
+        Route::get('/', [BannerController::class, 'index'])->name('admin.banners.index');
+        
+        // ส่วนอื่นๆ เหมือนเดิม
+        Route::post('/slider', [BannerController::class, 'storeSlider'])->name('admin.banners.slider.store');
+        Route::post('/static', [BannerController::class, 'updateStatic'])->name('admin.banners.static.update');
+        Route::delete('/{id}', [BannerController::class, 'destroy'])->name('admin.banners.destroy');
     });
 
 });

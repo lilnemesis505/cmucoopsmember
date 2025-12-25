@@ -31,6 +31,9 @@ const user = page.props.auth?.user || { name: 'Admin' };
                 <Link :href="route('admin.events.index')" class="admin-link">
                     <i class="bi bi-calendar-event-fill mr-3"></i> จัดการ Event
                 </Link>
+                <Link :href="route('admin.banners.index')" class="admin-link">
+                    <i class="bi bi-calendar-event-fill mr-3"></i> จัดการ Event
+                </Link>
             </nav>
 
             <div class="p-4 border-t border-slate-700">

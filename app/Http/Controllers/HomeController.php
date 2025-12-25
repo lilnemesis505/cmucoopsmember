@@ -7,6 +7,7 @@ use App\Models\PageContent; // 1. เรียกใช้ Model นี้
 use Inertia\Inertia;
 use App\Models\EasyPointPost;
 use App\Models\Event;
+use App\Models\Banner;
 
 class HomeController extends Controller
 {
@@ -22,9 +23,13 @@ class HomeController extends Controller
         $events = Event::with('images')
             ->orderBy('key', 'desc') // หรือ orderBy('event_date', 'desc')
             ->get();
+        $sliders = Banner::where('type', 'slider')->latest()->get();
+         $staticBanner = Banner::where('type', 'static')->first();
 
         return Inertia::render('HomeXcademy', [
-            'events' => $events
+            'events' => $events,
+            'sliders' => $sliders,       // <--- ส่งไปหน้าบ้าน
+            'staticBanner' => $staticBanner
         ]);
     }
     public function memberHome()
