@@ -18,7 +18,7 @@ export default defineConfig({
             },
         }),
     ],
-    // เพิ่มส่วนนี้เพื่อให้ใช้ @ แทน resources/js ได้
+    // เพิ่มส่วนนี้เพื่อให้ใช้ @ แทน resources/js ได้ 
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './resources/js'),

@@ -101,6 +101,11 @@ const prevImage = () => {
 
             <div class="relative z-10 w-full max-w-6xl mt-4 mb-12 animate-fade-in-down text-center flex flex-col items-center justify-center">
                 
+                <div class="mb-6 relative">
+                    <h1 class="text-3xl md:text-5xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm">
+                        กิจกรรมประจำเดือน
+                    </h1>
+                </div>
 
                 <div class="relative group cursor-pointer transition-transform hover:scale-[1.01] duration-500">
                     <div class="absolute -inset-4 bg-gradient-to-r from-purple-100 via-amber-100 to-purple-100 rounded-[2rem] blur-3xl opacity-60 group-hover:opacity-80 transition-opacity"></div>
