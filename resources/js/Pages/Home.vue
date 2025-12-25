@@ -48,9 +48,11 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                             <div class="absolute top-0 right-0 w-48 h-48 bg-blue-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-125 duration-700 blur-2xl opacity-60"></div>
                             
                             <div class="relative z-10 flex justify-between items-start">
-                                <div class="icon-box bg-blue-100 text-blue-600">
-                                    <i class="bi bi-person-fill text-3xl"></i>
-                                </div>
+                                <img 
+                                    src="https://ik.imagekit.io/cmucoopsmember/logo/member2.png?updatedAt=1766650891949" 
+                                    alt="Icon"
+                                    class="w-25 h-30 object-contain"
+                                />
                             </div>
                             
                             <div class="relative z-10 mt-auto pt-8">
@@ -66,12 +68,12 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                             <div class="absolute top-0 right-0 w-40 h-40 bg-cyan-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-125 duration-700 blur-2xl opacity-60"></div>
                             
                             <div class="relative z-10 flex justify-between items-start">
-                                <div class="icon-box bg-cyan-100 text-cyan-600">
-                                    <i class="bi bi-bag-heart-fill text-3xl"></i>
-                                </div>
-                                <i class="bi bi-box-arrow-up-right text-slate-300 group-hover:text-cyan-500"></i>
+                                <img 
+                                        src="https://ik.imagekit.io/cmucoopsmember/logo/coop1.png?updatedAt=1766546164356" 
+                                        alt="Icon"
+                                        class="w-25 h-30 object-contain"
+                                    />
                             </div>
-                            
                             <div class="relative z-10 mt-auto pt-8">
                                 <h2 class="card-title text-slate-800">STORE ONLINE</h2>
                                 <p class="card-subtitle text-slate-500">ช้อปปิ้งสินค้าสหกรณ์ครบวงจร</p>
@@ -85,9 +87,11 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                             <div class="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
                             
                             <div class="relative z-10 mb-4">
-                                <div class="icon-box-sm bg-purple-100 text-purple-600">
-                                    <i class="bi bi-mortarboard-fill text-2xl"></i>
-                                </div>
+                                <img 
+                                        src="https://ik.imagekit.io/cmucoopsmember/logo/xcademy.png?updatedAt=1766551989903" 
+                                        alt="Icon"
+                                        class="w-25 h-30 object-contain"
+                                    />
                             </div>
                             <div class="relative z-10 mt-auto">
                                 <h3 class="text-xl font-bold text-slate-800">X-CADEMY</h3>
@@ -117,10 +121,11 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                             <div class="absolute inset-0 bg-yellow-50 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
                             
                             <div class="relative z-10 mb-4 flex items-center justify-between">
-                                <div class="icon-box-sm bg-yellow-100 text-yellow-600">
-                                    <i class="bi bi-coin text-2xl"></i>
-                                </div>
-                                <span class="text-xs text-yellow-600 font-bold bg-yellow-100 px-2 py-1 rounded">HOT</span>
+                                    <img 
+                                        src="https://ik.imagekit.io/cmucoopsmember/logo/easy1.png?updatedAt=1766638379250" 
+                                        alt="Icon"
+                                        class="w-25 h-30 object-contain"
+                                    />
                             </div>
                             <div class="relative z-10 mt-auto">
                                 <h3 class="text-xl font-bold text-slate-800">EASY POINT</h3>
