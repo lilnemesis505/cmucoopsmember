@@ -7,7 +7,7 @@ import { ref, computed } from 'vue'; // เพิ่ม computed
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Navigation, Pagination, Grid } from 'swiper/modules'; // ลบ Autoplay ออก
 
-// --- Import Swiper Styles ---
+// --- Import Swiper styles ---
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
