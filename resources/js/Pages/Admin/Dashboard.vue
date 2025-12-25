@@ -34,34 +34,6 @@ const getGreeting = () => {
     if (hour < 18) return 'สวัสดีตอนบ่าย';
     return 'สวัสดีตอนเย็น';
 };
-const props = defineProps({
-    totalMembers: Number,
-    totalEvents: Number,
-    trafficChart: Object // <--- รับก้อนข้อมูลกราฟ
-});
-// --- 3. Chart Configuration (Mock Data) ---
-// จำลองข้อมูลการเข้าชมหน้า Member vs X-Cademy ย้อนหลัง 7 วัน
-const chartData = ref({
-  labels: props.trafficChart?.labels || [], // รับวัน จันทร์-อาทิตย์
-  datasets: [
-    {
-      label: 'Member Zone',
-      backgroundColor: 'rgba(59, 130, 246, 0.1)',
-      borderColor: '#3b82f6',
-      data: props.trafficChart?.memberData || [], // ข้อมูลจริง TrafficLog
-      fill: true,
-      tension: 0.4
-    },
-    {
-      label: 'X-Cademy',
-      backgroundColor: 'rgba(168, 85, 247, 0.1)',
-      borderColor: '#a855f7',
-      data: props.trafficChart?.xcademyData || [], // ข้อมูลจริง TrafficLog
-      fill: true,
-      tension: 0.4
-    }
-  ]
-});
 
 const chartOptions = {
   responsive: true,
