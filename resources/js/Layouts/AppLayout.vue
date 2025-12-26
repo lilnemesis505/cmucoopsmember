@@ -64,7 +64,9 @@
                         <i class="bi bi-geo-alt-fill text-red-700 mt-1 mr-3"></i>
                         <span class="font-medium text-black">
                             สำนักงานใหญ่ (สนญ.) มหาวิทยาลัยเชียงใหม่<br>
-                            อ.เมือง จ.เชียงใหม่ 50200
+                            อ.เมือง จ.เชียงใหม่ 50200<br>
+                            ติดต่อสอบถามที่บูธสมาชิกสัมพันธ์<br>
+                            จ-ศ เวลา 9.00 - 16.00 น.
                         </span>
                     </li>
                     <li class="flex items-center">
