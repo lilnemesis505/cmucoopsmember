@@ -10,11 +10,10 @@ import AppLayout from '@/Layouts/AppLayout.vue';
         <div class="relative w-full min-h-screen flex flex-col items-center justify-center p-4 md:p-8 font-sans overflow-hidden bg-black">
             
             <div class="absolute inset-0 z-0">
-                <img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2048&auto=format&fit=crop" 
+                <img src="https://png.pngtree.com/background/20250207/original/pngtree-soft-pastel-floral-design-light-blue-background-picture-image_16257054.jpg" 
                      alt="Galaxy Background" 
                      class="w-full h-full object-cover opacity-60">
-                <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-slate-900/30 to-black"></div>
-                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-70 animate-pulse-slow"></div>
+                <div class="absolute inset-0 bg-gradient-to-b via-slate-900/30"></div>
             </div>
 
             <div class="absolute inset-0 overflow-hidden pointer-events-none z-1">
@@ -28,33 +27,34 @@ import AppLayout from '@/Layouts/AppLayout.vue';
             <div class="relative z-10 w-full max-w-[1400px] flex flex-col gap-6 animate-fade-in-down">
                 
                 <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-2">
-                    <img
+                    <div class="bg-white p-1 rounded-xl border-1 border-white">
+                         <img
                         src="https://ik.imagekit.io/cmucoopsmember/logo/coop1.png?updatedAt=1766546164356"
-                        alt="CMU Cooperative Logo"
-                        class="h-16 md:h-20 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.6)]"
+                        alt="CMU Coop Logo"
+                        class="h-19 md:h-20 w-auto"
                     />
+                    </div>
                     <div class="text-center md:text-left">
-                        <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-1 drop-shadow-md">
-                            CMU Cooperative
+                        <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-1 drop-shadow-md mt-3">
+                            CMU Coop
                         </h1>
-                        <p class="text-lg text-blue-200 font-light tracking-wide opacity-80">Galaxy Member Dashboard</p>
+                        <p class="text-lg text-gray-800 tracking-wide font-medium drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">ศูนย์รวมบริการร้านสหกรณ์มหาวิทยาลัยเชียงใหม่ จำกัด</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 w-full">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 w-full"> 
                     
                     <Link :href="route('member.home')" class="modern-card md:col-span-7 group border-l-4 border-blue-500">
                         <div class="flex flex-col justify-between h-full p-8 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 w-48 h-48 bg-blue-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-125 duration-700 blur-2xl opacity-60"></div>
+                            <div class="absolute top-0 right-0 w-40 h-40 bg-cyan-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-125 duration-700 blur-2xl opacity-60"></div>
                             
                             <div class="relative z-10 flex justify-between items-start">
                                 <img 
-                                    src="https://ik.imagekit.io/cmucoopsmember/logo/member2.png?updatedAt=1766650891949" 
+                                    src="https://ik.imagekit.io/cmucoopsmember/logo/member3.png?updatedAt=1766716604659" 
                                     alt="Icon"
-                                    class="w-25 h-30 object-contain"
+                                    class="h-19 md:h-24 w-24 object-contain"
                                 />
                             </div>
-                            
                             <div class="relative z-10 mt-auto pt-8">
                                 <h2 class="card-title text-slate-800">MEMBER CONNECT</h2>
                                 <p class="card-subtitle text-slate-500">ข้อมูลสมาชิก สวัสดิการ และสิทธิประโยชน์</p>
@@ -66,12 +66,11 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                     <a href="https://www.cmu-coops.com/" target="_blank" class="modern-card md:col-span-5 group border-l-4 border-cyan-500">
                         <div class="flex flex-col justify-between h-full p-8 relative overflow-hidden">
                             <div class="absolute top-0 right-0 w-40 h-40 bg-cyan-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-125 duration-700 blur-2xl opacity-60"></div>
-                            
                             <div class="relative z-10 flex justify-between items-start">
                                 <img 
                                         src="https://ik.imagekit.io/cmucoopsmember/logo/coop1.png?updatedAt=1766546164356" 
                                         alt="Icon"
-                                        class="w-25 h-30 object-contain"
+                                        class="h-19 md:h-24 w-24 object-contain"
                                     />
                             </div>
                             <div class="relative z-10 mt-auto pt-8">
@@ -83,10 +82,10 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                     </a>
 
                     <Link :href="route('xcademy')" class="modern-card md:col-span-4 group border-t-4 border-purple-500">
-                        <div class="flex flex-col h-full p-6 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
-                            
-                            <div class="relative z-10 mb-4">
+                        <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-purple-200 rounded-xl">
+                            <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
+    
+                            <div class="relative z-10 mb-4 flex items-center justify-between">
                                 <img 
                                         src="https://ik.imagekit.io/cmucoopsmember/logo/xcademy.png?updatedAt=1766551989903" 
                                         alt="Icon"
@@ -101,14 +100,13 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                     </Link>
 
                     <a href="https://www.cmu-coops.com/login.php" target="_blank" class="modern-card md:col-span-4 group border-t-4 border-pink-500">
-                        <div class="flex flex-col h-full p-6 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 w-32 h-32 bg-pink-50 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
-                            
-                            <div class="relative z-10 mb-4">
-                                <div class="icon-box-sm bg-pink-100 text-pink-600">
-                                    <i class="bi bi-shield-check text-2xl"></i>
+                            <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-pink-100 rounded-xl">
+                                <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
+                                <div class="relative z-10 mb-4">
+                                    <div class="icon-box-sm bg-pink-100 text-pink-600">
+                                        <i class="bi bi-shield-check text-2xl"></i>
+                                    </div>
                                 </div>
-                            </div>
                             <div class="relative z-10 mt-auto">
                                 <h3 class="text-xl font-bold text-slate-800">ตรวจสอบข้อมูล</h3>
                                 <p class="text-sm text-slate-500 mt-1">เช็คยอดหุ้น / เงินปันผล / หนี้สิน</p>
@@ -117,9 +115,8 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                     </a>
 
                      <Link :href="route('easypoint')" class="modern-card md:col-span-4 group border-t-4 border-yellow-500 relative z-20">
-                        <div class="flex flex-col h-full p-6 relative overflow-hidden">
-                            <div class="absolute inset-0 bg-yellow-50 opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
-                            
+                        <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-yellow-100 rounded-xl">
+                            <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
                             <div class="relative z-10 mb-4 flex items-center justify-between">
                                     <img 
                                         src="https://ik.imagekit.io/cmucoopsmember/logo/easy1.png?updatedAt=1766638379250" 
