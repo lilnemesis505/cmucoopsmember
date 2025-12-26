@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PageContent;
 use ImageKit\ImageKit;
+use Inertia\Inertia;
 
 class PageContentController extends Controller
 {
@@ -24,7 +25,10 @@ class PageContentController extends Controller
     public function edit($key)
     {
         $page = PageContent::where('page_key', $key)->firstOrFail();
-        return view('admin.promotions.pages.edit', compact('page', 'key'));
+        return Inertia::render('Admin/Pages/Edit', [
+            'page' => $page,
+            'pageKey' => $key
+        ]);
     }
 
     // บันทึกข้อมูล
@@ -35,11 +39,31 @@ class PageContentController extends Controller
         // 1. อัปเดตข้อความ
         $page->title = $request->title;
         $page->subtitle = $request->subtitle;
-        $page->content = $request->input('content'); // เนื้อหาจาก Summernote
+        $page->content = $request->input('content');
 
-        // 2. จัดการรูปภาพ (ถ้ามีการอัปโหลดเพิ่ม)
-        $currentImages = $page->images ?? []; // ดึงรูปเดิมมา
+        // 2. จัดการรูปปก (Cover Image)
+        if ($request->hasFile('cover_image')) {
+            try {
+                // อัปโหลดรูปใหม่
+                $upload = $this->imageKit->upload([
+                    'file' => fopen($request->file('cover_image'), 'r'),
+                    'fileName' => 'cover_' . $key . '_' . time(),
+                    'folder' => '/main/covers/'
+                ]);
+                
+                // บันทึกลงฐานข้อมูลช่อง image_url
+                $page->image_url = $upload->result->url;
+                
+            } catch (\Exception $e) {
+                return back()->with('error', 'อัปโหลดรูปปกไม่สำเร็จ: ' . $e->getMessage());
+            }
+        }
 
+        // 3. จัดการรูปภาพ Gallery (ส่วนประกอบเนื้อหา)
+        // เริ่มต้นดึงรูปเดิมมาเก็บไว้ก่อน
+        $currentImages = $page->images ?? [];
+
+        // 3.1 ถ้ามีการอัปโหลดรูปเพิ่ม
         if ($request->hasFile('upload_images')) {
             foreach ($request->file('upload_images') as $file) {
                 try {
@@ -51,19 +75,52 @@ class PageContentController extends Controller
                     // เพิ่ม URL รูปลงไปใน Array
                     $currentImages[] = $upload->result->url;
                 } catch (\Exception $e) {
-                    // Handle Error
+                    // กรณีอัปโหลดไม่ผ่าน ข้ามไป
                 }
             }
         }
 
-        // 3. ถ้ามีการลบรูป (รับค่าเป็น Array ของ URL ที่จะลบ)
+        // 3.2 ถ้ามีการลบรูป (รับค่าเป็น Array ของ URL ที่จะลบ)
         if ($request->has('remove_images')) {
             $currentImages = array_diff($currentImages, $request->remove_images);
         }
 
-        $page->images = array_values($currentImages); // จัด index ใหม่
+        // บันทึก Gallery กลับเข้า Database
+        $page->images = array_values($currentImages); // จัด index ใหม่ให้เรียงสวยงาม
         $page->save();
 
         return back()->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
+    }
+    public function editCover($key)
+    {
+        $page = PageContent::where('page_key', $key)->firstOrFail();
+        return Inertia::render('Admin/Pages/EditCover', [ // หน้าใหม่สำหรับแก้ปกโดยเฉพาะ
+            'page' => $page,
+            'pageKey' => $key
+        ]);
+    }
+
+    public function updateCover(Request $request, $key)
+    {
+        $page = PageContent::where('page_key', $key)->firstOrFail();
+
+        if ($request->hasFile('cover_image')) {
+            try {
+                $upload = $this->imageKit->upload([
+                    'file' => fopen($request->file('cover_image'), 'r'),
+                    'fileName' => 'cover_' . $key . '_' . time(),
+                    'folder' => '/main/covers/'
+                ]);
+                
+                $page->image_url = $upload->result->url;
+                $page->save();
+                
+                return back()->with('success', 'เปลี่ยนรูปปกเรียบร้อยแล้ว');
+            } catch (\Exception $e) {
+                return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+            }
+        }
+
+        return back()->with('error', 'กรุณาเลือกไฟล์รูปภาพ');
     }
 }

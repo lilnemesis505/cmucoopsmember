@@ -32,45 +32,44 @@ class HomeController extends Controller
             'staticBanner' => $staticBanner
         ]);
     }
-    public function memberHome()
+   public function memberHome()
     {
-        // 2. ดึงข้อมูล 3 ตัวตาม Page Key
-        $targetKeys = ['member', 'board', 'ezpoint'];
-        
-        $contents = PageContent::whereIn('page_key', $targetKeys)
-            ->orderBy('id', 'asc') // เรียงตาม ID (1, 2, 3)
-            ->get();
+        // 1. ดึงข้อมูลจาก Database
+        $memberPage = PageContent::where('page_key', 'member')->first();
+        $boardPage = PageContent::where('page_key', 'board')->first();
+        $ezPage = PageContent::where('page_key', 'ezpoint')->first();
 
-        // 3. แปลงข้อมูลให้หน้าบ้านใช้ง่ายๆ
-        $cards = $contents->map(function ($item) {
-            // แกะรูปภาพ (เพราะใน DB เก็บเป็น JSON Array ["url"])
-            $images = $item->images;
-            if (is_string($images)) {
-                $images = json_decode($images, true);
-            }
-            $mainImage = $images[0] ?? 'https://via.placeholder.com/800x400';
-
-            // กำหนดลิ้งค์แยกตาม page_key
-            $link = '#';
-            if ($item->page_key === 'member') $link = route('member');
-            elseif ($item->page_key === 'board') $link = route('board');
-            elseif ($item->page_key === 'ezpoint') $link = '#'; // ยังไม่มี Route ezpoint ให้ใส่ # ไว้ก่อน
-
-            return [
-                'id' => $item->id,
-                'title' => $item->title,
-                'subtitle' => $item->subtitle,
-                'image_url' => $mainImage,
-                'link' => $link
-            ];
-        });
+        // 2. สร้างข้อมูล Cards ส่งไปหน้าบ้าน
+        $cards = [
+            [
+                'id' => 1,
+                'title' => $memberPage->title ?? 'สิทธิประโยชน์สำหรับสมาชิก',
+                'subtitle' => $memberPage->subtitle ?? 'ข้อมูลสมาชิก',
+                // แก้ไข Logic: ให้ใช้ image_url (รูปปกใหม่) ก่อน ถ้าไม่มีค่อยใช้ images[0] (รูปเก่า)
+                'image_url' => $memberPage->image_url ?? ($memberPage->images[0] ?? null),
+                'link' => route('member')
+            ],
+            [
+                'id' => 2,
+                'title' => $boardPage->title ?? 'สิทธิประโยชน์รักษาพยาบาล',
+                'subtitle' => $boardPage->subtitle ?? 'สวัสดิการ',
+                'image_url' => $boardPage->image_url ?? ($boardPage->images[0] ?? null),
+                'link' => route('board')
+            ],
+            [
+                'id' => 3,
+                'title' => $ezPage->title ?? 'สิทธิประโยชน์ Easy Point',
+                'subtitle' => $ezPage->subtitle ?? 'Easy Point',
+                'image_url' => $ezPage->image_url ?? ($ezPage->images[0] ?? null),
+                'link' => route('easypoint')
+            ],
+        ];
 
         return Inertia::render('HomeMember', [
-            'cards' => $cards, // ส่งไปในชื่อ cards
-            'title' => 'CMUCOOPMEMBER',
+            'cards' => $cards,
+            'title' => 'ระบบสมาชิกสหกรณ์'
         ]);
     }
-
     // --- เมนูอื่นๆ คงเดิม ---
    public function member()
     {

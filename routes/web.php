@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\PageContentController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\EasyPointPostController;
 
 use App\Models\Member;
 use App\Models\Event;
@@ -68,7 +69,14 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
             'totalEvents'  => Event::count(),
         ]);
     })->name('admin.dashboard');
+    Route::prefix('services')->group(function() {
+        // ใช้ PageContentController เดิม แต่ระบุ Key ให้ตรงกับใน Database
+        Route::get('pages/{key}/edit', [PageContentController::class, 'edit'])->name('admin.pages.edit');
+        Route::put('pages/{key}', [PageContentController::class, 'update'])->name('admin.pages.update');
 
+        Route::get('pages/{key}/cover', [PageContentController::class, 'editCover'])->name('admin.pages.edit_cover');
+         Route::put('pages/{key}/cover', [PageContentController::class, 'updateCover'])->name('admin.pages.update_cover');
+    });
     // ---------------------------------------------------------------------
     // GROUP A: MEMBER SYSTEM
     // ---------------------------------------------------------------------
@@ -100,9 +108,15 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         Route::get('promotions', [PromotionController::class, 'index'])->name('admin.promotions.index');
         Route::put('promotions/update-all', [PromotionController::class, 'updateAll'])->name('admin.promotions.update_all');
 
-        // 4. แก้ไขเนื้อหาหน้าเว็บ
-        Route::get('pages/{key}/edit', [PageContentController::class, 'edit'])->name('admin.pages.edit');
-        Route::put('pages/{key}', [PageContentController::class, 'update'])->name('admin.pages.update');
+        Route::resource('easypoint', EasyPointPostController::class)->names([
+        'index' => 'admin.easypoint.index',
+        'create' => 'admin.easypoint.create',
+        'store' => 'admin.easypoint.store',
+        'edit' => 'admin.easypoint.edit',
+        'update' => 'admin.easypoint.update',
+        'destroy' => 'admin.easypoint.destroy',
+    ]);
+
     });
 
 

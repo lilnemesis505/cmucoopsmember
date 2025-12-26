@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\MembersImport;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 
 class MemberController extends Controller
 {
@@ -38,10 +39,14 @@ class MemberController extends Controller
             ->paginate(20); // แบ่งหน้าทีละ 20
 
         // ส่งค่าเดิมกลับไปที่หน้า View ด้วย (เพื่อให้ช่องกรอกไม่หายตอนกดค้นหา)
-        return view('admin.members.index', compact('members', 'member_id', 'first_name', 'last_name', 'phone'));
+       return Inertia::render('Admin/Members/Index', [
+            'members' => $members,
+            'filters' => $request->only(['member_id', 'first_name', 'last_name', 'phone'])
+        ]);
     }
 
     // ฟังก์ชัน Import Excel
+    // Import Excel
     public function import(Request $request)
     {
         $request->validate([
@@ -50,16 +55,16 @@ class MemberController extends Controller
 
         try {
             Excel::import(new MembersImport, $request->file('file'));
-            return back()->with('success', 'นำเข้าข้อมูลสำเร็จ!');
+            return redirect()->back()->with('success', 'นำเข้าข้อมูลสำเร็จ!');
         } catch (\Exception $e) {
-            return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
         }
     }
 
     // ฟอร์มเพิ่มสมาชิก (Manual)
     public function create()
     {
-        return view('admin.members.create');
+        return Inertia::render('Admin/Members/Create');
     }
 
     // บันทึกสมาชิกใหม่
@@ -92,29 +97,17 @@ class MemberController extends Controller
     public function edit($id)
     {
         $member = Member::findOrFail($id);
-        return view('admin.members.edit', compact('member'));
+        return Inertia::render('Admin/Members/Edit', [
+            'member' => $member
+        ]);
     }
-
     // อัปเดตข้อมูล
     public function update(Request $request, $id)
     {
-        // 1. ตรวจสอบข้อมูลพื้นฐาน
         $request->validate([
-            'member_id' => 'required',
+            'member_id' => 'required|unique:members,member_id,' . $id,
         ]);
 
-        // 2. เช็คว่ารหัสสมาชิกซ้ำกับคนอื่นไหม? (โดยข้าม ID ของตัวเองไป)
-        // Logic: หารหัสนี้ใน DB + แต่ ID ต้องไม่ใช่คนนี้
-        $exists = Member::where('member_id', $request->member_id)
-                        ->where('id', '!=', $id) // <--- สำคัญมาก: ห้ามเช็คเจอกับตัวเอง
-                        ->exists();
-
-        if ($exists) {
-            // ถ้าซ้ำกับคนอื่น: แจ้งเตือนและเด้งกลับ
-            return back()->with('error', "แก้ไขล้มเหลว! รหัสสมาชิก '{$request->member_id}' ถูกใช้งานโดยสมาชิกท่านอื่นแล้ว");
-        }
-
-        // 3. ✅ ถ้าไม่ซ้ำ (หรือเป็นรหัสเดิมของตัวเอง): บันทึกได้เลย
         $member = Member::findOrFail($id);
         $member->update($request->all());
         
@@ -122,27 +115,20 @@ class MemberController extends Controller
     }
 
     // ลบข้อมูล
-    public function destroy($id)
+   public function destroy($id)
     {
         Member::findOrFail($id)->delete();
-        return back()->with('success', 'ลบข้อมูลสำเร็จ');
+        return redirect()->back()->with('success', 'ลบข้อมูลสำเร็จ');
     }
-    public function truncate(Request $request)
+   public function truncate(Request $request)
     {
-        // 1. ตรวจสอบว่ากรอกรหัสผ่านมาไหม
-        $request->validate([
-            'password' => 'required',
-        ]);
+        $request->validate(['password' => 'required']);
 
-        // 2. เช็คว่ารหัสผ่านที่กรอกมา ตรงกับรหัสผ่านของ Admin ที่ Login อยู่ไหม
         if (!Hash::check($request->password, auth()->user()->password)) {
-            // ถ้ารหัสผิด ให้เด้งกลับไปพร้อมแจ้งเตือน
-            return back()->with('error', 'รหัสผ่านไม่ถูกต้อง! ไม่สามารถลบข้อมูลได้');
+            return redirect()->back()->with('error', 'รหัสผ่านไม่ถูกต้อง!');
         }
 
-        // 3. ถ้ารหัสถูก -> ล้างข้อมูลทั้งหมด (Truncate จะรีเซ็ต ID กลับเป็น 1 ด้วย)
         Member::truncate();
-
-        return back()->with('success', 'ล้างข้อมูลสมาชิกทั้งหมดเรียบร้อยแล้ว');
+        return redirect()->back()->with('success', 'ล้างข้อมูลสมาชิกทั้งหมดเรียบร้อยแล้ว');
     }
 }

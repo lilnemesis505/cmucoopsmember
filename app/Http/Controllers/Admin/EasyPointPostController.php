@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\BoardPost;
+use App\Models\EasyPointPost; // <--- ใช้ Model ใหม่
 use ImageKit\ImageKit;
-use Inertia\Inertia; // <--- เรียกใช้ Inertia
+use Inertia\Inertia;
 
-class BoardPostController extends Controller
+class EasyPointPostController extends Controller
 {
     protected $imageKit;
 
@@ -23,16 +23,16 @@ class BoardPostController extends Controller
 
     public function index()
     {
-        $posts = BoardPost::latest()->get();
-        // เปลี่ยนเป็น Inertia
-        return Inertia::render('Admin/Board/Index', [
+        // ดึงข้อมูลล่าสุด
+        $posts = EasyPointPost::latest()->get();
+        return Inertia::render('Admin/EasyPoint/Index', [
             'posts' => $posts
         ]);
     }
 
     public function create()
     {
-        return Inertia::render('Admin/Board/Create');
+        return Inertia::render('Admin/EasyPoint/Create');
     }
 
     public function store(Request $request)
@@ -43,50 +43,52 @@ class BoardPostController extends Controller
             'content' => 'nullable',
         ]);
 
+        // 1. Cover Image
         if ($request->hasFile('cover_image')) {
             $upload = $this->imageKit->upload([
                 'file' => fopen($request->file('cover_image'), 'r'),
-                'fileName' => 'board_cover_' . time(),
-                'folder' => '/board/'
+                'fileName' => 'ez_cover_' . time(),
+                'folder' => '/easypoint/'
             ]);
             $data['cover_image'] = $upload->result->url;
         }
 
+        // 2. Gallery Images
         $gallery = [];
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $file) {
                 $up = $this->imageKit->upload([
                     'file' => fopen($file, 'r'),
-                    'fileName' => 'board_img_' . time(),
-                    'folder' => '/board/gallery/'
+                    'fileName' => 'ez_img_' . time(),
+                    'folder' => '/easypoint/gallery/'
                 ]);
                 $gallery[] = $up->result->url;
             }
         }
         $data['images'] = $gallery;
 
-        BoardPost::create($data);
-        return redirect()->route('admin.board.index')->with('success', 'เพิ่มหัวข้อใหม่เรียบร้อยแล้ว');
+        EasyPointPost::create($data);
+        return redirect()->route('admin.easypoint.index')->with('success', 'เพิ่มโพสต์ Easy Point เรียบร้อยแล้ว');
     }
 
     public function edit($id)
     {
-        $post = BoardPost::findOrFail($id);
-        return Inertia::render('Admin/Board/Edit', [
+        $post = EasyPointPost::findOrFail($id);
+        return Inertia::render('Admin/EasyPoint/Edit', [
             'post' => $post
         ]);
     }
 
     public function update(Request $request, $id)
     {
-        $post = BoardPost::findOrFail($id);
+        $post = EasyPointPost::findOrFail($id);
         $data = $request->except(['cover_image', 'gallery_images', 'remove_images']);
 
         if ($request->hasFile('cover_image')) {
             $upload = $this->imageKit->upload([
                 'file' => fopen($request->file('cover_image'), 'r'),
-                'fileName' => 'board_cover_' . time(),
-                'folder' => '/board/'
+                'fileName' => 'ez_cover_' . time(),
+                'folder' => '/easypoint/'
             ]);
             $data['cover_image'] = $upload->result->url;
         }
@@ -99,8 +101,8 @@ class BoardPostController extends Controller
             foreach ($request->file('gallery_images') as $file) {
                 $up = $this->imageKit->upload([
                     'file' => fopen($file, 'r'),
-                    'fileName' => 'board_img_' . time(),
-                    'folder' => '/board/gallery/'
+                    'fileName' => 'ez_img_' . time(),
+                    'folder' => '/easypoint/gallery/'
                 ]);
                 $currentImages[] = $up->result->url;
             }
@@ -108,12 +110,12 @@ class BoardPostController extends Controller
         $data['images'] = array_values($currentImages);
 
         $post->update($data);
-        return redirect()->route('admin.board.index')->with('success', 'บันทึกการแก้ไขเรียบร้อยแล้ว');
+        return redirect()->route('admin.easypoint.index')->with('success', 'บันทึกการแก้ไขเรียบร้อยแล้ว');
     }
 
     public function destroy($id)
     {
-        $post = BoardPost::findOrFail($id);
+        $post = EasyPointPost::findOrFail($id);
         $post->delete();
         return back()->with('success', 'ลบข้อมูลเรียบร้อยแล้ว');
     }
