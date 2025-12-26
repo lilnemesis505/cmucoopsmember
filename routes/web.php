@@ -32,6 +32,8 @@ use App\Models\Event;
 Route::get('/', [HomeController::class, 'index'])->name('landing');
 Route::get('/xcademy', [HomeController::class, 'xcademy'])->name('xcademy');
 
+Route::get('/xcademy/event/{key}', [HomeController::class, 'xcademyEvent'])->name('xcademy.event');
+
 // กลุ่มหน้าสมาชิก (Member Zone)
 Route::prefix('member')->group(function () {
     Route::get('/', [HomeController::class, 'memberHome'])->name('member.home');

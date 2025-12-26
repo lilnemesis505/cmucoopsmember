@@ -32,6 +32,15 @@ class HomeController extends Controller
             'staticBanner' => $staticBanner
         ]);
     }
+    public function xcademyEvent($key)
+    {
+        // ค้นหาจาก key หรือ id ก็ได้ตามที่คุณเก็บ (ในที่นี้สมมติว่าใช้ key)
+        $event = \App\Models\Event::with('images')->where('key', $key)->firstOrFail();
+        
+        return Inertia::render('Xcademy/EventDetail', [
+            'event' => $event
+        ]);
+    }
    public function memberHome()
     {
         // 1. ดึงข้อมูลจาก Database
