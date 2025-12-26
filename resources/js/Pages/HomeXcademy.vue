@@ -88,7 +88,16 @@ const showStaticLightbox = ref(false);
             </div>
 
             <div class="relative z-10 w-full max-w-7xl animate-fade-in-up delay-200">
-                <swiper :modules="eventModules" :slides-per-view="3" :grid="{ rows: 2, fill: 'row' }" :space-between="20" :breakpoints="breakpoints" :navigation="true" :pagination="{ clickable: true, dynamicBullets: true }" class="pb-12 !px-2 h-[600px] md:h-[750px]">
+                <swiper 
+    :modules="eventModules" 
+    :slides-per-view="3" 
+    :grid="{ rows: 2, fill: 'row' }" 
+    :space-between="20" 
+    :breakpoints="breakpoints" 
+    :navigation="true" 
+    :pagination="{ clickable: true, dynamicBullets: true }" 
+    class="pb-12 !px-2 h-[420px] md:h-[750px]"
+>
                     <swiper-slide v-for="ev in sortedEvents" :key="ev.id" class="h-[calc((100%-20px)/2)]">
                         
                        <Link :href="route('xcademy.event', ev.key)" class="block h-full">

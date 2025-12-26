@@ -52,6 +52,9 @@ Route::prefix('member')->group(function () {
 Route::prefix('admin')->middleware('guest')->group(function () {
     Route::get('login', [AuthController::class, 'showLogin'])->name('admin.login');
     Route::post('login', [AuthController::class, 'login']);
+
+    // Route::get('register', [AuthController::class, 'showRegister'])->name('admin.register');
+    Route::post('register', [AuthController::class, 'register'])->name('admin.register.store');
 });
 
 
