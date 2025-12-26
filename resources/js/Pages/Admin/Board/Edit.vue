@@ -58,9 +58,44 @@ const editorConfig = {
 
 const currentGallery = ref(props.post.images || []);
 
+// --- ส่วนจัดการการเลือกรูปภาพเพื่อลบแบบหลายรูป ---
+const selectedImages = ref([]); // เก็บ URL ของรูปที่ถูกเลือกอยู่
+
+// เช็คว่ารูปนี้ถูกเลือกอยู่หรือไม่
+const isSelected = (imgUrl) => {
+    return selectedImages.value.includes(imgUrl);
+};
+
+// คลิกเพื่อเลือก/ยกเลิกเลือก
+const toggleSelection = (imgUrl) => {
+    if (isSelected(imgUrl)) {
+        selectedImages.value = selectedImages.value.filter(url => url !== imgUrl);
+    } else {
+        selectedImages.value.push(imgUrl);
+    }
+};
+
+// ลบรูปที่เลือกทั้งหมด
+const deleteSelectedImages = () => {
+    selectedImages.value.forEach(imgUrl => {
+        markToRemove(imgUrl);
+    });
+    selectedImages.value = []; // เคลียร์การเลือกหลังจากลบแล้ว
+};
+// --------------------------------------------------
+
 const markToRemove = (imgUrl) => {
-    form.remove_images.push(imgUrl);
+    // เพิ่มรูปลงใน array remove_images ของฟอร์ม (เช็คกันซ้ำ)
+    if (!form.remove_images.includes(imgUrl)) {
+        form.remove_images.push(imgUrl);
+    }
+    // ลบออกจากตัวแปรที่ใช้แสดงผลชั่วคราว
     currentGallery.value = currentGallery.value.filter(img => img !== imgUrl);
+
+    // ถ้าลบรูปเดียวแล้วรูปนั้นถูกเลือกอยู่ด้วย ให้เอาออกจากการเลือก
+    if (isSelected(imgUrl)) {
+        toggleSelection(imgUrl);
+    }
 };
 
 const submit = () => {
@@ -104,27 +139,68 @@ const submit = () => {
                     </div>
                 </div>
 
-                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                    <label class="block text-sm font-medium text-slate-700 mb-2">รูปภาพเพิ่มเติม (Gallery)</label>
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 select-none">
+                    <div class="flex justify-between items-center mb-3">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">รูปภาพเพิ่มเติม (Gallery)</label>
+                            <p class="text-xs text-slate-500">คลิกที่รูปเพื่อเลือกหลายรายการ</p>
+                        </div>
+                        
+                        <transition enter-active-class="transition ease-out duration-200" enter-from-class="opacity-0 translate-y-1" enter-to-class="opacity-100 translate-y-0" leave-active-class="transition ease-in duration-150" leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 translate-y-1">
+                            <button 
+                                v-if="selectedImages.length > 0"
+                                type="button" 
+                                @click="deleteSelectedImages" 
+                                class="text-sm text-white font-bold flex items-center gap-2 bg-red-500 hover:bg-red-600 px-4 py-2 rounded-full shadow-sm transition-colors"
+                            >
+                                <i class="bi bi-trash-fill"></i> ลบ {{ selectedImages.length }} รูปที่เลือก
+                            </button>
+                        </transition>
+                    </div>
                     
-                    <div v-if="currentGallery.length > 0" class="grid grid-cols-4 md:grid-cols-6 gap-2 mb-4">
-                        <div v-for="(img, idx) in currentGallery" :key="idx" class="relative group aspect-square">
-                            <img :src="img" class="w-full h-full object-cover rounded shadow-sm" />
-                            <button type="button" @click="markToRemove(img)" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-600">
+                    <div v-if="currentGallery.length > 0" class="grid grid-cols-4 md:grid-cols-6 gap-3 mb-4">
+                        <div 
+                            v-for="(img, idx) in currentGallery" 
+                            :key="idx" 
+                            class="relative group aspect-square rounded-lg overflow-hidden cursor-pointer border-2 transition-all duration-200"
+                            :class="{'border-red-500 shadow-md': isSelected(img), 'border-transparent hover:border-slate-300': !isSelected(img)}"
+                            @click="toggleSelection(img)"
+                        >
+                            <img :src="img" class="w-full h-full object-cover bg-white transition-opacity" :class="{'opacity-75': isSelected(img)}" />
+                            
+                            <div class="absolute top-2 left-2 w-6 h-6 rounded-full bg-white/80 flex items-center justify-center border transition-all" :class="{'bg-red-500 border-red-500 text-white': isSelected(img), 'border-slate-300 text-transparent group-hover:border-slate-400': !isSelected(img)}">
+                                <i class="bi bi-check-lg text-sm font-bold"></i>
+                            </div>
+
+                            <button type="button" @click.stop="markToRemove(img)" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-600 hover:scale-110 z-10" title="ลบรูปนี้">
                                 <i class="bi bi-x-lg"></i>
                             </button>
                         </div>
                     </div>
+                    <div v-else class="text-center p-8 border-2 border-dashed border-slate-300 rounded-lg text-slate-400 mb-4">
+                        ยังไม่มีรูปภาพในแกลเลอรี
+                    </div>
 
-                    <input type="file" multiple @input="form.gallery_images = $event.target.files" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer" accept="image/*" />
-                    <p class="text-xs text-slate-400 mt-2" v-if="form.remove_images.length > 0">
-                        <i class="bi bi-info-circle"></i> กำลังลบ {{ form.remove_images.length }} รูปเมื่อกดบันทึก
-                    </p>
+                    <div class="flex items-center gap-2">
+                         <label class="cursor-pointer bg-white border border-slate-300 hover:border-purple-500 text-slate-600 px-4 py-2 rounded-full text-sm font-medium transition-colors shadow-sm flex items-center gap-2">
+                            <i class="bi bi-cloud-upload-fill text-purple-600"></i> อัปโหลดรูปเพิ่ม...
+                            <input type="file" multiple @input="form.gallery_images = $event.target.files" class="hidden" accept="image/*" />
+                        </label>
+                        <span v-if="form.gallery_images.length > 0" class="text-sm text-purple-600 ml-2">
+                             เลือกแล้ว {{ form.gallery_images.length }} ไฟล์
+                        </span>
+                    </div>
+
+                    <transition enter-active-class="transition ease-out duration-200" enter-from-class="opacity-0" enter-to-class="opacity-100" leave-active-class="transition ease-in duration-150" leave-from-class="opacity-100" leave-to-class="opacity-0">
+                        <p class="text-sm text-red-600 mt-3 font-medium flex items-center gap-2 bg-red-50 p-2 rounded-lg border border-red-100" v-if="form.remove_images.length > 0">
+                            <i class="bi bi-exclamation-triangle-fill"></i> ระบบจะทำการลบ {{ form.remove_images.length }} รูปภาพอย่างถาวร เมื่อคุณกดปุ่ม "บันทึกการแก้ไข" ด้านล่าง
+                        </p>
+                    </transition>
                 </div>
 
-                <div class="flex justify-end gap-3 pt-4 border-t">
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
                     <Link :href="route('admin.board.index')" class="px-4 py-2 bg-white border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors">ยกเลิก</Link>
-                    <button type="submit" :disabled="form.processing" class="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 font-bold shadow-md transition-colors flex items-center gap-2">
+                    <button type="submit" :disabled="form.processing" class="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2">
                         <i v-if="form.processing" class="bi bi-hourglass-split animate-spin"></i>
                         <i v-else class="bi bi-save"></i>
                         บันทึกการแก้ไข
