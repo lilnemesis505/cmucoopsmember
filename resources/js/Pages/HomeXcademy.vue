@@ -39,7 +39,7 @@ const showStaticLightbox = ref(false);
 
 <template>
     <AppLayoutXcademy>
-        <Head title="X-Cademy กิจกรรมและหลักสูตร" />
+        <Head title="ข่าวสารและกิจกกรม X-Cademy" />
 
         <div class="relative w-full flex flex-col items-center p-4 md:p-8 font-sans overflow-hidden bg-slate-50 min-h-screen">
             
