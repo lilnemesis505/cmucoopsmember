@@ -99,6 +99,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
             'index' => 'admin.board.index',
             'create' => 'admin.board.create',
             'store' => 'admin.board.store',
+            'show'    => 'admin.board.show',
             'edit' => 'admin.board.edit',
             'update' => 'admin.board.update',
             'destroy' => 'admin.board.destroy',
@@ -111,6 +112,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         Route::resource('easypoint', EasyPointPostController::class)->names([
         'index' => 'admin.easypoint.index',
         'create' => 'admin.easypoint.create',
+        'show'    => 'admin.easypoint.show',
         'store' => 'admin.easypoint.store',
         'edit' => 'admin.easypoint.edit',
         'update' => 'admin.easypoint.update',
