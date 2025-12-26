@@ -7,6 +7,7 @@
         {{-- Inertia จะจัดการ Title ให้เอง --}}
         <title inertia>{{ config('app.name', 'CMU X-CADEMY') }}</title>
 
+        <link rel="icon" type="image/png" href="{{ asset('images/icon.gif') }}">
         <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
