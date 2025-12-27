@@ -6,19 +6,8 @@ import { ref } from 'vue';
 // --- 1. Import CKEditor แบบใหม่ (Modular) ---
 import { Ckeditor } from '@ckeditor/ckeditor5-vue';
 import { 
-    ClassicEditor,
-    Essentials, 
-    Paragraph, 
-    Bold, 
-    Italic, 
-    Font, 
-    List, 
-    Link as CkLink, 
-    BlockQuote,
-    Heading,
-    Table, 
-    TableToolbar,
-    Undo 
+    ClassicEditor, Essentials, Paragraph, Bold, Italic, Font, 
+    List, Link as CkLink, BlockQuote, Heading, Table, TableToolbar, Undo 
 } from 'ckeditor5';
 
 // --- 2. Import CSS ของ CKEditor 5 ---
@@ -34,19 +23,17 @@ const form = useForm({
     title: props.page.title || '',
     subtitle: props.page.subtitle || '',
     content: props.page.content || '',
-    cover_image: null, // <--- เพิ่ม: ตัวแปรเก็บไฟล์รูปปกใหม่
+    cover_image: null,
     upload_images: [],
     remove_images: []
 });
 
 // --- ส่วนจัดการ Preview รูปปก ---
 const coverPreview = ref(props.page.image_url || null);
-
 const handleCoverUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
         form.cover_image = file;
-        // สร้าง URL ชั่วคราวเพื่อแสดงผลทันที
         coverPreview.value = URL.createObjectURL(file);
     }
 };
@@ -71,8 +58,24 @@ const editorConfig = {
     }
 };
 
-const currentImages = ref(props.page.images || []);
+// --- 4. ส่วนจัดการ Font (เพิ่มใหม่) ---
+const currentFont = ref('font-sarabun'); // ค่าเริ่มต้น
+const currentSize = ref('text-base');   // ค่าเริ่มต้น
 
+const fonts = [
+    { name: 'Sarabun', class: 'font-sarabun' },
+    { name: 'Prompt', class: 'font-prompt' },
+    { name: 'Kanit', class: 'font-kanit' },
+];
+
+const sizes = [
+    { name: 'เล็ก', class: 'text-sm' },
+    { name: 'ปกติ', class: 'text-base' },
+    { name: 'ใหญ่', class: 'text-lg' },
+];
+
+// --- ส่วนจัดการรูปภาพ ---
+const currentImages = ref(props.page.images || []);
 const markToRemove = (imgUrl) => {
     form.remove_images.push(imgUrl);
     currentImages.value = currentImages.value.filter(img => img !== imgUrl);
@@ -83,7 +86,7 @@ const submit = () => {
         onSuccess: () => {
             form.upload_images = []; 
             form.remove_images = [];
-            form.cover_image = null; // รีเซ็ตค่าไฟล์ปกหลังส่งสำเร็จ
+            form.cover_image = null;
         }
     });
 };
@@ -102,11 +105,37 @@ const getPageName = (key) => {
     <AdminLayout>
         <Head :title="'แก้ไข: ' + pageKey" />
 
+        <component :is="'style'">
+            @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Prompt:wght@300;400;600&family=Sarabun:wght@300;400;600&display=swap');
+            .font-prompt { font-family: 'Prompt', sans-serif; }
+            .font-sarabun { font-family: 'Sarabun', sans-serif; }
+            .font-kanit { font-family: 'Kanit', sans-serif; }
+        </component>
+
         <div class="max-w-4xl mx-auto">
             <div class="flex items-center gap-2 mb-6 text-sm text-slate-500">
                 <Link :href="route('admin.dashboard')" class="hover:text-blue-600">Dashboard</Link>
                 <i class="bi bi-chevron-right text-xs"></i>
                 <span class="text-slate-800 font-bold">แก้ไขเนื้อหา</span>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center justify-between gap-4 sticky top-4 z-20">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider"><i class="bi bi-fonts"></i> Content Font:</span>
+                    <div class="flex bg-slate-100 rounded-lg p-1">
+                        <button 
+                            v-for="font in fonts" 
+                            :key="font.name"
+                            @click="currentFont = font.class"
+                            :class="[
+                                'px-3 py-1 text-xs rounded-md transition-all',
+                                currentFont === font.class ? 'bg-white shadow text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-700'
+                            ]"
+                        >
+                            {{ font.name }}
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
@@ -133,13 +162,13 @@ const getPageName = (key) => {
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">รายละเอียดเนื้อหา (Content)</label>
-                        <div class="ck-editor-wrapper">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">
+                            รายละเอียดเนื้อหา (Content)
+                            <span class="text-xs font-normal text-slate-400 ml-2">*Font ที่เลือกมีผลเฉพาะช่องนี้</span>
+                        </label>
+                        <div class="ck-editor-wrapper transition-all duration-300" :class="[currentFont, currentSize]">
                             <Ckeditor :editor="editor" v-model="form.content" :config="editorConfig" />
                         </div>
-                        <p class="text-xs text-slate-400 mt-1">
-                            * สามารถพิมพ์และจัดรูปแบบได้เหมือน Word (ตัวหนา, ตัวเอียง, จัดย่อหน้า)
-                        </p>
                     </div>
 
                     <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
@@ -191,8 +220,18 @@ const getPageName = (key) => {
 .ck-editor__editable {
     min-height: 300px;
     padding: 1rem !important;
-    font-family: 'Sarabun', sans-serif;
 }
+
+/* Force CKEditor content to use the selected font/size from parent wrapper */
+.font-prompt .ck-content { font-family: 'Prompt', sans-serif !important; }
+.font-sarabun .ck-content { font-family: 'Sarabun', sans-serif !important; }
+.font-kanit .ck-content { font-family: 'Kanit', sans-serif !important; }
+
+/* Apply sizes specifically to ck-content */
+.text-sm .ck-content { font-size: 0.875rem !important; line-height: 1.25rem !important; }
+.text-base .ck-content { font-size: 1rem !important; line-height: 1.5rem !important; }
+.text-lg .ck-content { font-size: 1.125rem !important; line-height: 1.75rem !important; }
+
 .ck.ck-toolbar {
     border-top-left-radius: 0.5rem !important;
     border-top-right-radius: 0.5rem !important;
