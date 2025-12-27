@@ -169,6 +169,45 @@ const getGreeting = () => {
             </div>
 
         </div>
+      <div>
+                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-orange-500"></span> Go to Front-End
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <a :href="route('landing')" target="_blank" class="shortcut-card group hover:border-slate-500/50">
+                        <div class="icon-box bg-slate-50 text-slate-600 group-hover:bg-slate-500 group-hover:text-white">
+                            <i class="bi bi-globe text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800">หน้า Landing Page</h3>
+                            <p class="text-xs text-slate-500">หน้าแรกเว็บไซต์ (Public)</p>
+                        </div>
+                    </a>
+
+                    <a :href="route('member.home')" target="_blank" class="shortcut-card group hover:border-blue-500/50">
+                        <div class="icon-box bg-blue-50 text-blue-600 group-hover:bg-blue-500 group-hover:text-white">
+                            <i class="bi bi-house-heart-fill text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800">หน้าบ้าน MEMBER</h3>
+                            <p class="text-xs text-slate-500">หน้าเมนูหลักสมาชิก</p>
+                        </div>
+                    </a>
+
+                     <a :href="route('xcademy')" target="_blank" class="shortcut-card group hover:border-purple-500/50">
+                        <div class="icon-box bg-purple-50 text-purple-600 group-hover:bg-purple-500 group-hover:text-white">
+                            <i class="bi bi-mortarboard-fill text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800">หน้าบ้าน X-Cademy</h3>
+                            <p class="text-xs text-slate-500">หน้ากิจกรรมและหลักสูตร</p>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+                
     </AdminLayout>
 </template>
 
