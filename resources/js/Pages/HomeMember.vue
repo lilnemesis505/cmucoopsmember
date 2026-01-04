@@ -21,7 +21,7 @@ defineProps({
                 <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800">
                     ระบบสมาชิกสหกรณ์
                 </h2>
-                <p class="text-slate-500 mt-2">เลือกเมนูที่ต้องการใช้งาน</p>
+                <p class="text-slate-500 mt-2">สิทธิ์และประโยชน์ต่างๆของสมาชิก ร้านสหกรณ์มหาวิทยาลัยเชียงใหม่ ที่จะได้รับ</p>
              </div>
 
              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
