@@ -46,7 +46,7 @@ const isMobileMenuOpen = ref(false);
                             <i class="bi bi-coin mr-1.5"></i> EasyPoint
                         </Link>
                         <Link :href="route('check.member')" :class="['nav-item', route().current('check.member') ? 'active' : '']">
-                            <i class="bi bi-search mr-1.5"></i> ตรวจสอบห
+                            <i class="bi bi-search mr-1.5"></i> ตรวจสอบ
                         </Link>
                     </div>
 
