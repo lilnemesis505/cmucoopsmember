@@ -28,8 +28,17 @@ const submitSlider = () => {
     });
 };
 
-const deleteBanner = (id) => {
-    if (confirm('คุณต้องการลบรูปสไลด์นี้ใช่หรือไม่?')) {
+// --- ฟังก์ชันลบ Banner ---
+const deleteBanner = (id, type) => {
+    let message = 'ยืนยันการลบรูปภาพนี้?';
+    
+    if (type === 'static') {
+        message = '⚠️ คุณต้องการลบ "รูปโปสเตอร์ขวา" ออกใช่หรือไม่?';
+    } else {
+        message = '⚠️ คุณต้องการลบ "รูปสไลด์" นี้ใช่หรือไม่?';
+    }
+
+    if (confirm(message)) {
         useForm({}).delete(route('admin.banners.destroy', id));
     }
 };
@@ -107,18 +116,23 @@ const submitStatic = () => {
                         ยังไม่มีรูปภาพสไลด์
                     </div>
                     
-                    <div v-for="slide in sliders" :key="slide.id" class="group relative bg-slate-50 rounded-xl overflow-hidden border border-slate-200 transition-all hover:shadow-md">
-                        <img :src="slide.image_url" class="w-full h-40 object-cover">
-                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                            <a :href="slide.image_url" target="_blank" class="p-2 bg-white/20 text-white rounded-full hover:bg-white/40 backdrop-blur-sm">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <button @click="deleteBanner(slide.id)" class="p-2 bg-red-500/80 text-white rounded-full hover:bg-red-600 backdrop-blur-sm">
-                                <i class="bi bi-trash"></i>
-                            </button>
+                    <div v-for="slide in sliders" :key="slide.id" class="bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+                        <div class="relative w-full aspect-video bg-slate-100">
+                             <img :src="slide.image_url" class="w-full h-full object-cover">
                         </div>
-                        <div class="absolute bottom-2 right-2 text-[10px] text-white bg-black/50 px-2 rounded backdrop-blur-sm">
-                            อัปโหลดเมื่อ: {{ new Date(slide.created_at).toLocaleDateString('th-TH') }}
+                        
+                        <div class="p-3 flex justify-between items-center bg-slate-50 border-t border-slate-100">
+                            <span class="text-xs text-slate-400">
+                                <i class="bi bi-calendar"></i> {{ new Date(slide.created_at).toLocaleDateString('th-TH') }}
+                            </span>
+                            <div class="flex gap-2">
+                                <a :href="slide.image_url" target="_blank" class="px-3 py-1.5 bg-white border border-slate-300 text-slate-600 text-xs rounded hover:bg-slate-50 transition-colors">
+                                    <i class="bi bi-eye"></i> ดูรูป
+                                </a>
+                                <button @click="deleteBanner(slide.id, 'slider')" class="px-3 py-1.5 bg-red-100 text-red-600 border border-red-200 text-xs rounded font-bold hover:bg-red-200 transition-colors flex items-center gap-1">
+                                    <i class="bi bi-trash"></i> ลบรูปนี้
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -127,25 +141,27 @@ const submitStatic = () => {
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 h-fit">
                 <div class="mb-4 border-b pb-2">
                     <h2 class="text-lg font-bold text-blue-600">
-                        <i class="bi bi-card-image mr-2"></i>รูปโปสเตอร์ขวา (30% ของหน้าจอ)
+                        <i class="bi bi-card-image mr-2"></i>รูปโปสเตอร์ขวา
                     </h2>
                     <p class="text-xs text-slate-400">ขนาดแนะนำ: แนวตั้งหรือจัตุรัส (แสดงผลเพียง 1 รูป)</p>
                 </div>
 
-                <div class="mb-6 w-full aspect-[4/3] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 relative group">
+                <div class="mb-4 w-full aspect-[4/3] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 relative">
                     <img v-if="staticBanner" :src="staticBanner.image_url" class="w-full h-full object-cover">
                     <div v-else class="w-full h-full flex flex-col items-center justify-center text-slate-400">
                         <i class="bi bi-image text-4xl mb-2"></i>
                         <span>ยังไม่มีรูปภาพ</span>
                     </div>
-                    
-                    <div v-if="staticBanner" class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
-                        <p class="text-white text-xs">แก้ไขล่าสุด: {{ new Date(staticBanner.updated_at).toLocaleDateString('th-TH') }}</p>
-                    </div>
+                </div>
+
+                <div v-if="staticBanner" class="mb-6">
+                    <button @click="deleteBanner(staticBanner.id, 'static')" class="w-full py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg text-sm font-bold hover:bg-red-100 transition-colors flex items-center justify-center gap-2">
+                        <i class="bi bi-trash-fill"></i> ลบรูปโปสเตอร์ปัจจุบันออก
+                    </button>
                 </div>
 
                 <form @submit.prevent="submitStatic" class="bg-slate-50 p-4 rounded-xl border border-dashed border-slate-300">
-                    <label class="block mb-2 text-sm font-medium text-slate-700">เปลี่ยนรูปภาพใหม่</label>
+                    <label class="block mb-2 text-sm font-medium text-slate-700">เปลี่ยน/อัปโหลด รูปภาพใหม่</label>
                     <div class="flex flex-col gap-3">
                         <input 
                             type="file" 
