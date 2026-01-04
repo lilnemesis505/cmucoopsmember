@@ -108,7 +108,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                                     </div>
                                 </div>
                             <div class="relative z-10 mt-auto">
-                                <h3 class="text-xl font-bold text-slate-800">ตรวจสอบข้อมูล</h3>
+                                <h3 class="text-xl font-bold text-slate-800">ตรวจสอบข้อมูล สมาชิก</h3>
                                 <p class="text-sm text-slate-500 mt-1">เช็คยอดหุ้น / เงินปันผล / หนี้สิน</p>
                             </div>
                         </div>
