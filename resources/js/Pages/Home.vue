@@ -1,12 +1,60 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
+import { ref, onMounted } from 'vue';
+
+// --- จัดการ Popup ---
+const showPopup = ref(true); // เริ่มต้นให้แสดง Popup ทันที
+
+// ใส่ URL ของรูปภาพขนาด 1920x1080 ที่ต้องการตรงนี้
+const popupImage = 'https://ik.imagekit.io/cmucoopsmember/%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%99%E0%B8%B2%E0%B8%87.jpg?updatedAt=1767600043418'; 
+
+const enterSite = () => {
+    showPopup.value = false;
+};
 </script>
 
 <template>
     <AppLayout>
         <Head title="หน้าแรก" />
 
+        <Transition
+            enter-active-class="transition duration-500 ease-out"
+            enter-from-class="opacity-0"
+            enter-to-class="opacity-100"
+            leave-active-class="transition duration-700 ease-in"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0 translate-y-0"
+        >
+            <div v-if="showPopup" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+                
+                <div class="relative w-full max-w-6xl flex flex-col items-center animate-zoom-in">
+                    
+                    <div class="relative w-full aspect-video rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(255,255,255,0.1)] border border-white/10">
+                        <img 
+                            :src="popupImage" 
+                            class="w-full h-full object-cover"
+                            alt="Welcome Popup"
+                        />
+                        
+                        <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
+                    </div>
+
+                    <div class="mt-8 md:-mt-20 relative z-20">
+                        <button 
+                            @click="enterSite"
+                            class="group relative inline-flex items-center gap-3 px-10 py-4 bg-white text-slate-900 rounded-full font-bold text-lg md:text-xl shadow-2xl hover:scale-105 transition-all duration-300 ring-4 ring-white/30 hover:ring-white/50"
+                        >
+                            <span>เข้าสู่เว็บไซต์</span>
+                            <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            
+                            <div class="absolute inset-0 rounded-full bg-white blur-lg opacity-40 group-hover:opacity-60 transition-opacity -z-10"></div>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </Transition>
         <div class="relative w-full min-h-screen flex flex-col items-center justify-center p-4 md:p-8 font-sans overflow-hidden bg-black">
             
             <div class="absolute inset-0 z-0">
@@ -100,19 +148,20 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                     </Link>
 
                     <Link :href="route('member_check.home')" class="modern-card md:col-span-4 group border-t-4 border-pink-500">
-    <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-pink-100 rounded-xl">
-        <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
-        <div class="relative z-10 mb-4">
-            <div class="icon-box-sm bg-pink-100 text-pink-600">
-                <i class="bi bi-shield-check text-2xl"></i>
-            </div>
-        </div>
-        <div class="relative z-10 mt-auto">
-            <h3 class="text-xl font-bold text-slate-800">ตรวจสอบข้อมูล สมาชิก</h3>
-            <p class="text-sm text-slate-500 mt-1">เช็คข้อมูลสมาชิก / ยอดหุ้น </p>
-        </div>
-    </div>
-</Link>
+                        <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-pink-100 rounded-xl">
+                            <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
+                            <div class="relative z-10 mb-4">
+                                <div class="icon-box-sm bg-pink-100 text-pink-600">
+                                    <i class="bi bi-shield-check text-2xl"></i>
+                                </div>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <h3 class="text-xl font-bold text-slate-800">ตรวจสอบข้อมูล สมาชิก</h3>
+                                <p class="text-sm text-slate-500 mt-1">เช็คข้อมูลสมาชิก / ยอดหุ้น </p>
+                            </div>
+                        </div>
+                    </Link>
+
                      <Link :href="route('easypoint')" class="modern-card md:col-span-4 group border-t-4 border-yellow-500 relative z-20">
                         <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-yellow-100 rounded-xl">
                             <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
@@ -141,6 +190,15 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 
 .font-sans { 
     font-family: 'Prompt', sans-serif; 
+}
+
+/* === ANIMATION FOR POPUP === */
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+.animate-zoom-in {
+    animation: zoomIn 0.5s ease-out forwards;
 }
 
 /* === CARD STYLES === */
