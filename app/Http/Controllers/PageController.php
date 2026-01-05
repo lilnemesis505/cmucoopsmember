@@ -38,10 +38,11 @@ class PageController extends Controller
     public function editMemberCheck()
     {
         $page = Page::firstOrCreate(['key' => 'member_check'], ['title' => 'ตรวจสอบข้อมูลสมาชิก']);
-        return Inertia::render('Admin/MemberCheck/Edit', [
-            'page' => $page,
-            'pageKey' => 'member_check' // ส่ง key ไปบอก Vue ว่ากำลังแก้หน้านี้
-        ]);
+       return Inertia::render('Admin/MemberCheck/Edit', [
+    'page' => $page,
+    'pageKey' => 'member_check',
+    'updateRoute' => 'admin.member_check.update' // ส่งชื่อ Route ใหม่ไป
+]);
     }
 
     public function update(Request $request, $key)

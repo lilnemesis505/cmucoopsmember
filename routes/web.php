@@ -81,7 +81,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         // ใช้ PageContentController เดิม แต่ระบุ Key ให้ตรงกับใน Database
         Route::get('pages/{key}/edit', [PageContentController::class, 'edit'])->name('admin.pages.edit');
         Route::put('pages/{key}', [PageContentController::class, 'update'])->name('admin.pages.update');
-
+        Route::put('/pages/{key}', [PageController::class, 'update'])->name('admin.member_check.update');
         Route::get('pages/{key}/cover', [PageContentController::class, 'editCover'])->name('admin.pages.edit_cover');
          Route::put('pages/{key}/cover', [PageContentController::class, 'updateCover'])->name('admin.pages.update_cover');
     });
@@ -158,8 +158,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         Route::post('/static', [BannerController::class, 'updateStatic'])->name('admin.banners.static.update');
         Route::delete('/{id}', [BannerController::class, 'destroy'])->name('admin.banners.destroy');
 
-    Route::get('/member-check/edit', [PageController::class, 'editMemberCheck'])->name('admin.member_check.edit');
-    Route::put('/pages/{key}', [PageController::class, 'update'])->name('admin.pages.update');
-});
 
+});
+    Route::get('/member-check/edit', [PageController::class, 'editMemberCheck'])->name('admin.member_check.edit');
+    Route::put('/member-check/update/{key}', [PageController::class, 'update'])->name('admin.member_check.update');
 });

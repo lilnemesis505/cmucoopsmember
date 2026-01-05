@@ -1,7 +1,6 @@
 <script setup>
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { ref } from 'vue';
 import { Ckeditor } from '@ckeditor/ckeditor5-vue';
 import { 
     ClassicEditor, Essentials, Paragraph, Bold, Italic, Font, 
@@ -19,8 +18,7 @@ const form = useForm({
     title: props.page.title || '',
     subtitle: props.page.subtitle || '',
     content: props.page.content || '',
-    cover_image: null,
-    remove_cover: false
+    // ลบส่วน cover_image ออกแล้ว
 });
 
 // CKEditor Config
@@ -31,26 +29,13 @@ const editorConfig = {
     toolbar: ['undo', 'redo', '|', 'heading', '|', 'bold', 'italic', 'fontSize', 'fontColor', '|', 'bulletedList', 'numberedList', '|', 'link', 'insertTable', 'blockQuote'],
 };
 
-// Image Preview
-const coverPreview = ref(props.page.image_url || null);
-const handleCoverUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        form.cover_image = file;
-        form.remove_cover = false;
-        coverPreview.value = URL.createObjectURL(file);
-    }
-};
-
-const removeCover = () => {
-    form.cover_image = null;
-    form.remove_cover = true;
-    coverPreview.value = null;
-};
-
 const submit = () => {
-    // ส่งไปที่ Route update โดยส่ง key ไปด้วย
-    form.post(route('admin.pages.update', props.pageKey));
+    // แก้ไข Route ให้ตรงกับ web.php (admin.member_check.update)
+    form.put(route('admin.member_check.update', props.pageKey), {
+        onSuccess: () => {
+            // อาจจะเพิ่ม Alert ตรงนี้ก็ได้ถ้าต้องการ
+        }
+    });
 };
 </script>
 
@@ -71,19 +56,6 @@ const submit = () => {
                 </h2>
                 
                 <form @submit.prevent="submit" class="space-y-6">
-                    <div class="flex gap-4 items-start bg-slate-50 p-4 rounded-lg border border-slate-100">
-                        <div v-if="coverPreview" class="w-40 h-24 shrink-0 relative group">
-                            <img :src="coverPreview" class="w-full h-full object-cover rounded border bg-white" />
-                            <button type="button" @click="removeCover" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow hover:scale-110 transition-all">
-                                <i class="bi bi-x"></i>
-                            </button>
-                        </div>
-                        <div class="flex-grow">
-                            <label class="block font-medium text-slate-700 mb-1">รูปปก (Banner)</label>
-                            <input type="file" @input="handleCoverUpload" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 cursor-pointer" accept="image/*" />
-                        </div>
-                    </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="col-span-2">
                             <label class="block font-medium text-slate-700 mb-1">หัวข้อหลัก (Title)</label>
@@ -104,9 +76,11 @@ const submit = () => {
 
                     <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
                         <Link :href="route('admin.dashboard')" class="px-4 py-2 bg-white border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50">ยกเลิก</Link>
+                        
                         <button type="submit" :disabled="form.processing" class="px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 font-bold shadow transition-all flex items-center gap-2">
                             <i v-if="form.processing" class="bi bi-hourglass-split animate-spin"></i>
-                            <i v-else class="bi bi-save"></i> บันทึกการแก้ไข
+                            <i v-else class="bi bi-save"></i> 
+                            {{ form.processing ? 'กำลังบันทึก...' : 'บันทึกการแก้ไข' }}
                         </button>
                     </div>
                 </form>
