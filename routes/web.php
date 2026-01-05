@@ -80,7 +80,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::prefix('services')->group(function() {
         // ใช้ PageContentController เดิม แต่ระบุ Key ให้ตรงกับใน Database
         Route::get('pages/{key}/edit', [PageContentController::class, 'edit'])->name('admin.pages.edit');
-        Route::put('pages/{key}', [PageContentController::class, 'update'])->name('admin.pages.update');
+      
         Route::put('/pages/{key}', [PageController::class, 'update'])->name('admin.member_check.update');
         Route::get('pages/{key}/cover', [PageContentController::class, 'editCover'])->name('admin.pages.edit_cover');
          Route::put('pages/{key}/cover', [PageContentController::class, 'updateCover'])->name('admin.pages.update_cover');
