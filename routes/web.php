@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\PageContentController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\EasyPointPostController;
+use App\Http\Controllers\PageController;
 
 use App\Models\Member;
 use App\Models\Event;
@@ -33,6 +34,8 @@ Route::get('/', [HomeController::class, 'index'])->name('landing');
 Route::get('/xcademy', [HomeController::class, 'xcademy'])->name('xcademy');
 
 Route::get('/xcademy/event/{key}', [HomeController::class, 'xcademyEvent'])->name('xcademy.event');
+
+Route::get('/member-check', [PageController::class, 'showMemberCheck'])->name('member_check.home');
 
 // กลุ่มหน้าสมาชิก (Member Zone)
 Route::prefix('member')->group(function () {
@@ -154,6 +157,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         Route::post('/slider', [BannerController::class, 'storeSlider'])->name('admin.banners.slider.store');
         Route::post('/static', [BannerController::class, 'updateStatic'])->name('admin.banners.static.update');
         Route::delete('/{id}', [BannerController::class, 'destroy'])->name('admin.banners.destroy');
-    });
+
+    Route::get('/member-check/edit', [PageController::class, 'editMemberCheck'])->name('admin.member_check.edit');
+    Route::put('/pages/{key}', [PageController::class, 'update'])->name('admin.pages.update');
+});
 
 });
