@@ -1,12 +1,7 @@
 <script setup>
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { Ckeditor } from '@ckeditor/ckeditor5-vue';
-import { 
-    ClassicEditor, Essentials, Paragraph, Bold, Italic, Font, 
-    List, Link as CkLink, BlockQuote, Heading, Table, TableToolbar, Undo 
-} from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
+import RichTextEditor from '@/Components/RichTextEditor.vue';
 
 const props = defineProps({ 
     page: Object,
@@ -18,22 +13,12 @@ const form = useForm({
     title: props.page.title || '',
     subtitle: props.page.subtitle || '',
     content: props.page.content || '',
-    // ลบส่วน cover_image ออกแล้ว
 });
 
-// CKEditor Config
-const editor = ClassicEditor;
-const editorConfig = {
-    licenseKey: 'GPL',
-    plugins: [Essentials, Paragraph, Heading, Bold, Italic, Font, List, CkLink, BlockQuote, Table, TableToolbar, Undo],
-    toolbar: ['undo', 'redo', '|', 'heading', '|', 'bold', 'italic', 'fontSize', 'fontColor', '|', 'bulletedList', 'numberedList', '|', 'link', 'insertTable', 'blockQuote'],
-};
-
 const submit = () => {
-    // แก้ไข Route ให้ตรงกับ web.php (admin.member_check.update)
     form.put(route('admin.member_check.update', props.pageKey), {
         onSuccess: () => {
-            // อาจจะเพิ่ม Alert ตรงนี้ก็ได้ถ้าต้องการ
+            // Success action if needed
         }
     });
 };
@@ -42,6 +27,10 @@ const submit = () => {
 <template>
     <AdminLayout>
         <Head title="แก้ไขหน้าตรวจสอบสมาชิก" />
+
+        <component :is="'style'">
+            @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Prompt:wght@300;400;600&family=Sarabun:wght@300;400;600&display=swap');
+        </component>
 
         <div class="max-w-4xl mx-auto">
             <div class="flex items-center gap-2 mb-6 text-sm text-slate-500">
@@ -69,9 +58,7 @@ const submit = () => {
 
                     <div>
                         <label class="block font-medium text-slate-700 mb-1">เนื้อหา (Content)</label>
-                        <div class="ck-editor-wrapper">
-                            <Ckeditor :editor="editor" v-model="form.content" :config="editorConfig" />
-                        </div>
+                        <RichTextEditor v-model="form.content" />
                     </div>
 
                     <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
@@ -90,5 +77,21 @@ const submit = () => {
 </template>
 
 <style>
-.ck-editor__editable { min-height: 350px; padding: 1rem !important; }
+/* CKEditor Styles */
+.ck-editor__editable {
+    min-height: 350px;
+    padding: 1rem !important;
+}
+
+/* CKEditor Toolbar Radius Fix */
+.ck.ck-toolbar {
+    border-top-left-radius: 0.5rem !important;
+    border-top-right-radius: 0.5rem !important;
+    border-color: #cbd5e1 !important;
+}
+.ck.ck-content {
+    border-bottom-left-radius: 0.5rem !important;
+    border-bottom-right-radius: 0.5rem !important;
+    border-color: #cbd5e1 !important;
+}
 </style>

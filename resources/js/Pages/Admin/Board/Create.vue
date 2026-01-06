@@ -2,8 +2,7 @@
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { Ckeditor } from '@ckeditor/ckeditor5-vue';
-import { ClassicEditor, Essentials, Paragraph, Bold, Italic, Font, List, Link as CkLink, BlockQuote, Heading, Table, TableToolbar, Undo } from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
+import RichTextEditor from '@/Components/RichTextEditor.vue';
 
 const form = useForm({
     title: '',
@@ -13,12 +12,7 @@ const form = useForm({
     gallery_images: []
 });
 
-const editor = ClassicEditor;
-const editorConfig = {
-    licenseKey: 'GPL',
-    plugins: [Essentials, Paragraph, Heading, Bold, Italic, Font, List, CkLink, BlockQuote, Table, TableToolbar, Undo],
-    toolbar: ['undo', 'redo', '|', 'heading', '|', 'bold', 'italic', 'fontSize', 'fontColor', '|', 'bulletedList', 'numberedList', '|', 'link', 'insertTable', 'blockQuote'],
-};
+
 
 const submit = () => {
     form.post(route('admin.board.store'));

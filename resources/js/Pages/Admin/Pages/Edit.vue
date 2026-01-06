@@ -3,15 +3,7 @@ import { Head, useForm, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { ref } from 'vue';
 
-// --- 1. Import CKEditor แบบใหม่ (Modular) ---
-import { Ckeditor } from '@ckeditor/ckeditor5-vue';
-import { 
-    ClassicEditor, Essentials, Paragraph, Bold, Italic, Font, 
-    List, Link as CkLink, BlockQuote, Heading, Table, TableToolbar, Undo 
-} from 'ckeditor5';
-
-// --- 2. Import CSS ของ CKEditor 5 ---
-import 'ckeditor5/ckeditor5.css';
+import RichTextEditor from '@/Components/RichTextEditor.vue';
 
 const props = defineProps({ 
     page: Object,
@@ -38,43 +30,8 @@ const handleCoverUpload = (event) => {
     }
 };
 
-// --- 3. ตั้งค่า Editor & Plugins ---
-const editor = ClassicEditor;
-const editorConfig = {
-    licenseKey: 'GPL',
-    plugins: [
-        Essentials, Paragraph, Heading, Bold, Italic, Font, 
-        List, CkLink, BlockQuote, Table, TableToolbar, Undo
-    ],
-    toolbar: [
-        'undo', 'redo', '|', 
-        'heading', '|', 
-        'bold', 'italic', 'fontSize', 'fontColor', '|',
-        'bulletedList', 'numberedList', '|',
-        'link', 'insertTable', 'blockQuote'
-    ],
-    table: {
-        contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
-    }
-};
 
-// --- 4. ส่วนจัดการ Font (เพิ่มใหม่) ---
-const currentFont = ref('font-sarabun'); // ค่าเริ่มต้น
-const currentSize = ref('text-base');   // ค่าเริ่มต้น
-
-const fonts = [
-    { name: 'Sarabun', class: 'font-sarabun' },
-    { name: 'Prompt', class: 'font-prompt' },
-    { name: 'Kanit', class: 'font-kanit' },
-];
-
-const sizes = [
-    { name: 'เล็ก', class: 'text-sm' },
-    { name: 'ปกติ', class: 'text-base' },
-    { name: 'ใหญ่', class: 'text-lg' },
-];
-
-// --- ส่วนจัดการรูปภาพ ---
+// --- ส่วนจัดการรูปภาพ Gallery ---
 const currentImages = ref(props.page.images || []);
 const markToRemove = (imgUrl) => {
     form.remove_images.push(imgUrl);
@@ -107,9 +64,6 @@ const getPageName = (key) => {
 
         <component :is="'style'">
             @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Prompt:wght@300;400;600&family=Sarabun:wght@300;400;600&display=swap');
-            .font-prompt { font-family: 'Prompt', sans-serif; }
-            .font-sarabun { font-family: 'Sarabun', sans-serif; }
-            .font-kanit { font-family: 'Kanit', sans-serif; }
         </component>
 
         <div class="max-w-4xl mx-auto">
@@ -117,25 +71,6 @@ const getPageName = (key) => {
                 <Link :href="route('admin.dashboard')" class="hover:text-blue-600">Dashboard</Link>
                 <i class="bi bi-chevron-right text-xs"></i>
                 <span class="text-slate-800 font-bold">แก้ไขเนื้อหา</span>
-            </div>
-
-            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center justify-between gap-4 sticky top-4 z-20">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider"><i class="bi bi-fonts"></i> Content Font:</span>
-                    <div class="flex bg-slate-100 rounded-lg p-1">
-                        <button 
-                            v-for="font in fonts" 
-                            :key="font.name"
-                            @click="currentFont = font.class"
-                            :class="[
-                                'px-3 py-1 text-xs rounded-md transition-all',
-                                currentFont === font.class ? 'bg-white shadow text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-700'
-                            ]"
-                        >
-                            {{ font.name }}
-                        </button>
-                    </div>
-                </div>
             </div>
 
             <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
@@ -153,27 +88,24 @@ const getPageName = (key) => {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">หัวข้อหลัก (Title)</label>
-                            <input v-model="form.title" type="text" class="form-input" required />
+                            <input v-model="form.title" type="text" class="form-input w-full border-slate-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" required />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">คำโปรย (Subtitle)</label>
-                            <input v-model="form.subtitle" type="text" class="form-input" />
+                            <input v-model="form.subtitle" type="text" class="form-input w-full border-slate-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">
                             รายละเอียดเนื้อหา (Content)
-                            <span class="text-xs font-normal text-slate-400 ml-2">*Font ที่เลือกมีผลเฉพาะช่องนี้</span>
                         </label>
-                        <div class="ck-editor-wrapper transition-all duration-300" :class="[currentFont, currentSize]">
-                            <Ckeditor :editor="editor" v-model="form.content" :config="editorConfig" />
-                        </div>
+                        <RichTextEditor v-model="form.content" />
                     </div>
 
                     <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
                         <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
-                            <i class="bi bi-images"></i> จัดการรูปภาพประกอบ (ในเนื้อหา)
+                            <i class="bi bi-images"></i> จัดการรูปภาพประกอบ (Gallery)
                         </h3>
                         
                         <div v-if="currentImages.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -216,21 +148,10 @@ const getPageName = (key) => {
 </template>
 
 <style>
-/* CKEditor Styles */
 .ck-editor__editable {
-    min-height: 300px;
+    min-height: 350px;
     padding: 1rem !important;
 }
-
-/* Force CKEditor content to use the selected font/size from parent wrapper */
-.font-prompt .ck-content { font-family: 'Prompt', sans-serif !important; }
-.font-sarabun .ck-content { font-family: 'Sarabun', sans-serif !important; }
-.font-kanit .ck-content { font-family: 'Kanit', sans-serif !important; }
-
-/* Apply sizes specifically to ck-content */
-.text-sm .ck-content { font-size: 0.875rem !important; line-height: 1.25rem !important; }
-.text-base .ck-content { font-size: 1rem !important; line-height: 1.5rem !important; }
-.text-lg .ck-content { font-size: 1.125rem !important; line-height: 1.75rem !important; }
 
 .ck.ck-toolbar {
     border-top-left-radius: 0.5rem !important;
@@ -241,8 +162,5 @@ const getPageName = (key) => {
     border-bottom-left-radius: 0.5rem !important;
     border-bottom-right-radius: 0.5rem !important;
     border-color: #cbd5e1 !important;
-}
-.form-input {
-    @apply w-full border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm;
 }
 </style>

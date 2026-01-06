@@ -2,12 +2,7 @@
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { ref } from 'vue';
-import { Ckeditor } from '@ckeditor/ckeditor5-vue';
-import { 
-    ClassicEditor, Essentials, Paragraph, Bold, Italic, Font, 
-    List, Link as CkLink, BlockQuote, Heading, Table, TableToolbar, Undo 
-} from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
+import RichTextEditor from '@/Components/RichTextEditor.vue';
 
 const props = defineProps({ post: Object });
 
@@ -18,46 +13,17 @@ const form = useForm({
     content: props.post.content,
     cover_image: null,
     gallery_images: [],
-    remove_images: [] // เก็บรายชื่อรูปที่จะลบเมื่อกดบันทึก
+    remove_images: [] 
 });
 
-const editor = ClassicEditor;
-const editorConfig = {
-    licenseKey: 'GPL',
-    plugins: [Essentials, Paragraph, Heading, Bold, Italic, Font, List, CkLink, BlockQuote, Table, TableToolbar, Undo],
-    toolbar: ['undo', 'redo', '|', 'heading', '|', 'bold', 'italic', 'fontSize', 'fontColor', '|', 'bulletedList', 'numberedList', '|', 'link', 'insertTable', 'blockQuote'],
-    table: {
-        contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
-    }
-};
+
 
 const currentGallery = ref(props.post.images || []);
+const selectedImages = ref([]);
 
-// --- ส่วนจัดการ Font (เพิ่มใหม่) ---
-const currentFont = ref('font-sarabun'); // ค่าเริ่มต้น
-const currentSize = ref('text-base');   // ค่าเริ่มต้น
+// --- ส่วนจัดการ Gallery ---
+const isSelected = (imgUrl) => selectedImages.value.includes(imgUrl);
 
-const fonts = [
-    { name: 'Sarabun', class: 'font-sarabun' },
-    { name: 'Prompt', class: 'font-prompt' },
-    { name: 'Kanit', class: 'font-kanit' },
-];
-
-const sizes = [
-    { name: 'เล็ก', class: 'text-sm' },
-    { name: 'ปกติ', class: 'text-base' },
-    { name: 'ใหญ่', class: 'text-lg' },
-];
-
-// --- ส่วนจัดการการเลือกรูปภาพเพื่อลบแบบหลายรูป ---
-const selectedImages = ref([]); // เก็บ URL ของรูปที่ถูกเลือกอยู่
-
-// เช็คว่ารูปนี้ถูกเลือกอยู่หรือไม่
-const isSelected = (imgUrl) => {
-    return selectedImages.value.includes(imgUrl);
-};
-
-// คลิกเพื่อเลือก/ยกเลิกเลือก
 const toggleSelection = (imgUrl) => {
     if (isSelected(imgUrl)) {
         selectedImages.value = selectedImages.value.filter(url => url !== imgUrl);
@@ -66,28 +32,17 @@ const toggleSelection = (imgUrl) => {
     }
 };
 
-// ลบรูปที่เลือกทั้งหมด
 const deleteSelectedImages = () => {
-    selectedImages.value.forEach(imgUrl => {
-        markToRemove(imgUrl);
-    });
-    selectedImages.value = []; // เคลียร์การเลือกหลังจากลบแล้ว
+    selectedImages.value.forEach(imgUrl => markToRemove(imgUrl));
+    selectedImages.value = [];
 };
-// --------------------------------------------------
 
-// ฟังก์ชันลบรูปเดียว (ใช้ทั้งปุ่ม X และปุ่มลบหมู่)
 const markToRemove = (imgUrl) => {
-    // เพิ่มรูปลงใน array remove_images ของฟอร์ม
     if (!form.remove_images.includes(imgUrl)) {
         form.remove_images.push(imgUrl);
     }
-    // ลบออกจากตัวแปรที่ใช้แสดงผลชั่วคราว (เพื่อให้ UI อัปเดตทันที)
     currentGallery.value = currentGallery.value.filter(img => img !== imgUrl);
-    
-    // ถ้าลบรูปเดียวแล้วรูปนั้นถูกเลือกอยู่ด้วย ให้เอาออกจากการเลือก
-    if (isSelected(imgUrl)) {
-        toggleSelection(imgUrl);
-    }
+    if (isSelected(imgUrl)) toggleSelection(imgUrl);
 };
 
 const submit = () => {
@@ -101,32 +56,10 @@ const submit = () => {
 
         <component :is="'style'">
             @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Prompt:wght@300;400;600&family=Sarabun:wght@300;400;600&display=swap');
-            .font-prompt { font-family: 'Prompt', sans-serif; }
-            .font-sarabun { font-family: 'Sarabun', sans-serif; }
-            .font-kanit { font-family: 'Kanit', sans-serif; }
         </component>
 
         <div class="max-w-4xl mx-auto">
             
-            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center justify-between gap-4 sticky top-4 z-20">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider"><i class="bi bi-fonts"></i> Content Font:</span>
-                    <div class="flex bg-slate-100 rounded-lg p-1">
-                        <button 
-                            v-for="font in fonts" 
-                            :key="font.name"
-                            @click="currentFont = font.class"
-                            :class="[
-                                'px-3 py-1 text-xs rounded-md transition-all',
-                                currentFont === font.class ? 'bg-white shadow text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-700'
-                            ]"
-                        >
-                            {{ font.name }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-
             <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
                 <h2 class="text-2xl font-bold text-slate-800 mb-6">แก้ไข: {{ post.title }}</h2>
                 
@@ -156,11 +89,8 @@ const submit = () => {
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">
                             เนื้อหา (Content)
-                            <span class="text-xs font-normal text-slate-400 ml-2">*Font ที่เลือกมีผลเฉพาะช่องนี้</span>
                         </label>
-                        <div class="ck-editor-wrapper transition-all duration-300" :class="[currentFont, currentSize]">
-                            <Ckeditor :editor="editor" v-model="form.content" :config="editorConfig" />
-                        </div>
+                        <RichTextEditor v-model="form.content" />
                     </div>
 
                     <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 select-none">
@@ -191,11 +121,9 @@ const submit = () => {
                                 @click="toggleSelection(img)"
                             >
                                 <img :src="img" class="w-full h-full object-cover bg-white transition-opacity" :class="{'opacity-75': isSelected(img)}" />
-                                
                                 <div class="absolute top-2 left-2 w-6 h-6 rounded-full bg-white/80 flex items-center justify-center border transition-all" :class="{'bg-red-500 border-red-500 text-white': isSelected(img), 'border-slate-300 text-transparent group-hover:border-slate-400': !isSelected(img)}">
                                     <i class="bi bi-check-lg text-sm font-bold"></i>
                                 </div>
-
                                 <button type="button" @click.stop="markToRemove(img)" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-600 hover:scale-110 z-10" title="ลบรูปนี้">
                                     <i class="bi bi-x-lg"></i>
                                 </button>
@@ -242,16 +170,6 @@ const submit = () => {
     min-height: 300px;
     padding: 1rem !important;
 }
-
-/* Force CKEditor content to use the selected font/size from parent wrapper */
-.font-prompt .ck-content { font-family: 'Prompt', sans-serif !important; }
-.font-sarabun .ck-content { font-family: 'Sarabun', sans-serif !important; }
-.font-kanit .ck-content { font-family: 'Kanit', sans-serif !important; }
-
-/* Apply sizes specifically to ck-content */
-.text-sm .ck-content { font-size: 0.875rem !important; line-height: 1.25rem !important; }
-.text-base .ck-content { font-size: 1rem !important; line-height: 1.5rem !important; }
-.text-lg .ck-content { font-size: 1.125rem !important; line-height: 1.75rem !important; }
 
 /* CKEditor Toolbar Radius Fix */
 .ck.ck-toolbar {
