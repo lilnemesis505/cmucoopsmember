@@ -52,11 +52,12 @@ Route::prefix('member')->group(function () {
 // =========================================================================
 // 2. ADMIN GUEST (ยังไม่ได้ Login)
 // =========================================================================
-Route::prefix('admin')->middleware('guest')->group(function () {
-    Route::get('login', [AuthController::class, 'showLogin'])->name('admin.login');
-    Route::get('/admin', function() {
+Route::get('/admin', function() {
     return redirect()->route('admin.login');
 });
+Route::prefix('admin')->middleware('guest')->group(function () {
+    Route::get('login', [AuthController::class, 'showLogin'])->name('admin.login');
+    
     Route::post('login', [AuthController::class, 'login']);
 
     // Route::get('register', [AuthController::class, 'showRegister'])->name('admin.register');
