@@ -76,8 +76,8 @@ const editorConfig = {
 <template>
     <div class="rich-text-editor-wrapper">
         <component :is="'style'">
-            @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600&family=Kanit:wght@300;400;600&family=Mitr:wght@300;400;600&family=Prompt:wght@300;400;600&family=Sarabun:wght@300;400;600&family=Kodchasan:wght@300;400;600display=swap');
-        </component>
+    @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600&family=Kanit:wght@300;400;600&family=Kodchasan:wght@300;400;600&family=Mitr:wght@300;400;600&family=Prompt:wght@300;400;600&family=Sarabun:wght@300;400;600&display=swap');
+</component>
 
         <Ckeditor 
             :editor="editor" 
