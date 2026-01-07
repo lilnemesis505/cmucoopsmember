@@ -104,7 +104,7 @@ const enterSite = () => {
                                 />
                             </div>
                             <div class="relative z-10 mt-auto pt-8">
-                                <h2 class="card-title text-slate-800">MEMBER CONNECT</h2>
+                                <h2 class="card-title text-slate-800">MEMBER</h2>
                                 <p class="card-subtitle text-slate-500">ข้อมูลสมาชิก สวัสดิการ และสิทธิประโยชน์</p>
                                 <div class="h-1.5 w-16 bg-blue-500 mt-4 rounded-full group-hover:w-1/2 transition-all duration-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
                             </div>
