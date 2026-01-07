@@ -3,53 +3,67 @@ name: Deploy to Hosting Lotus
 on:
   push:
     branches:
-      - main  # เช็คดูว่า Branch หลักของคุณชื่อ main หรือ master (ถ้าเป็น master ให้แก้ตรงนี้)
+      - main  # หรือ master (เช็คชื่อ branch หลักของคุณ)
 
 jobs:
   web-deploy:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
     steps:
+      # 1. ดึงโค้ดจาก GitHub มาเตรียมไว้
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
 
+      # 2. ตั้งค่า PHP ให้ตรงกับโฮสต์ (8.2)
       - name: 🟢 Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
 
+      # 3. ลง Library ของ Laravel (Vendor)
       - name: 📦 Install Composer Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
+      # 4. ตั้งค่า Node.js เพื่อเตรียมสร้างไฟล์ CSS/JS
       - name: 🟡 Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
+      # 5. สั่ง Build ไฟล์ Vite (สร้างโฟลเดอร์ build)
       - name: 🔨 Build Frontend (Vite)
         run: |
           npm install
           npm run build
 
-      - name: 📂 Sync Code (Backend) to cmucoop folder
+      # ---------------------------------------------------
+      # ส่วนการอัปโหลด (แบ่งเป็น 2 ก้อน: หลังบ้าน และ หน้าบ้าน)
+      # ---------------------------------------------------
+
+      # 6. อัปโหลด "โค้ดหลังบ้าน" ไปที่โฟลเดอร์ cmucoop
+      - name: 📂 Sync Backend Code (to cmucoop)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /cmucoop/
-          exclude: |
+          server-dir: /cmucoop/           # โฟลเดอร์ปลายทาง
+          exclude: |                      # ไฟล์ที่ไม่ต้องเอาขึ้นไป
             **/.git*
             **/.git*/**
             **/node_modules/**
-            **/public/build/**
-            .env
+            **/public/** # ไม่เอา public ขึ้น (เดี๋ยวแยกไปใส่ public_html)
+            **/storage/*.key
+            .env                          # ห้ามทับ .env เด็ดขาด
+            .env.example
+            deploy.yml
 
-      - name: 📂 Sync Assets (Frontend) to public_html
+      # 7. อัปโหลด "หน้าบ้าน" (CSS/JS ที่ Build แล้ว) ไปที่ public_html
+      - name: 📂 Sync Frontend Assets (to public_html)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./public/build/
-          server-dir: /domains/cmucoop.com/public_html/build/
+          local-dir: ./public/build/      # เอาเฉพาะใน build
+          server-dir: /domains/cmucoop.com/public_html/build/  # ไปใส่ใน public_html
