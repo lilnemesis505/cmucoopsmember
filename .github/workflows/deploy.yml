@@ -1,0 +1,55 @@
+name: Deploy to Hosting Lotus
+
+on:
+  push:
+    branches:
+      - main  # เช็คดูว่า Branch หลักของคุณชื่อ main หรือ master (ถ้าเป็น master ให้แก้ตรงนี้)
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: 📦 Install Composer Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: 🟡 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: 🔨 Build Frontend (Vite)
+        run: |
+          npm install
+          npm run build
+
+      - name: 📂 Sync Code (Backend) to cmucoop folder
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /cmucoop/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/public/build/**
+            .env
+
+      - name: 📂 Sync Assets (Frontend) to public_html
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./public/build/
+          server-dir: /domains/cmucoop.com/public_html/build/
