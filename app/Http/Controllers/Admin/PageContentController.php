@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\PageContent;
 use ImageKit\ImageKit;
 use Inertia\Inertia;
+use App\Models\Page;
 
 class PageContentController extends Controller
 {
@@ -103,30 +104,41 @@ class PageContentController extends Controller
     // ในไฟล์ PageContentController.php
 
 public function updateCover(Request $request, $key)
-{
-    $page = Page::where('key', $key)->firstOrFail();
-    
-    // 1. เพิ่มการรับค่า title และ subtitle ใน validate
-    $data = $request->validate([
-        'title' => 'nullable|string',     // เพิ่มตรงนี้
-        'subtitle' => 'nullable|string',  // เพิ่มตรงนี้
-        'cover_image' => 'nullable|image|max:2048', // (Validation เดิมของรูป)
-    ]);
+    {
+ 
+        $page = PageContent::where('page_key', $key)->firstOrFail();
+        
+        // 2. Validate ข้อมูล
+        $request->validate([
+            'title' => 'nullable|string',
+            'subtitle' => 'nullable|string',
+            'cover_image' => 'nullable|image|max:2048', 
+        ]);
 
-    // 2. สั่งอัปเดต title และ subtitle
-    $page->title = $request->title;
-    $page->subtitle = $request->subtitle;
+        // 3. อัปเดต Title และ Subtitle
+        $page->title = $request->title;
+        $page->subtitle = $request->subtitle;
 
-    // 3. ส่วนจัดการอัปโหลดรูป (Code เดิมของคุณ)
-    if ($request->hasFile('cover_image')) {
-        // ... (Code อัปโหลดรูป ImageKit เดิม) ...
-        // $upload = ...
-        // $page->image_url = $upload->result->url;
+        // 4. อัปโหลดรูป (ถ้ามี)
+        if ($request->hasFile('cover_image')) {
+            try {
+                $upload = $this->imageKit->upload([
+                    'file' => fopen($request->file('cover_image'), 'r'),
+                    'fileName' => 'cover_' . $key . '_' . time(),
+                    'folder' => '/main/covers/'
+                ]);
+                
+                // บันทึก URL รูปลงฐานข้อมูล
+                $page->image_url = $upload->result->url;
+                
+            } catch (\Exception $e) {
+                return back()->with('error', 'อัปโหลดรูปไม่สำเร็จ: ' . $e->getMessage());
+            }
+        }
+
+        // 5. บันทึกข้อมูล
+        $page->save();
+
+        return back()->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
     }
-
-    // 4. บันทึกข้อมูลลงฐานข้อมูล
-    $page->save();
-
-    return back()->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
-}
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { Head, useForm, Link } from '@inertiajs/vue3';
+import { Head, useForm, Link, usePage } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { ref } from 'vue';
 
@@ -10,13 +10,30 @@ const props = defineProps({
 
 const form = useForm({
     _method: 'PUT',
-    title: props.page.title || '',       // เพิ่ม: รับค่า Title เดิม
-    subtitle: props.page.subtitle || '', // เพิ่ม: รับค่า Subtitle เดิม
+    title: props.page.title || '',
+    subtitle: props.page.subtitle || '',
     cover_image: null
 });
 
 // Preview Logic
 const coverPreview = ref(props.page.image_url || null);
+
+// --- ระบบแจ้งเตือน (Notification) ---
+const showToast = ref(false);
+const toastMessage = ref('');
+const toastType = ref('success'); // 'success' หรือ 'error'
+
+const triggerToast = (message, type = 'success') => {
+    toastMessage.value = message;
+    toastType.value = type;
+    showToast.value = true;
+    
+    // ซ่อนอัตโนมัติเมื่อผ่านไป 3 วินาที
+    setTimeout(() => {
+        showToast.value = false;
+    }, 3000);
+};
+// ----------------------------------
 
 const handleCoverUpload = (event) => {
     const file = event.target.files[0];
@@ -27,10 +44,21 @@ const handleCoverUpload = (event) => {
 };
 
 const submit = () => {
-    // ลบเงื่อนไขบังคับเลือกรูปออก (เผื่อ user อยากแก้แค่ชื่อ)
     form.post(route('admin.pages.update_cover', props.pageKey), {
         onSuccess: () => {
-            form.cover_image = null;
+            // เช็คว่า Backend ส่ง Flash Message อะไรมาไหม (ถ้ามี error จาก catch)
+            const page = usePage();
+            if (page.props.flash?.error) {
+                triggerToast(page.props.flash.error, 'error');
+            } else {
+                triggerToast('บันทึกข้อมูลเรียบร้อยแล้ว!', 'success');
+                form.cover_image = null;
+            }
+        },
+        onError: (errors) => {
+            // กรณี Validate ไม่ผ่าน
+            triggerToast('เกิดข้อผิดพลาด กรุณาตรวจสอบข้อมูล', 'error');
+            console.error(errors);
         }
     });
 };
@@ -49,6 +77,39 @@ const getPageName = (key) => {
     <AdminLayout>
         <Head :title="'จัดการรูปปก: ' + pageKey" />
 
+        <Transition
+            enter-active-class="transform ease-out duration-300 transition"
+            enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+            enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+            leave-active-class="transition ease-in duration-100"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+        >
+            <div v-if="showToast" class="fixed top-5 right-5 z-50 max-w-sm w-full shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden">
+                <div class="p-4" :class="toastType === 'success' ? 'bg-white border-l-4 border-green-500' : 'bg-white border-l-4 border-red-500'">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i v-if="toastType === 'success'" class="bi bi-check-circle-fill text-green-500 text-xl"></i>
+                            <i v-else class="bi bi-x-circle-fill text-red-500 text-xl"></i>
+                        </div>
+                        <div class="ml-3 w-0 flex-1 pt-0.5">
+                            <p class="text-sm font-medium text-slate-900">
+                                {{ toastType === 'success' ? 'สำเร็จ!' : 'ข้อผิดพลาด!' }}
+                            </p>
+                            <p class="mt-1 text-sm text-slate-500">
+                                {{ toastMessage }}
+                            </p>
+                        </div>
+                        <div class="ml-4 flex-shrink-0 flex">
+                            <button @click="showToast = false" class="bg-white rounded-md inline-flex text-slate-400 hover:text-slate-500 focus:outline-none">
+                                <span class="sr-only">Close</span>
+                                <i class="bi bi-x text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Transition>
         <div class="max-w-2xl mx-auto">
             <div class="flex items-center gap-2 mb-6 text-sm text-slate-500">
                 <Link :href="route('admin.dashboard')" class="hover:text-blue-600">Dashboard</Link>
