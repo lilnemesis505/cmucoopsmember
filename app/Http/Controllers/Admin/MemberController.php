@@ -49,6 +49,8 @@ class MemberController extends Controller
     // Import Excel
     public function import(Request $request)
     {
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 300);
         $request->validate([
             'file' => 'required|mimes:xlsx,xls,csv'
         ]);
