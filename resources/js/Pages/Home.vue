@@ -9,9 +9,23 @@ const showPopup = ref(true); // เริ่มต้นให้แสดง Po
 // ใส่ URL ของรูปภาพขนาด 1920x1080 ที่ต้องการตรงนี้
 const popupImage = 'https://ik.imagekit.io/cmucoopsmember/%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%99%E0%B8%B2%E0%B8%87.jpg?updatedAt=1767600043418'; 
 
+// 2. ใช้ onMounted เช็คตอนโหลดหน้าเว็บ
+onMounted(() => {
+    // เช็คว่าในเครื่องมีข้อมูลว่า "เคยเข้าแล้ว" หรือยัง
+    // ถ้าอยากให้แสดงทุกครั้งที่ปิดบราวเซอร์แล้วเปิดใหม่ ให้เปลี่ยน localStorage เป็น sessionStorage
+    const hasVisited = localStorage.getItem('has_visited_intro');
+
+    if (!hasVisited) {
+        showPopup.value = true; // ถ้ายังไม่เคยเข้า -> ให้แสดง Popup
+    }
+});
+
 const enterSite = () => {
+    // 3. เมื่อกดปุ่ม ให้บันทึกว่า "เข้าแล้ว"
+    localStorage.setItem('has_visited_intro', 'true');
     showPopup.value = false;
 };
+
 </script>
 
 <template>
@@ -28,7 +42,7 @@ const enterSite = () => {
         >
             <div v-if="showPopup" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/75 backdrop-blur-sm p-4">
                 
-                <div class="relative w-full max-w-6xl flex flex-col items-center animate-zoom-in">
+                <div class="relative w-full max-w-4xl flex flex-col items-center animate-zoom-in">
                     
                     <div class="relative w-full aspect-video rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(255,255,255,0.1)] border border-white/10">
                         <img 

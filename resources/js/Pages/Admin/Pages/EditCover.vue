@@ -10,6 +10,8 @@ const props = defineProps({
 
 const form = useForm({
     _method: 'PUT',
+    title: props.page.title || '',       // เพิ่ม: รับค่า Title เดิม
+    subtitle: props.page.subtitle || '', // เพิ่ม: รับค่า Subtitle เดิม
     cover_image: null
 });
 
@@ -25,11 +27,10 @@ const handleCoverUpload = (event) => {
 };
 
 const submit = () => {
-    if (!form.cover_image) return alert('กรุณาเลือกรูปภาพก่อนบันทึก');
+    // ลบเงื่อนไขบังคับเลือกรูปออก (เผื่อ user อยากแก้แค่ชื่อ)
     form.post(route('admin.pages.update_cover', props.pageKey), {
         onSuccess: () => {
             form.cover_image = null;
-            // ไม่ต้อง reset preview เพื่อให้เห็นรูปใหม่ที่เพิ่งอัป
         }
     });
 };
@@ -62,15 +63,36 @@ const getPageName = (key) => {
                     </div>
                     <div>
                         <h2 class="text-lg font-bold text-slate-800">{{ getPageName(pageKey) }}</h2>
-                        <p class="text-xs text-slate-500">เปลี่ยนรูปภาพปกของการ์ด</p>
+                        <p class="text-xs text-slate-500">แก้ไขข้อมูลการ์ดและรูปภาพปก</p>
                     </div>
                 </div>
                 
                 <div class="p-8">
                     <form @submit.prevent="submit" class="space-y-6">
                         
+                        <div class="grid grid-cols-1 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">หัวข้อการ์ด (Title)</label>
+                                <input 
+                                    v-model="form.title" 
+                                    type="text" 
+                                    class="w-full text-sm border-slate-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" 
+                                    placeholder="เช่น สวัสดิการ"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">คำโปรยสั้นๆ (Subtitle)</label>
+                                <input 
+                                    v-model="form.subtitle" 
+                                    type="text" 
+                                    class="w-full text-sm border-slate-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" 
+                                    placeholder="เช่น รายละเอียดสวัสดิการต่างๆ"
+                                />
+                            </div>
+                        </div>
+
                         <div class="space-y-2">
-                            <label class="block text-sm font-medium text-slate-700">ตัวอย่างรูปปกปัจจุบัน</label>
+                            <label class="block text-sm font-medium text-slate-700">รูปปกปัจจุบัน</label>
                             <div class="w-full aspect-[4/3] bg-slate-100 rounded-xl border-2 border-dashed border-slate-300 flex items-center justify-center overflow-hidden relative group">
                                 <img v-if="coverPreview" :src="coverPreview" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                                 <div v-else class="text-slate-400 flex flex-col items-center">
@@ -81,7 +103,7 @@ const getPageName = (key) => {
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">เลือกรูปภาพใหม่</label>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">เลือกรูปภาพใหม่ (ถ้าต้องการเปลี่ยน)</label>
                             <input 
                                 type="file" 
                                 @change="handleCoverUpload" 
@@ -103,10 +125,10 @@ const getPageName = (key) => {
                             <Link :href="route('admin.dashboard')" class="flex-1 py-2.5 text-center text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 font-medium transition-colors">
                                 กลับหน้าหลัก
                             </Link>
-                            <button type="submit" :disabled="form.processing || !form.cover_image" class="flex-[2] py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <button type="submit" :disabled="form.processing" class="flex-[2] py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                                 <i v-if="form.processing" class="bi bi-hourglass-split animate-spin"></i>
                                 <i v-else class="bi bi-check-lg"></i>
-                                บันทึกรูปปกใหม่
+                                บันทึกข้อมูล
                             </button>
                         </div>
 
