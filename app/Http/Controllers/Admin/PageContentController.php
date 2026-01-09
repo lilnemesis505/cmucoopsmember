@@ -100,27 +100,33 @@ class PageContentController extends Controller
         ]);
     }
 
-    public function updateCover(Request $request, $key)
-    {
-        $page = PageContent::where('page_key', $key)->firstOrFail();
+    // ในไฟล์ PageContentController.php
 
-        if ($request->hasFile('cover_image')) {
-            try {
-                $upload = $this->imageKit->upload([
-                    'file' => fopen($request->file('cover_image'), 'r'),
-                    'fileName' => 'cover_' . $key . '_' . time(),
-                    'folder' => '/main/covers/'
-                ]);
-                
-                $page->image_url = $upload->result->url;
-                $page->save();
-                
-                return back()->with('success', 'เปลี่ยนรูปปกเรียบร้อยแล้ว');
-            } catch (\Exception $e) {
-                return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
-            }
-        }
+public function updateCover(Request $request, $key)
+{
+    $page = Page::where('key', $key)->firstOrFail();
+    
+    // 1. เพิ่มการรับค่า title และ subtitle ใน validate
+    $data = $request->validate([
+        'title' => 'nullable|string',     // เพิ่มตรงนี้
+        'subtitle' => 'nullable|string',  // เพิ่มตรงนี้
+        'cover_image' => 'nullable|image|max:2048', // (Validation เดิมของรูป)
+    ]);
 
-        return back()->with('error', 'กรุณาเลือกไฟล์รูปภาพ');
+    // 2. สั่งอัปเดต title และ subtitle
+    $page->title = $request->title;
+    $page->subtitle = $request->subtitle;
+
+    // 3. ส่วนจัดการอัปโหลดรูป (Code เดิมของคุณ)
+    if ($request->hasFile('cover_image')) {
+        // ... (Code อัปโหลดรูป ImageKit เดิม) ...
+        // $upload = ...
+        // $page->image_url = $upload->result->url;
     }
+
+    // 4. บันทึกข้อมูลลงฐานข้อมูล
+    $page->save();
+
+    return back()->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
+}
 }
