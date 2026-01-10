@@ -53,7 +53,7 @@ import { ref } from 'vue';
         <div class="relative w-full min-h-screen flex flex-col items-center justify-center p-4 md:p-8 font-sans overflow-hidden bg-black">
             
             <div class="absolute inset-0 z-0">
-                <img src="https://png.pngtree.com/background/20250207/original/pngtree-soft-pastel-floral-design-light-blue-background-picture-image_16257054.jpg" 
+                <img src="https://ik.imagekit.io/cmucoopsmember/logo/background.png" 
                      alt="Galaxy Background" 
                      class="w-full h-full object-cover opacity-60">
                 <div class="absolute inset-0 bg-gradient-to-b via-slate-900/30"></div>
@@ -95,7 +95,7 @@ import { ref } from 'vue';
                                 <img 
                                     src="https://ik.imagekit.io/cmucoopsmember/logo/member3.png?updatedAt=1766716604659" 
                                     alt="Icon"
-                                    class="h-16 w-auto object-contain group-hover:scale-110 transition-transform"
+                                    class="w-25 h-20 object-contain group-hover:scale-110 transition-transform"
                                 />
                             </div>
                             <div class="relative z-10 mt-auto">
@@ -112,7 +112,7 @@ import { ref } from 'vue';
                                 <img 
                                     src="https://ik.imagekit.io/cmucoopsmember/logo/coop1.png?updatedAt=1766546164356" 
                                     alt="Icon"
-                                    class="h-16 w-auto object-contain group-hover:scale-110 transition-transform"
+                                    class="w-25 h-20 object-contain group-hover:scale-110 transition-transform"
                                 />
                             </div>
                             <div class="relative z-10 mt-auto">
@@ -126,12 +126,12 @@ import { ref } from 'vue';
                             <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
                             <div class="relative z-10 mb-4">
                                 <div class="icon-box-sm bg-green-100 text-green-600 group-hover:scale-110 transition-transform">
-                                    <i class="bi bi-person-lines-fill text-2xl"></i>
+                                    <i class="bi bi-check-circle-fill text-4xl"></i>
                                 </div>
                             </div>
                             <div class="relative z-10 mt-auto">
-                                <h3 class="text-xl font-bold text-slate-800">CHECK MEMBER</h3>
-                                <p class="text-sm text-slate-500 mt-1">ตรวจสอบข้อมูลสมาชิก</p>
+                                <h3 class="text-xl font-bold text-slate-800">ตรวจเช็คสมาชิก</h3>
+                                <p class="text-sm text-slate-500 mt-1">สำหรับหน่วยงานและสถานประกอบการที่รวมรายการ</p>
                             </div>
                         </div>
                     </Link>
@@ -141,18 +141,18 @@ import { ref } from 'vue';
                             <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
                             <div class="relative z-10 mb-4">
                                 <div class="icon-box-sm bg-pink-100 text-pink-600 group-hover:scale-110 transition-transform">
-                                    <i class="bi bi-shield-check text-2xl"></i>
+                                    <i class="bi bi-shield-check text-4xl"></i>
                                 </div>
                             </div>
                             <div class="relative z-10 mt-auto">
-                                <h3 class="text-xl font-bold text-slate-800">ตรวจสอบสิทธิ์</h3>
-                                <p class="text-sm text-slate-500 mt-1">เช็คข้อมูลเบื้องต้น / ยอดหุ้น </p>
+                                <h3 class="text-xl font-bold text-slate-800">ตรวจสอบหุ้นและยอดซื้อ</h3>
+                                <p class="text-sm text-slate-500 mt-1">ตรวจสอยสมาชิก / ยอดหุ้น </p>
                             </div>
                         </div>
                     </Link>
 
                     <Link :href="route('xcademy')" class="modern-card md:col-span-4 group border-t-4 border-purple-500">
-                        <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-purple-200 rounded-xl">
+                        <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-purple-100 rounded-xl">
                             <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
     
                             <div class="relative z-10 mb-4 flex items-center justify-between">
@@ -164,7 +164,7 @@ import { ref } from 'vue';
                             </div>
                             <div class="relative z-10 mt-auto">
                                 <h3 class="text-xl font-bold text-slate-800">X-CADEMY</h3>
-                                <p class="text-sm text-slate-500 mt-1">คอร์สเรียนออนไลน์พัฒนาทักษะ</p>
+                                <p class="text-sm text-slate-500 mt-1">ข่าวสารและกิจกรรม Workshop ประจำเดือน</p>
                             </div>
                         </div>
                     </Link>
@@ -227,28 +227,6 @@ import { ref } from 'vue';
     @apply shadow-md;
 }
 
-/* === ANIMATION STYLES === */
-.animated-shape {
-    position: absolute;
-    z-index: 1;
-    opacity: 0.5;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    animation: float 15s infinite ease-in-out alternate;
-}
-.animated-shape.circle { border-radius: 50%; }
-.animated-shape.square { border-radius: 12px; transform: rotate(45deg); }
-
-@keyframes float {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    100% { transform: translate(30px, 40px) rotate(10deg); }
-}
-
-/* Positions */
-.shape-1 { width: 150px; height: 150px; top: 10%; left: 5%; animation-duration: 20s; }
-.shape-2 { width: 100px; height: 100px; bottom: 15%; left: 10%; animation-duration: 18s; animation-delay: 2s; }
-.shape-3 { width: 200px; height: 200px; top: 20%; right: 5%; animation-duration: 25s; animation-delay: 1s; }
-.shape-4 { width: 120px; height: 120px; bottom: 20%; right: 15%; animation-duration: 22s; animation-delay: 3s; }
-.shape-5 { width: 80px; height: 80px; top: 40%; left: 45%; animation-duration: 15s; }
 
 .animate-fade-in-down {
     animation: fadeInDown 0.8s ease-out;
