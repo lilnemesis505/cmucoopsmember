@@ -19,10 +19,10 @@
             <div class="md:col-span-4 lg:col-span-5">
                 <div class="mb-2">
                     <h5 class="font-semibold text-slate-900 text-xl mb-1">
-                        สหกรณ์มหาวิทยาลัยเชียงใหม่
+                        ร้านสหกรณ์มหาวิทยาลัยเชียงใหม่ จำกัด
                     </h5>
                     <p class="text-slate-500 text-sm">
-                        Chiang Mai University Cooperative
+                        Chiang Mai University Cooperative Store Co., Ltd.
                     </p>
                 </div>
                 <p class="text-black leading-relaxed mb-6 max-w-sm text-sm">
@@ -64,9 +64,9 @@
                         <i class="bi bi-geo-alt-fill text-red-700 mt-1 mr-3"></i>
                         <span class="font-medium text-black">
                             สำนักงานใหญ่ (สนญ.) มหาวิทยาลัยเชียงใหม่<br>
-                            อ.เมือง จ.เชียงใหม่ 50200<br>
+                            239 ถ.ห้วยแก้ว ต.สุเทพ อ.เมืองเชียงใหม่ จ.เชียงใหม่ 50200<br>
                             ติดต่อสอบถามที่บูธสมาชิกสัมพันธ์<br>
-                            จ-ศ เวลา 9.00 - 16.00 น.
+                            จันทร์ - ศูกร์ เวลา 9.00 น. - 16.00 น.
                         </span>
                     </li>
                     <li class="flex items-center">
@@ -95,12 +95,12 @@
                         <a href="https://www.cmu-coops.com"
                         target="_blank"
                         class="no-underline text-slate-900 hover:text-blue-600 transition-colors uration-200 hover:scale-105 inline-block">
-                        - ร้านค้าสหกรณ์</a>
+                        - ร้านสหกรณ์มหาวิทยาลัยเชียงใหม่ จำกัด</a>
                     </li>
                     <li>
                         <a href="https://www.cmu-coops.com/location.php"
                         target="_blank"
-                        class="no-underline text-slate-900 hover:text-blue-600 transition-colors uration-200 hover:scale-105 inline-block">- ตำแหน่งสาขา</a>
+                        class="no-underline text-slate-900 hover:text-blue-600 transition-colors uration-200 hover:scale-105 inline-block">- ตำแหน่งที่ตั้งแต่ละสาขา</a>
                     </li>
                     <li>
                         <a href="https://www.cmu-coops.com/coopnews.php" 
