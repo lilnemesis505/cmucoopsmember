@@ -113,7 +113,7 @@ const config = ref({
                                 </div>
                             </div>
                             <div class="relative z-10 mt-auto">
-                                <h3 class="text-xl font-bold text- slate-800">ตรวจเช็คสมาชิก</h3>
+                                <h3 class="text-xl font-bold text-slate-800">ตรวจเช็คสมาชิก</h3>
                                 <p class="text-sm text-slate-500 mt-1">สำหรับหน่วยงาน และ สถานประกอบการที่รวมรายการ</p>
                             </div>
                         </div>

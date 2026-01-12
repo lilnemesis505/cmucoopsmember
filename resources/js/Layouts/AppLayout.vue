@@ -119,7 +119,6 @@
 
             <p>
                 © {{ new Date().getFullYear() }} CMU COOPERATIVE COMPANY LIMITED ALL RIGHTS RESERVED.
-                All Rights Reserved.
             </p>
 
             <div class="mt-3 md:mt-0">
