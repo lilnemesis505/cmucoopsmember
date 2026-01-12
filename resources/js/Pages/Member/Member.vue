@@ -36,7 +36,6 @@ const showImagePopup = (url) => {
         <div class="container my-5">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
-                    
                     <div class="card shadow-sm border-0">
                         <div class="card-body p-4 p-md-5">
                             
@@ -67,18 +66,20 @@ const showImagePopup = (url) => {
             </div>
         </div>
 
-        <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl">
-                <div class="modal-content bg-transparent border-0 shadow-none">
-                    <div class="modal-body p-0 text-center position-relative">
-                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 p-2 bg-dark bg-opacity-50 rounded-circle" 
-                                data-bs-dismiss="modal" aria-label="Close" style="z-index: 1050;">
-                        </button>
-                        <img :src="popupImageUrl" class="img-fluid rounded shadow-lg" style="max-height: 90vh; object-fit: contain;">
+        <Teleport to="body">
+            <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true" style="z-index: 1055;">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content bg-transparent border-0 shadow-none">
+                        <div class="modal-body p-0 text-center position-relative">
+                            <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 p-2 bg-dark bg-opacity-50 rounded-circle" 
+                                    data-bs-dismiss="modal" aria-label="Close" style="z-index: 1060;">
+                            </button>
+                            <img :src="popupImageUrl" class="img-fluid rounded shadow-lg" style="max-height: 90vh; object-fit: contain;">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Teleport>
 
     </AppLayoutMember>
 </template>

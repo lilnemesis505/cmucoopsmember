@@ -28,12 +28,12 @@ const isMobileMenuOpen = ref(false);
                 <div class="flex justify-between items-center h-20">
                     
                     <Link :href="route('landing')" class="flex items-center group no-underline hover:no-underline">
-                        <div class="relative w-12 h-12 mr-3 transition-transform group-hover:scale-110">
-                        </div>
-                        <div class="leading-tight">
-                            <span class="block font-bold text-3xl text-blue-600 tracking-tight drop-shadow-[2px_2px_0_rgba(200,200,200,1)] transition-transform duration-300 hover:scale-110 ">Member</span>
-                        </div>
-                    </Link>
+    <img 
+        src="https://ik.imagekit.io/cmucoopsmember/logo/member3.png?updatedAt=1766716604659" 
+        alt="Member Logo"
+        class="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+    />
+</Link>
 
                     <div class="hidden lg:flex items-center space-x-1 ml-auto ">
                         <Link :href="route('member')" :class="['nav-item', route().current('member') ? 'active' : '']">
@@ -46,7 +46,7 @@ const isMobileMenuOpen = ref(false);
                             <i class="bi bi-coin mr-1.5"></i> EasyPoint
                         </Link>
                         <Link :href="route('check.member')" :class="['nav-item', route().current('check.member') ? 'active' : '']">
-                            <i class="bi bi-search mr-1.5"></i> ตรวจสอบห
+                            <i class="bi bi-search mr-1.5"></i> ตรวจสอบ
                         </Link>
                     </div>
 

@@ -62,7 +62,9 @@ const showImagePopup = (url) => {
                 </div>
             </div>
         </div>
-
+        <Teleport to="body">
+            
+        
         <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content bg-transparent border-0 shadow-none">
@@ -74,7 +76,7 @@ const showImagePopup = (url) => {
                 </div>
             </div>
         </div>
-
+    </Teleport>
     </AppLayoutMember>
 </template>
 

@@ -5,14 +5,14 @@ namespace App\Imports;
 use App\Models\Member;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithUpserts; // <--- 1. ต้อง Import ตัวนี้
+use Maatwebsite\Excel\Concerns\WithUpserts;
 use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-// 2. ต้องเพิ่ม WithUpserts เข้าไปใน implements
 class MembersImport implements ToModel, WithHeadingRow, WithUpserts 
 {
     /**
-     * บอกระบบว่าให้เช็คซ้ำที่คอลัมน์ member_id
+     * บอกระบบว่าให้เช็คซ้ำที่คอลัมน์ member_id (ถ้ามีแล้วจะอัปเดตแทน)
      */
     public function uniqueBy()
     {
@@ -20,7 +20,8 @@ class MembersImport implements ToModel, WithHeadingRow, WithUpserts
     }
 
     /**
-     * กำหนดบรรทัดที่เป็นหัวตาราง (Key ภาษาอังกฤษ) = บรรทัด 3
+     * กำหนดบรรทัดที่เป็นหัวตาราง (Key ภาษาอังกฤษ)
+     * จากไฟล์ CSV ของคุณ หัวตารางภาษาอังกฤษอยู่ที่บรรทัด 3
      */
     public function headingRow(): int
     {
@@ -29,53 +30,46 @@ class MembersImport implements ToModel, WithHeadingRow, WithUpserts
 
     public function model(array $row)
     {
-        // =========================================================
-        // 3. ส่วนกรองข้อมูล (Filter) ป้องกันแถวว่างและแถวหัวตารางไทย
-        // =========================================================
-
-        // ดึงค่า member_id ออกมาก่อน (รองรับ key หลายแบบ)
-        $memberId = $row['registr'] ?? $row['registry_no_2'] ?? null;
+        // 1. ดึง Member ID จากคอลัมน์ 'registry_no_2' (ตามไฟล์ Excel)
+        $memberId = $row['registry_no_2'] ?? null;
 
         // ถ้าไม่มี Member ID หรือเป็นค่าว่าง -> ข้าม
         if (!$memberId || trim($memberId) === '') {
             return null;
         }
 
-        // *** ดักจับแถวหัวตารางภาษาไทย (บรรทัดที่ 4) ***
-        // ถ้าค่าในช่อง ID เป็นคำว่า "เลขสมาชิก" ให้ข้ามไปเลย ไม่ต้องบันทึก
-        if ($memberId === 'เลขสมาชิก') {
-            return null;
+        // 2. ดักจับบรรทัดหัวตารางภาษาไทย (บรรทัดที่ 4) ที่อาจหลุดเข้ามา
+        // ถ้าค่าในช่อง ID เป็นคำว่า "เลขสมาชิก" ให้ข้ามไปเลย
+        if (trim($memberId) === 'เลขสมาชิก') {
+            return null; 
         }
 
-        // =========================================================
-        // 4. บันทึก/อัปเดตข้อมูล
-        // =========================================================
+        // 3. เตรียมข้อมูลสำหรับบันทึก
         return new Member([
-            'member_id'     => $memberId,
+            'member_id'     => trim($memberId),
             
-            // ข้อมูลอื่นๆ
-            'id_card'       => $row['idcard'] ?? null,
-            'title_name'    => $row['titlena'] ?? $row['titlename'] ?? null,
-            'first_name'    => $row['firstna'] ?? $row['firstname'],
-            'last_name'     => $row['lastnam'] ?? $row['lastname'],
-            'nation'        => $row['nation'] ?? 'TH',
+            // จับคู่คอลัมน์ตามไฟล์ Excel
+            'prefix'        => $row['titlename'] ?? null,  // TITLENAME
+            'firstname'     => $row['firstname'] ?? null,  // FIRSTNAME
+            'lastname'      => $row['lastname'] ?? null,   // LASTNAME
+            'nation'        => $row['nation'] ?? 'TH',     // NATION
             
-            // แปลงวันที่
-            'registry_date' => $this->transformDate($row['registr_1'] ?? $row['registry_date'] ?? null), 
+            // แปลงวันที่จากคอลัมน์ registry_date
+            'registry_date' => $this->transformDate($row['registry_date'] ?? null), 
 
-            'phone'         => $row['tel_no'] ?? null,
+            'phone'         => $row['tel_no'] ?? null,     // TEL_NO
             
             // ที่อยู่
-            'loc_addr'      => $row['loc_addr'] ?? null,
-            'tambon'        => $row['tambon'] ?? $row['tambon_name'] ?? null,
-            'amphur'        => $row['amphur'] ?? $row['amphur_name'] ?? null,
-            'province'      => $row['provinc'] ?? $row['province_name'] ?? null,
-            'zip_code'      => $row['zip_cod'] ?? $row['zip_code'] ?? null,
+            'loc_addr'      => $row['loc_addr'] ?? null,      // LOC_ADDR
+            'tambon'        => $row['tambon_name'] ?? null,   // TAMBON_NAME
+            'amphur'        => $row['amphur_name'] ?? null,   // AMPHUR_NAME
+            'province'      => $row['province_name'] ?? null, // PROVINCE_NAME
+            'zip_code'      => $row['zip_code'] ?? null,      // ZIP_CODE
         ]);
     }
 
     /**
-     * ฟังก์ชันแปลงวันที่
+     * ฟังก์ชันแปลงวันที่ (รองรับทั้งแบบ Excel Serial Number และ String)
      */
     private function transformDate($value)
     {
@@ -84,20 +78,17 @@ class MembersImport implements ToModel, WithHeadingRow, WithUpserts
         }
 
         try {
+            // กรณีเป็นตัวเลข (Excel Serial Date) เช่น 44725
             if (is_numeric($value)) {
-                return \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value)->format('Y-m-d');
+                return Date::excelToDateTimeObject($value)->format('Y-m-d');
             }
 
-            $parts = explode('/', $value);
-            if (count($parts) == 3) {
-                $d = (int)$parts[0];
-                $m = (int)$parts[1];
-                $y = (int)$parts[2];
-                if ($y > 2400) $y -= 543;
-                return sprintf('%04d-%02d-%02d', $y, $m, $d);
-            }
-            return null;
+            // กรณีเป็น String เช่น "2022-06-11" หรือ "11/06/2022"
+            // ลองแปลงด้วย Carbon
+            return Carbon::parse($value)->format('Y-m-d');
+
         } catch (\Exception $e) {
+            // ถ้าแปลงไม่ได้จริงๆ ให้ส่งกลับเป็น null
             return null;
         }
     }

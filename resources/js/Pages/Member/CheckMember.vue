@@ -78,7 +78,7 @@ const formatDate = (dateString) => {
 </script>
 
 <template>
-    <AppLayoutMember>
+    <AppLayoutMember> 
         <Head title="ตรวจสอบสถานะสมาชิก" />
 
         <div class="container py-5">
@@ -221,7 +221,7 @@ const formatDate = (dateString) => {
                 </div>
             </div>
         </div>
-
+        <Teleport to="body">
         <div class="modal fade" id="addressModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -242,6 +242,6 @@ const formatDate = (dateString) => {
                 </div>
             </div>
         </div>
-
+        </Teleport>
     </AppLayoutMember>
 </template>

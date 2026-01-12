@@ -8,11 +8,11 @@ import { Link } from '@inertiajs/vue3';
             
             <a class="flex items-center gap-3 group no-underline hover:no-underline">
                 <div class="relative w-12 h-12 transition-transform group-hover:scale-110">
-                    <img src="https://ik.imagekit.io/cmucoopsmember/icon" alt="CMU Logo" class="w-full h-full object-contain">
+                    <img src="https://ik.imagekit.io/cmucoopsmember/logo/xcademy.png?updatedAt=1766551989903" alt="CMU Logo" class="w-full h-full object-contain">
                 </div>
-                <div class="hidden md:block leading-tight ">
+                <!-- <div class="hidden md:block leading-tight ">
                     <span class="block font-bold text-lg text-slate-800 tracking-tight" >CMU X-CADEMY</span>
-                </div>
+                </div> -->
             </a>
             
             <div class="flex items-center gap-4">

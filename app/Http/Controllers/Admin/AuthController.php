@@ -6,31 +6,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Inertia\Inertia;
 class AuthController extends Controller
 {
     public function showRegister()
     {
-        return view('admin.auth.register');
+        return Inertia::render('Admin/Auth/Register');
     }
 
     public function register(Request $request)
     {
-        // 1. ตรวจสอบความถูกต้องของข้อมูล
         $request->validate([
-            'name' => 'required|string|max:255|unique:users', // เช็คชื่อซ้ำ
-            'email' => 'required|string|email|max:255|unique:users', // เช็คอีเมลซ้ำ
-            'password' => 'required|string|min:8|confirmed', // password_confirmation ต้องตรงกัน
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|confirmed|min:8', // ต้องมี password_confirmation ในฟอร์ม
         ]);
 
-        // 2. สร้าง User ใหม่ลง Database
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password), // เข้ารหัสรหัสผ่าน
+            'password' => Hash::make($request->password),
         ]);
 
-        // 3. ส่งกลับไปหน้า Login พร้อมข้อความ
-        return redirect()->route('admin.login')->with('success', 'สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ');
+        // สมัครเสร็จแล้วให้เด้งไปหน้า Login พร้อมข้อความ
+        return redirect()->route('admin.login')->with('success', 'ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบ');
     }
 
     public function showLogin()
