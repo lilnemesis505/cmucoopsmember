@@ -118,7 +118,7 @@
                     text-xs text-slate-500">
 
             <p>
-                © {{ new Date().getFullYear() }} CMU Cooperative.
+                © {{ new Date().getFullYear() }} CMU COOPERATIVE COMPANY LIMITED ALL RIGHTS RESERVED.
                 All Rights Reserved.
             </p>
 
