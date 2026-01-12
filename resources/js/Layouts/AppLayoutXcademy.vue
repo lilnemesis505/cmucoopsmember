@@ -1,8 +1,12 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, Head } from '@inertiajs/vue3'; // <--- 1. เพิ่ม Head ตรงนี้
 </script>
 
 <template>
+    <Head>
+        <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600&family=Kanit:wght@300;400;600&family=Kodchasan:wght@300;400;600&family=Mitr:wght@300;400;600&family=Prompt:wght@300;400;600&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    </Head>
+
     <div class="min-h-screen bg-slate-50 font-sans">
         <nav class="bg-white px-4 md:px-8 py-3 border-b-4 border-purple-400 sticky top-0 z-50 shadow-sm flex justify-between items-center">
             
@@ -10,9 +14,6 @@ import { Link } from '@inertiajs/vue3';
                 <div class="relative w-12 h-12 transition-transform group-hover:scale-110">
                     <img src="https://ik.imagekit.io/cmucoopsmember/logo/xcademy.png?updatedAt=1766551989903" alt="CMU Logo" class="w-full h-full object-contain">
                 </div>
-                <!-- <div class="hidden md:block leading-tight ">
-                    <span class="block font-bold text-lg text-slate-800 tracking-tight" >CMU X-CADEMY</span>
-                </div> -->
             </a>
             
             <div class="flex items-center gap-4">
@@ -32,7 +33,11 @@ import { Link } from '@inertiajs/vue3';
     </div>
 </template>
 
-<style scoped>
-    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-    .font-sans { font-family: 'Prompt', sans-serif; }
+<style>
+/* กำหนดฟอนต์หลักของหน้านี้เป็น Prompt หรือ Sarabun ตามชอบ */
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+
+.font-sans {
+    font-family: 'Prompt', sans-serif;
+}
 </style>

@@ -25,7 +25,7 @@ const user = page.props.auth?.user || { name: 'Admin' };
                 <Link :href="route('admin.pages.edit', 'member')" class="admin-link" :class="{'active': route().current('admin.pages.edit', 'member')}">
                     <i class="bi bi-person-vcard mr-3"></i> สิทธิประโยชน์สมาชิก
                 </Link>
-                <Link :href="route('admin.member_check.edit', 'member')" class="admin-link" :class="{'active': route().current('admin.pages.edit', 'member')}">
+                <Link :href="route('admin.member_check.edit', 'member')" class="admin-link" :class="{'active': route().current('admin.member_check.edit', 'member')}">
                     <i class="bi bi-person-vcard mr-3"></i> หน้าตรวจสอบสมาชิก
                 </Link>
                 <Link :href="route('admin.board.index')" class="admin-link" :class="{'active': route().current('admin.board.*')}">

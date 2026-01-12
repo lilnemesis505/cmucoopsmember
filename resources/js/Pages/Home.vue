@@ -3,13 +3,19 @@ import { Head, Link } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { ref } from 'vue';
 
-// --- จัดการ Popup ---
-// const showPopup = ref(true);
-// const popupImage = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1920&auto=format&fit=crop'; // URL รูป Popup (แก้ไขได้)
-
-// const enterSite = () => {
-//     showPopup.value = false;
-// };
+const config = ref({
+    // 1. รูปพื้นหลัง
+    bgImage: 'https://ik.imagekit.io/cmucoopsmember/logo/background.png',
+    
+    // 2. ความชัดของรูป (0.1 = จางมาก, 1.0 = ชัดสุด)
+    bgOpacity: 0.7, 
+    
+    // 3. สีพื้นหลังหลัก (Hex Code) - ถ้าปรับรูปให้จาง สีนี้จะโผล่ขึ้นมา
+    bgColor: '#000000', 
+    
+    // 4. ความเข้มของเงาดำที่ทับรูป (เพื่อให้อ่านตัวหนังสือง่าย)
+    overlayIntensity: 0.3 
+});
 </script>
 
 <template>
@@ -24,49 +30,23 @@ import { ref } from 'vue';
             leave-from-class="opacity-100"
             leave-to-class="opacity-0 translate-y-0"
         >
-            <div v-if="showPopup" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-                
-                <div class="relative w-full max-w-4xl flex flex-col items-center animate-zoom-in">
-                    
-                    <div class="relative w-full aspect-video rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(255,255,255,0.1)] border border-white/10">
-                        <img 
-                            :src="popupImage" 
-                            class="w-full h-full object-cover"
-                            alt="Welcome Popup"
-                        />
-                        <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
-                    </div>
-
-                    <div class="mt-8 md:-mt-16 relative z-20">
-                        <button 
-                            @click="enterSite"
-                            class="group relative inline-flex items-center gap-3 px-8 py-3 bg-white text-slate-900 rounded-full font-bold text-lg shadow-2xl hover:scale-105 transition-all duration-300 ring-4 ring-white/30 hover:ring-white/50"
-                        >
-                            <span>เข้าสู่เว็บไซต์</span>
-                            <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                        </button>
-                    </div>
-
-                </div>
+            <div v-if="showPopup" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-/50 backdrop-blur-sm p-4">
             </div>
         </Transition>
         <div class="relative w-full min-h-screen flex flex-col items-center justify-center p-4 md:p-8 font-sans overflow-hidden bg-black">
             
-            <div class="absolute inset-0 z-0">
-                <img src="https://ik.imagekit.io/cmucoopsmember/logo/background.png" 
-                     alt="Galaxy Background" 
-                     class="w-full h-full object-cover opacity-60">
-                <div class="absolute inset-0 bg-gradient-to-b via-slate-900/30"></div>
+           <div class="absolute inset-0 z-0">
+                <img 
+                    :src="config.bgImage" 
+                    alt="Background" 
+                    class="w-full h-full object-cover transition-opacity duration-500"
+                    :style="{ opacity: config.bgOpacity }"
+                >
+                <div 
+                    class="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900"
+                    :style="{ opacity: config.overlayIntensity }"
+                ></div>
             </div>
-
-            <div class="absolute inset-0 overflow-hidden pointer-events-none z-1">
-                <div class="animated-shape circle shape-1 bg-white/10"></div>
-                <div class="animated-shape square shape-2 bg-blue-400/20"></div>
-                <div class="animated-shape circle shape-3 bg-purple-400/10"></div>
-                <div class="animated-shape square shape-4 bg-cyan-400/20"></div>
-                <div class="animated-shape circle shape-5 bg-white/5"></div>
-            </div>
-
             <div class="relative z-10 w-full max-w-[1400px] flex flex-col gap-6 animate-fade-in-down">
                 
                 <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-2">
@@ -77,12 +57,15 @@ import { ref } from 'vue';
                         class="h-16 md:h-20 w-auto"
                     />
                     </div>
-                    <div class="text-center md:text-left">
-                        <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-1 drop-shadow-md mt-3">
-                            CMU Coop
-                        </h1>
-                        <p class="text-lg text-gray-800 tracking-wide font-medium drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">ศูนย์รวมบริการร้านสหกรณ์มหาวิทยาลัยเชียงใหม่ จำกัด</p>
-                    </div>
+                   <div class="text-center md:text-left">
+    <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-1 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] mt-3">
+        CMU COOP
+    </h1>
+    
+    <p class="text-lg text-white tracking-wide font-medium drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+        ศูนย์รวมบริการร้านสหกรณ์มหาวิทยาลัยเชียงใหม่ จำกัด
+    </p>
+</div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6 w-full"> 
@@ -130,8 +113,8 @@ import { ref } from 'vue';
                                 </div>
                             </div>
                             <div class="relative z-10 mt-auto">
-                                <h3 class="text-xl font-bold text-slate-800">ตรวจเช็คสมาชิก</h3>
-                                <p class="text-sm text-slate-500 mt-1">สำหรับหน่วยงานและสถานประกอบการที่รวมรายการ</p>
+                                <h3 class="text-xl font-bold text- slate-800">ตรวจเช็คสมาชิก</h3>
+                                <p class="text-sm text-slate-500 mt-1">สำหรับหน่วยงาน และ สถานประกอบการที่รวมรายการ</p>
                             </div>
                         </div>
                     </Link>

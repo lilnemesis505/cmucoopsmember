@@ -67,10 +67,11 @@ const getImgUrl = (img) => {
                         <span>{{ event.event_date || 'ไม่ระบุวันที่' }}</span>
                     </div>
 
-                    <div class="prose prose-lg prose-slate max-w-none text-slate-600 leading-relaxed whitespace-pre-line">
-                        <p v-if="event.description">{{ event.description }}</p>
+                    <div class="prose prose-lg prose-slate max-w-none text-slate-600 leading-relaxed ck-content">
+                        <div v-if="event.description" v-html="event.description"></div>
                         <p v-else class="text-slate-400 italic text-center py-4">ไม่มีรายละเอียดเนื้อหา</p>
                     </div>
+
                 </div>
 
                 <div class="bg-slate-50 p-8 md:p-12 border-t border-slate-200" v-if="event.images && event.images.length > 0">
@@ -127,4 +128,16 @@ const getImgUrl = (img) => {
 <style scoped>
 .animate-fade-in { animation: fadeIn 0.2s ease-out; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* CSS เสริมเพื่อให้รูปในเนื้อหา (CKEditor) ไม่ล้นจอ */
+:deep(.ck-content img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+:deep(.ck-content blockquote) {
+    border-left: 4px solid #a855f7;
+    padding-left: 1rem;
+    font-style: italic;
+}
 </style>

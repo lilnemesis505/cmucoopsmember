@@ -19,6 +19,7 @@ const isMobileMenuOpen = ref(false);
             }
         </component>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600&family=Kanit:wght@300;400;600&family=Kodchasan:wght@300;400;600&family=Mitr:wght@300;400;600&family=Prompt:wght@300;400;600&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
     </Head>
 
     <div class="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-600 transition-colors duration-300">

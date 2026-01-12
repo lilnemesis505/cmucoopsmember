@@ -3,25 +3,25 @@ import { Head, Link, useForm, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Swal from 'sweetalert2';
 
+// 1. นำเข้า RichTextEditor ที่คุณมีอยู่แล้ว
+import RichTextEditor from '@/Components/RichTextEditor.vue';
+
 const props = defineProps({
     event: Object,
     images: Array,
-    key_param: String // รับชื่อ key มา (เช่น ev1)
+    key_param: String 
 });
 
-// Form 1: แก้ไขรายละเอียด
 const formDetails = useForm({
     event_title: props.event.title || '',
     event_date: props.event.event_date || '',
     event_description: props.event.description || ''
 });
 
-// Form 2: อัปโหลดรูป
 const formUpload = useForm({
     event_image: null
 });
 
-// Submit รายละเอียด
 const submitDetails = () => {
     formDetails.post(route('admin.events.update_details', props.key_param), {
         preserveScroll: true,
@@ -31,7 +31,6 @@ const submitDetails = () => {
     });
 };
 
-// Submit อัปโหลดรูป
 const submitUpload = () => {
     if (!formUpload.event_image) return;
     formUpload.post(route('admin.events.upload', props.key_param), {
@@ -43,7 +42,6 @@ const submitUpload = () => {
     });
 };
 
-// ลบรูปภาพ
 const deleteImage = (id) => {
     Swal.fire({
         title: 'ลบรูปภาพ?',
@@ -61,7 +59,6 @@ const deleteImage = (id) => {
     });
 };
 
-// ลบกิจกรรมทั้งหมด (Danger Zone)
 const deleteEvent = () => {
     Swal.fire({
         title: `ลบกิจกรรม ${props.key_param}?`,
@@ -108,10 +105,12 @@ const deleteEvent = () => {
                             <label class="block text-sm font-medium text-slate-700 mb-1">วันที่จัดกิจกรรม</label>
                             <input v-model="formDetails.event_date" type="date" class="w-full border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                         </div>
+                        
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">รายละเอียด</label>
-                            <textarea v-model="formDetails.event_description" rows="5" class="w-full border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="รายละเอียดเนื้อหา..."></textarea>
+                            <RichTextEditor v-model="formDetails.event_description" />
                         </div>
+
                         <button type="submit" :disabled="formDetails.processing" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors">
                             <i class="bi bi-save me-1"></i> บันทึกข้อมูล
                         </button>
