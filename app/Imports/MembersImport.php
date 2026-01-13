@@ -43,14 +43,12 @@ class MembersImport implements ToModel, WithHeadingRow, WithUpserts
             'last_name'     => $this->cleanString($row['lastname'] ?? null),
             'nation'        => $this->cleanString($row['nation'] ?? 'TH'),
             
-            // ข้อมูลสมาชิก (ตัด share_amount ออกแล้ว)
             'member_type'   => $this->cleanString($row['membertype'] ?? 'สามัญ'),
             
-            // วันที่สมัคร
             'registry_date' => $this->transformDate($row['registry_date'] ?? null), 
 
-            // ข้อมูลติดต่อ
-            'phone'         => $this->cleanString($row['tel_no'] ?? null),
+            // ✅ ใช้ฟังก์ชัน cleanPhone เพื่อลบขีด (-) และจัดการสูตรที่หลุดมา
+            'phone'         => $this->cleanPhone($row['tel_no'] ?? null),
             
             // ที่อยู่
             'loc_addr'      => $this->cleanString($row['loc_addr'] ?? null),
@@ -61,6 +59,7 @@ class MembersImport implements ToModel, WithHeadingRow, WithUpserts
         ]);
     }
 
+    // ... (ฟังก์ชัน transformDate เหมือนเดิม) ...
     private function transformDate($value)
     {
         if (!$value || trim($value) == '-' || trim($value) == '') {
@@ -80,5 +79,26 @@ class MembersImport implements ToModel, WithHeadingRow, WithUpserts
     {
         if (!$value || $value === '-') return null;
         return trim($value);
+    }
+
+    /**
+     * ✅ ฟังก์ชันใหม่: จัดการเบอร์โทรศัพท์
+     * - ลบขีด (-)
+     * - ลบเว้นวรรค
+     * - ถ้าเจอสูตร Excel (=...) ให้ตีเป็นค่าว่างไปเลยป้องกัน Error
+     */
+    private function cleanPhone($value)
+    {
+        if (!$value || $value === '-') return null;
+
+        // ถ้าค่าที่ได้มาเป็นสูตร Excel (ขึ้นต้นด้วย =) ให้คืนค่า null (เพราะเราอ่านค่าสูตรไม่ได้)
+        if (str_starts_with($value, '=')) {
+            return null; 
+        }
+
+        // ลบขีด (-) และช่องว่างออก ให้เหลือแต่ตัวเลข
+        $clean = str_replace(['-', ' ', '_'], '', $value);
+        
+        return trim($clean);
     }
 }

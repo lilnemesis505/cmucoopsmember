@@ -104,20 +104,7 @@ const config = ref({
                             </div>
                         </div>
                     </a>
-                     <Link :href="route('check.member')" class="modern-card md:col-span-4 group border-t-4 border-green-500">
-                        <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-green-100 rounded-xl">
-                            <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
-                            <div class="relative z-10 mb-4">
-                                <div class="icon-box-sm bg-green-100 text-green-600 group-hover:scale-110 transition-transform">
-                                    <i class="bi bi-check-circle-fill text-4xl"></i>
-                                </div>
-                            </div>
-                            <div class="relative z-10 mt-auto">
-                                <h3 class="text-xl font-bold text-slate-800">ตรวจเช็คสมาชิก</h3>
-                                <p class="text-sm text-slate-500 mt-1">สำหรับหน่วยงาน และ สถานประกอบการที่รวมรายการ</p>
-                            </div>
-                        </div>
-                    </Link>
+                   
 
                     <Link :href="route('member_check.home')" class="modern-card md:col-span-4 group border-t-4 border-pink-500">
                         <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-pink-100 rounded-xl">
@@ -151,7 +138,6 @@ const config = ref({
                             </div>
                         </div>
                     </Link>
-
                     <Link :href="route('easypoint')" class="modern-card md:col-span-4 group border-t-4 border-yellow-500 relative z-20">
                         <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-yellow-100 rounded-xl">
                             <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
@@ -165,6 +151,21 @@ const config = ref({
                             <div class="relative z-10 mt-auto">
                                 <h3 class="text-xl font-bold text-slate-800">EASY POINT</h3>
                                 <p class="text-sm text-slate-500 mt-1">แลกคะแนนสะสมเป็นรางวัล</p>
+                            </div>
+                        </div>
+                    </Link>
+
+                      <Link :href="route('check.member')" class="modern-card md:col-span-4 group border-t-4 border-green-500">
+                        <div class="flex flex-col h-full p-6 relative overflow-hidden bg-gradient-to-tr from-white to-green-100 rounded-xl">
+                            <div class="absolute top-0 right-0 w-32 h-32 rounded-full -mr-8 -mt-8 blur-xl opacity-60"></div>
+                            <div class="relative z-10 mb-4">
+                                <div class="icon-box-sm bg-green-100 text-green-600 group-hover:scale-110 transition-transform">
+                                    <i class="bi bi-check-circle-fill text-4xl"></i>
+                                </div>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <h3 class="text-xl font-bold text-slate-800">ตรวจเช็คสมาชิก</h3>
+                                <p class="text-sm text-slate-500 mt-1">สำหรับหน่วยงาน และ สถานประกอบการที่รวมรายการ</p>
                             </div>
                         </div>
                     </Link>
