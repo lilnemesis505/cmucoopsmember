@@ -19,6 +19,7 @@ use App\Http\Controllers\PageController;
 
 use App\Models\Member;
 use App\Models\Event;
+use App\Models\PageContent;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,13 @@ Route::prefix('member')->group(function () {
     Route::get('/easypoint/{id}', [HomeController::class, 'showEasyPoint'])->name('easypoint.show');
     Route::get('/check', [HomeController::class, 'checkMember'])->name('check.member');
 });
+// 1. Route หน้าบ้าน (สำหรับคนทั่วไปดู)
+Route::get('/qrcode', function () {
+    $page = PageContent::where('page_key', 'qrcode')->firstOrFail();
+    return Inertia::render('Qrcode/Home', [
+        'page' => $page
+    ]);
+})->name('qrcode');
 
 
 // =========================================================================
@@ -92,6 +100,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     // ---------------------------------------------------------------------
     // GROUP A: MEMBER SYSTEM
     // ---------------------------------------------------------------------
+    Route::get('/qrcode/edit', [PageContentController::class, 'editQrcode'])->name('admin.qrcode.edit');
     Route::prefix('member-system')->group(function() {
         
         // 1. จัดการสมาชิก
@@ -164,6 +173,10 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
 
 });
+
+    
+    // Route สำหรับบันทึก (ใช้อันเดิมได้)
+    Route::put('/pages/{key}', [PageContentController::class, 'update'])->name('admin.pages.update');
     Route::get('/member-check/edit', [PageController::class, 'editMemberCheck'])->name('admin.member_check.edit');
     Route::put('/member-check/update/{key}', [PageController::class, 'update'])->name('admin.member_check.update');
 });

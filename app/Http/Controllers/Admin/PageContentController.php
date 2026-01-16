@@ -42,17 +42,21 @@ class PageContentController extends Controller
         $page->subtitle = $request->subtitle;
         $page->content = $request->input('content');
 
-        // 2. จัดการรูปปก (Cover Image)
+        // ✅ 2. เพิ่มส่วนนี้ครับ: เช็คว่ามีการสั่งลบรูปหรือไม่
+        // ต้องเช็คก่อนการอัปโหลดรูปใหม่ เพื่อให้แน่ใจว่าถ้า user กดลบ มันจะลบออกก่อน
+        if ($request->boolean('remove_cover')) {
+            $page->image_url = null; // สั่งเคลียร์ค่าใน Database ให้เป็นว่าง
+        }
+
+        // 3. จัดการรูปปก (Cover Image) - ถ้ามีการอัปโหลดรูปใหม่ ให้บันทึกทับลงไป
         if ($request->hasFile('cover_image')) {
             try {
-                // อัปโหลดรูปใหม่
                 $upload = $this->imageKit->upload([
                     'file' => fopen($request->file('cover_image'), 'r'),
                     'fileName' => 'cover_' . $key . '_' . time(),
                     'folder' => '/main/covers/'
                 ]);
                 
-                // บันทึกลงฐานข้อมูลช่อง image_url
                 $page->image_url = $upload->result->url;
                 
             } catch (\Exception $e) {
@@ -60,11 +64,9 @@ class PageContentController extends Controller
             }
         }
 
-        // 3. จัดการรูปภาพ Gallery (ส่วนประกอบเนื้อหา)
-        // เริ่มต้นดึงรูปเดิมมาเก็บไว้ก่อน
+        // 4. จัดการรูปภาพ Gallery (คงโค้ดเดิมไว้)
         $currentImages = $page->images ?? [];
 
-        // 3.1 ถ้ามีการอัปโหลดรูปเพิ่ม
         if ($request->hasFile('upload_images')) {
             foreach ($request->file('upload_images') as $file) {
                 try {
@@ -73,21 +75,20 @@ class PageContentController extends Controller
                         'fileName' => $key . '_' . time(),
                         'folder' => '/main/pages/'
                     ]);
-                    // เพิ่ม URL รูปลงไปใน Array
                     $currentImages[] = $upload->result->url;
                 } catch (\Exception $e) {
-                    // กรณีอัปโหลดไม่ผ่าน ข้ามไป
+                    // ignore error
                 }
             }
         }
 
-        // 3.2 ถ้ามีการลบรูป (รับค่าเป็น Array ของ URL ที่จะลบ)
         if ($request->has('remove_images')) {
             $currentImages = array_diff($currentImages, $request->remove_images);
         }
 
-        // บันทึก Gallery กลับเข้า Database
-        $page->images = array_values($currentImages); // จัด index ใหม่ให้เรียงสวยงาม
+        $page->images = array_values($currentImages);
+        
+        // 5. บันทึกข้อมูล
         $page->save();
 
         return back()->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
@@ -134,6 +135,10 @@ public function updateCover(Request $request, $key)
             } catch (\Exception $e) {
                 return back()->with('error', 'อัปโหลดรูปไม่สำเร็จ: ' . $e->getMessage());
             }
+
+            if ($request->boolean('remove_cover')) {
+            $page->image_url = null; // เคลียร์ค่าใน Database ให้เป็น NULL
+        }
         }
 
         // 5. บันทึกข้อมูล
@@ -141,4 +146,12 @@ public function updateCover(Request $request, $key)
 
         return back()->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
     }
+    public function editQrcode()
+{
+    $page = PageContent::where('page_key', 'qrcode')->firstOrFail();
+    return Inertia::render('Admin/Qrcode/Edit', [
+        'page' => $page,
+        'pageKey' => 'qrcode'
+    ]);
+}
 }

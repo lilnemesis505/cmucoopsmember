@@ -76,4 +76,6 @@ class PageController extends Controller
 
         return back()->with('success', 'บันทึกข้อมูลเรียบร้อยแล้ว');
     }
+    // เพิ่ม method นี้ลงใน PageContentController.php
+
 }
