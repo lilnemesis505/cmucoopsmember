@@ -13,7 +13,7 @@ defineProps({
 
         <div class="container my-5">
             <div class="text-center mb-5">
-                <h2 class="fw-bold text-warning">
+                <h2 class="fw-bold text-purple-600">
                     <i class="bi bi-star-fill"></i> Easy Point สิทธิพิเศษ
                 </h2>
                 <p class="text-muted">รายการแลกแต้มและสิทธิพิเศษสำหรับสมาชิก</p>
@@ -42,7 +42,24 @@ defineProps({
                         </div>
                     </Link>
                 </div>
+                <a href="https://www.cmu-coops.com/login.php" target="_blank" class="text-decoration-none text-dark">
+    <div class="card h-100 shadow-sm hover-card border-0">
+        <div style="height: 200px; overflow: hidden; border-radius: 10px 10px 0 0;" class="bg-light position-relative">
+            <img src="https://ik.imagekit.io/cmucoopsmember/easypoint/%E0%B9%81%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B8%AD%E0%B8%99%20%E0%B9%80%E0%B8%94%E0%B9%89%E0%B8%AD%E0%B8%AA%E0%B8%B9!!!%20(4).png" 
+                 class="w-100 h-100" 
+                 style="object-fit: cover;"> </div>
+
+        <div class="card-body p-4 text-center">
+            <h5 class="fw-bold mb-2">ตรวจสอบแต้ม Easy Points</h5>
+            <p class="text-muted small text-truncate">เช็คยอดคะแนนสะสมและแลกของรางวัล</p>
+            <button class="btn btn-outline-warning btn-sm rounded-pill mt-2 px-4">
+                <i class="bi bi-box-arrow-up-right me-1"></i> ตรวจสอบทันที
+            </button>
+        </div>
+    </div>
+</a>
             </div>
+            
             
             <div v-if="posts.length === 0" class="text-center py-5 text-muted">
                 กำลังอัปเดตรายการใหม่ เร็วๆ นี้
