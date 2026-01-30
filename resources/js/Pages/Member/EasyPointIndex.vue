@@ -45,7 +45,7 @@ defineProps({
                 <a href="https://www.cmu-coops.com/login.php" target="_blank" class="text-decoration-none text-dark">
     <div class="card h-100 shadow-sm hover-card border-0">
         <div style="height: 200px; overflow: hidden; border-radius: 10px 10px 0 0;" class="bg-light position-relative">
-            <img src="https://ik.imagekit.io/cmucoopsmember/easypoint/%E0%B9%81%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B8%AD%E0%B8%99%20%E0%B9%80%E0%B8%94%E0%B9%89%E0%B8%AD%E0%B8%AA%E0%B8%B9!!!%20(4).png" 
+            <img src="https://ik.imagekit.io/cmucoopsmember/easypoint/%E0%B9%81%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B8%AD%E0%B8%99%20%E0%B9%80%E0%B8%94%E0%B9%89%E0%B8%AD%E0%B8%AA%E0%B8%B9!!!%20(5).png" 
                  class="w-100 h-100" 
                  style="object-fit: cover;"> </div>
 

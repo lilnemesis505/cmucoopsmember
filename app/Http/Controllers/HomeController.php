@@ -123,56 +123,67 @@ class HomeController extends Controller
     }
    public function checkMember(Request $request)
     {
-        // 1. รับค่า
-        $member_id  = $request->input('member_id');
-        $id_card    = $request->input('id_card');
-        $first_name = $request->input('first_name');
-        $last_name  = $request->input('last_name');
-        $phone      = $request->input('phone');
-
-        // 2. เช็คสถานะการค้นหา
-        $hasSearch = $member_id || $id_card || $first_name || $last_name || $phone;
-        
-        $members = null;
+        // เช็คว่ามีการกรอกข้อมูลมาบ้างไหม
+        $hasSearch = $request->anyFilled(['member_id', 'id_card', 'first_name', 'last_name', 'phone']);
+        $members = [];
 
         if ($hasSearch) {
-            $query = \App\Models\Member::query();
+            $query = \App\Models\Member::query(); // หรือ ExternalMember ตามที่คุณใช้
 
-            if ($member_id)  $query->where('member_id', 'like', "%{$member_id}%");
-            if ($id_card)    $query->where('id_card', 'like', "%{$id_card}%");
-            if ($first_name) $query->where('first_name', 'like', "%{$first_name}%");
-            if ($last_name)  $query->where('last_name', 'like', "%{$last_name}%");
-            if ($phone)      $query->where('phone', 'like', "%{$phone}%");
+            // --- 1. ปรับเงื่อนไขเป็น "ต้องตรงกันเป๊ะๆ (Exact Match)" ---
+            
+            // รหัสสมาชิก (ยังอนุโลมให้ค้นบางส่วนได้ หรือจะเอาเป๊ะๆ ก็แก้เป็น $query->where(...))
+            if ($request->filled('member_id')) {
+                $query->where('member_id', $request->member_id); 
+            }
+            
+            // ชื่อ-นามสกุล-เบอร์-เลขบัตร ต้องตรงเป๊ะๆ ถึงจะขึ้น
+            if ($request->filled('id_card')) {
+                $query->where('id_card', $request->id_card);
+            }
+            if ($request->filled('phone')) {
+                $query->where('phone', $request->phone);
+            }
+            if ($request->filled('first_name')) {
+                $query->where('first_name', 'like', '%' . $request->first_name . '%');
+            }
+            if ($request->filled('last_name')) {
+                $query->where('last_name', 'like', '%' . $request->last_name . '%');
+            }
 
-            $members = $query->paginate(10)->withQueryString();
+            // ดึงข้อมูล (ไม่เอาที่อยู่)
+            $result = $query->select(
+                'id', 'member_id', 'title_name', 'first_name', 'last_name', 
+                'registry_date', 'phone',
+                // ❌ ตัด loc_addr, province, etc. ออก ไม่ให้ดึงมาเลย
+            )->paginate(15)->withQueryString();
+
+            // --- 2. เซ็นเซอร์เบอร์โทร (PDPA Masking) ---
+            $result->getCollection()->transform(function ($member) {
+                if ($member->phone) {
+                    $p = preg_replace('/[^0-9]/', '', $member->phone); // เอาเฉพาะตัวเลข
+                    if (strlen($p) >= 9) {
+                        // โชว์ 3 ตัวหน้า - ปิดตรงกลาง - โชว์ 4 ตัวท้าย
+                        // เช่น 081-XXX-5678
+                        $member->phone = substr($p, 0, 3) . '-XXX-' . substr($p, -4);
+                    } else {
+                        $member->phone = 'XXX-XXX-XXXX';
+                    }
+                }
+                return $member;
+            });
+
+            $members = $result;
+
         } else {
-            $members = [
-                'data' => [],
-                'links' => [],
-                'total' => 0
-            ];
+             $members = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 15);
         }
 
-        // 3. ส่งข้อมูล (สังเกตว่าไม่มี 'page' => $page)
         return Inertia::render('Member/CheckMember', [
             'members'   => $members,
             'filters'   => $request->all(),
             'hasSearch' => (bool)$hasSearch
         ]);
-    }
-        public function import(Request $request) 
-    {
-       // ... (ใช้โค้ดเดิมของคุณได้เลย)
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv'
-        ]);
-
-        try {
-            Excel::import(new MembersImport, $request->file('file'));
-            return back()->with('success', 'นำเข้าข้อมูลสมาชิกเรียบร้อยแล้ว!');
-        } catch (\Exception $e) {
-            return back()->with('error', 'เกิดข้อผิดพลาด: ' . $e->getMessage());
-        }
     }
     public function easyPoint()
     {
